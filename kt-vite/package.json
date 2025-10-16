@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ader0908.github.io/react/kt-vite/",
+  "homepage": "https://ader0908.github.io/react/kt-vite",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

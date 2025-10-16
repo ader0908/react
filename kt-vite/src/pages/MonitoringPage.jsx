@@ -176,7 +176,7 @@ const MonitoringPage = () => {
           <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4 invisible">
             목록
           </label>
-          <div className="flex gap-2 h-8">
+          <div className="flex flex-col items-center justify-center gap-2 h-8">
             <button className="h-8 px-3 flex items-center gap-2 bg-white border border-[#e4e7e7] rounded hover:bg-gray-50 whitespace-nowrap">
               <div className="relative w-2.5 h-3.5">
                 <div className="w-0.5 h-2 bg-[#ed1b23] rounded-full absolute left-0 top-1/2 -translate-y-1/2" />

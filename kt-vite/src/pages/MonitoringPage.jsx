@@ -170,30 +170,32 @@ const MonitoringPage = () => {
         </div>
       </div>
 
-      {/* 목록 닫기 버튼들 */}
-      <div className="flex flex-col">
-        <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4 invisible">
-          목록
-        </label>
-        <div className="flex gap-2 h-8">
-          <button className="h-8 px-3 flex items-center gap-2 bg-white border border-[#e4e7e7] rounded hover:bg-gray-50 whitespace-nowrap">
-            <div className="relative w-2.5 h-3.5">
-              <div className="w-0.5 h-2 bg-[#ed1b23] rounded-full absolute left-0 top-1/2 -translate-y-1/2" />
-            </div>
-            <span className="text-[11px] font-medium text-[#272a2a]">
-              엔진 목록 닫기
-            </span>
-          </button>
-          <button className="h-8 px-3 flex items-center gap-2 bg-white border border-[#e4e7e7] rounded hover:bg-gray-50 whitespace-nowrap">
-            <div className="relative w-2.5 h-2.5">
-              <div className="w-0.5 h-2 bg-[#ed1b23] rounded-full absolute left-0 top-1/2 -translate-y-1/2" />
-            </div>
-            <span className="text-[11px] font-medium text-[#272a2a]">
-              서버 목록 닫기
-            </span>
-          </button>
+      {/* 목록 닫기 버튼들 - 수정모드일 때만 표시 */}
+      {dashboardMode === "edit" && (
+        <div className="flex flex-col">
+          <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4 invisible">
+            목록
+          </label>
+          <div className="flex gap-2 h-8">
+            <button className="h-8 px-3 flex items-center gap-2 bg-white border border-[#e4e7e7] rounded hover:bg-gray-50 whitespace-nowrap">
+              <div className="relative w-2.5 h-3.5">
+                <div className="w-0.5 h-2 bg-[#ed1b23] rounded-full absolute left-0 top-1/2 -translate-y-1/2" />
+              </div>
+              <span className="text-[11px] font-medium text-[#272a2a]">
+                엔진 목록 닫기
+              </span>
+            </button>
+            <button className="h-8 px-3 flex items-center gap-2 bg-white border border-[#e4e7e7] rounded hover:bg-gray-50 whitespace-nowrap">
+              <div className="relative w-2.5 h-2.5">
+                <div className="w-0.5 h-2 bg-[#ed1b23] rounded-full absolute left-0 top-1/2 -translate-y-1/2" />
+              </div>
+              <span className="text-[11px] font-medium text-[#272a2a]">
+                서버 목록 닫기
+              </span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 
@@ -208,13 +210,14 @@ const MonitoringPage = () => {
       />
 
       {/* 엔진 항목 선택 */}
-      <EngineList />
+      {dashboardMode === "edit" && <EngineList />}
 
       {/* 서버 목록 */}
+
       <ServeList />
 
       {/* 차트 카드 */}
-      <ChartList />
+      <ChartList dashboardMode={dashboardMode} />
     </div>
   );
 };

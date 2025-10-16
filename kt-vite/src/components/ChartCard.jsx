@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import Chip from "./Chip";
-import Select from "./Select";
 import Chart from "./Chart";
 
 /**
@@ -17,6 +16,8 @@ import Chart from "./Chart";
  * @param {Function} onSettings - 설정 버튼 클릭 핸들러 (선택사항)
  * @param {boolean} showControls - 컨트롤 버튼 표시 여부 (기본값: true)
  * @param {string} borderColor - 카드 테두리 색상 (선택사항, 기본값: #5090f7)
+ * @param {boolean} selected - 선택 상태 (선택사항, 기본값: false)
+ * @param {Function} onSelect - 카드 선택 핸들러 (선택사항)
  * @param {string} className - 추가 CSS 클래스 (선택사항)
  */
 const ChartCard = ({
@@ -27,34 +28,51 @@ const ChartCard = ({
   chartType = "line",
   chartData,
   chartOptions = {},
-  onChartTypeChange,
   onVisibilityToggle,
   onSettings,
   showControls = true,
   borderColor = "#5090f7",
+  selected = false,
+  onSelect,
   className = "",
 }) => {
-  const [selectedChartType, setSelectedChartType] = useState(chartType);
-
-  const chartTypeOptions = [
-    { value: "line", label: "선차트" },
-    { value: "bar", label: "막대차트" },
-    { value: "doughnut", label: "도넛차트" },
-    { value: "pie", label: "파이차트" },
-  ];
-
-  const handleChartTypeChange = (value) => {
-    setSelectedChartType(value);
-    if (onChartTypeChange) {
-      onChartTypeChange(value);
-    }
-  };
-
   return (
     <div
-      className={`bg-white rounded-md border ${className}`}
-      style={{ borderColor }}
+      className={`relative bg-white rounded-md border ${
+        selected ? "border-2" : ""
+      } ${className} cursor-pointer transition-all`}
+      style={{
+        borderColor: selected ? borderColor : "#e4e7e7",
+        overflow: "visible",
+      }}
+      onClick={onSelect}
     >
+      {/* 선택 시 리사이즈 핸들 (네 모서리) */}
+      {selected && (
+        <>
+          {/* 왼쪽 상단 */}
+          <div
+            className="absolute -top-1 -left-1 w-2 h-2 rounded-full border-2 border-white"
+            style={{ backgroundColor: borderColor }}
+          />
+          {/* 오른쪽 상단 */}
+          <div
+            className="absolute -top-1 -right-1 w-2 h-2 rounded-full border-2 border-white"
+            style={{ backgroundColor: borderColor }}
+          />
+          {/* 왼쪽 하단 */}
+          <div
+            className="absolute -bottom-1 -left-1 w-2 h-2 rounded-full border-2 border-white"
+            style={{ backgroundColor: borderColor }}
+          />
+          {/* 오른쪽 하단 */}
+          <div
+            className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full border-2 border-white"
+            style={{ backgroundColor: borderColor }}
+          />
+        </>
+      )}
+
       {/* 헤더 영역 */}
       <div className="px-5 py-4">
         <div className="flex items-center justify-between gap-4">
@@ -72,20 +90,13 @@ const ChartCard = ({
 
             {showControls && (
               <>
-                {/* 차트 타입 선택 */}
-                <div className="w-24">
-                  <Select
-                    value={selectedChartType}
-                    onChange={handleChartTypeChange}
-                    options={chartTypeOptions}
-                    className="text-xs"
-                  />
-                </div>
-
                 {/* 표시/숨김 버튼 */}
                 {onVisibilityToggle && (
                   <button
-                    onClick={onVisibilityToggle}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onVisibilityToggle();
+                    }}
                     className="w-6 h-6 flex items-center justify-center border border-[#e4e7e7] rounded hover:bg-gray-50 transition-colors"
                     title="표시/숨김"
                   >
@@ -114,7 +125,10 @@ const ChartCard = ({
                 {/* 설정 버튼 */}
                 {onSettings && (
                   <button
-                    onClick={onSettings}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSettings();
+                    }}
                     className="w-6 h-6 flex items-center justify-center border border-[#e4e7e7] rounded hover:bg-gray-50 transition-colors"
                     title="설정"
                   >
@@ -146,13 +160,16 @@ const ChartCard = ({
       </div>
 
       {/* 차트 영역 */}
-      <div className="px-5 pb-5">
+      <div className="px-3 pb-3">
         <div
-          className="bg-[#fafafa] rounded-lg p-4"
-          style={{ height: "248px" }}
+          style={{
+            height: "248px",
+            position: "relative",
+          }}
         >
           <Chart
-            type={selectedChartType}
+            key={`chart-${title}-${chartType}`}
+            type={chartType}
             data={chartData}
             options={chartOptions}
           />

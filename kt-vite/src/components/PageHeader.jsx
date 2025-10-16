@@ -55,24 +55,29 @@ const PageHeader = ({
           {subtitle && <p className="text-sm text-black">{subtitle}</p>}
         </div>
 
-        {/* 좌측 콘텐츠 (제목 바로 옆) */}
-        {leftContent && <div className="flex items-center">{leftContent}</div>}
+        {/* 우측: 모든 콘텐츠를 하나로 묶음 */}
+        <div className="flex items-end gap-4">
+          {/* 좌측 콘텐츠 (제목 바로 옆) */}
+          {leftContent && (
+            <div className="flex items-center">{leftContent}</div>
+          )}
 
-        {/* 중간 콘텐츠 (조회 기간 등) */}
-        {middleContent && (
-          <div className="flex items-end gap-4 flex-1">{middleContent}</div>
-        )}
+          {/* 중간 콘텐츠 (조회 기간 등) */}
+          {middleContent && (
+            <div className="flex items-end gap-4">{middleContent}</div>
+          )}
 
-        {/* 우측 콘텐츠 또는 children */}
-        {rightContent && (
-          <div className="flex items-end gap-4">{rightContent}</div>
-        )}
+          {/* 우측 콘텐츠 */}
+          {rightContent && (
+            <div className="flex items-end gap-4">{rightContent}</div>
+          )}
 
-        {/* children이 있으면 우측에 표시 (하위 호환성) */}
-        {children && <div className="flex items-center">{children}</div>}
+          {/* children이 있으면 우측에 표시 (하위 호환성) */}
+          {children && <div className="flex items-center">{children}</div>}
 
-        {/* 기본 전체 펼침/접기 버튼 (다른 콘텐츠가 없을 때만) */}
-        {!children && !rightContent && !middleContent && defaultExpandButton}
+          {/* 기본 전체 펼침/접기 버튼 (다른 콘텐츠가 없을 때만) */}
+          {!children && !rightContent && !middleContent && defaultExpandButton}
+        </div>
       </div>
     </div>
   );

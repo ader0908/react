@@ -67,7 +67,7 @@ const Dropdown = ({
     <div
       ref={dropdownRef}
       className={`dropdown-container ${className}`}
-      style={{ position: "relative", display: "inline-block" }}
+      style={{ position: "relative", display: "inline-block", zIndex: 1000 }}
     >
       {/* 드롭다운 트리거 버튼 */}
       <button
@@ -107,7 +107,7 @@ const Dropdown = ({
             borderRadius: "8px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
             minWidth: "120px",
-            zIndex: 1000,
+            zIndex: 10000,
             overflow: "hidden",
           }}
         >

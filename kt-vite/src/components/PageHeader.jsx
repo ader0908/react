@@ -47,7 +47,7 @@ const PageHeader = ({
   );
 
   return (
-    <div className="bg-white border-l-[7px] border-[#ed1b23] rounded-lg px-7 py-4">
+    <div className="bg-white border-l-[7px] border-[#ed1b23] rounded-lg px-7 py-4 relative z-50">
       <div className="flex items-center justify-between gap-4">
         {/* 좌측: 제목 및 설명 */}
         <div className="flex flex-col">

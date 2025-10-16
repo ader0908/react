@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "./Button";
 import Select from "./Select";
 import Dropdown from "./Dropdown";
 import { LuPlay } from "react-icons/lu";
 import { FiCalendar } from "react-icons/fi";
 import { IoStopCircleOutline } from "react-icons/io5";
+import DatePicker from "react-datepicker";
+import { ko } from "date-fns/locale";
+import "react-datepicker/dist/react-datepicker.css";
 
 /**
  * 시간 범위 선택 컴포넌트
@@ -29,6 +32,10 @@ const TimeRangeSelector = ({
   className = "",
 }) => {
   const [currentTime, setCurrentTime] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const datePickerRef = useRef(null);
 
   // 현재 시간 업데이트 (실시간 모드일 때)
   useEffect(() => {
@@ -45,6 +52,58 @@ const TimeRangeSelector = ({
       return () => clearInterval(interval);
     }
   }, [isRealtime]);
+
+  // 날짜 포맷 함수
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  };
+
+  // 적용 버튼 클릭 핸들러
+  const handleApply = () => {
+    if (startDate && endDate) {
+      const rangeString = `${formatDate(startDate)} ~ ${formatDate(endDate)}`;
+      onDateRangeChange?.(rangeString);
+      setIsCalendarOpen(false);
+    }
+  };
+
+  // 취소 버튼 클릭 핸들러
+  const handleCancel = () => {
+    setIsCalendarOpen(false);
+    // 취소 시 이전 상태로 되돌림
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  // 외부 클릭 감지하여 달력 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target)
+      ) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    if (isCalendarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCalendarOpen]);
+
+  // 달력 아이콘 클릭 핸들러
+  const handleCalendarClick = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
 
   // 시간 범위 프리셋 옵션
   const timeRangePresets = [
@@ -77,7 +136,10 @@ const TimeRangeSelector = ({
   ];
 
   return (
-    <div className={`flex items-end gap-4 ${className}`}>
+    <div
+      className={`flex items-end gap-4 ${className}`}
+      style={{ overflow: "visible" }}
+    >
       {/* 실시간/정지 버튼 */}
       <div className="flex flex-col">
         <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4 invisible">
@@ -95,7 +157,10 @@ const TimeRangeSelector = ({
       </div>
 
       {/* 조회 기간 설정 */}
-      <div className="flex-1 max-w-[417px] flex flex-col">
+      <div
+        className="flex-1 max-w-[417px] flex flex-col"
+        style={{ overflow: "visible" }}
+      >
         <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4">
           조회 기간 설정
           <span className="text-[#ed1b23] ml-0.5">*</span>
@@ -130,7 +195,7 @@ const TimeRangeSelector = ({
           </div>
         ) : (
           /* 일반 모드 UI */
-          <div className="relative h-8">
+          <div className="relative h-8" style={{ overflow: "visible" }}>
             <input
               type="text"
               value={dateRange}
@@ -138,7 +203,10 @@ const TimeRangeSelector = ({
               placeholder="2025/09/10 16:37 ~ 2025/09/10 17:37"
               className="w-full h-8 px-3 pr-[110px] bg-[#f4f5f5] border-none rounded text-sm"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+            <div
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5"
+              style={{ overflow: "visible" }}
+            >
               <Dropdown
                 items={timeRangePresets}
                 selectedValue={timeRangePreset}
@@ -147,7 +215,79 @@ const TimeRangeSelector = ({
                 grouped={true}
                 align="right"
               />
-              <FiCalendar className="w-4 h-4 text-gray-600 cursor-pointer" />
+              <div className="relative" ref={datePickerRef}>
+                <FiCalendar
+                  className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800"
+                  onClick={handleCalendarClick}
+                />
+                {isCalendarOpen && (
+                  <div
+                    className="absolute top-6 z-[10000] bg-white rounded-lg shadow-2xl p-4"
+                    style={{
+                      border: "1px solid #e4e7e7",
+                      minWidth: "700px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                    }}
+                  >
+                    <div className="flex flex-col gap-4">
+                      {/* 날짜 범위 선택 */}
+                      <div className="flex gap-4">
+                        {/* 시작 날짜/시간 */}
+                        <div className="flex-1">
+                          <label className="text-xs font-medium text-gray-600 mb-2 block">
+                            시작 날짜/시간
+                          </label>
+                          <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={5}
+                            dateFormat="yyyy/MM/dd HH:mm"
+                            locale={ko}
+                            inline
+                          />
+                        </div>
+
+                        {/* 종료 날짜/시간 */}
+                        <div className="flex-1">
+                          <label className="text-xs font-medium text-gray-600 mb-2 block">
+                            종료 날짜/시간
+                          </label>
+                          <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={5}
+                            dateFormat="yyyy/MM/dd HH:mm"
+                            locale={ko}
+                            inline
+                          />
+                        </div>
+                      </div>
+
+                      {/* 버튼 영역 */}
+                      <div className="flex justify-end gap-2 pt-2 border-t border-gray-200">
+                        <button
+                          onClick={handleCancel}
+                          className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                        >
+                          취소
+                        </button>
+                        <button
+                          onClick={handleApply}
+                          className="px-4 py-2 text-sm bg-[#2bb7b3] text-white rounded hover:bg-[#25a09d] disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={!startDate || !endDate}
+                        >
+                          적용
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

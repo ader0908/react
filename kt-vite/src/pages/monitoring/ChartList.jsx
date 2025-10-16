@@ -33,7 +33,7 @@ export default function ChartList() {
     ],
   };
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-4">
       <ChartCard
         chipLabel="STT"
         chipVariant="primary"
@@ -43,7 +43,7 @@ export default function ChartList() {
         onChartTypeChange={(type) => console.log("차트 타입 변경:", type)}
         onVisibilityToggle={() => console.log("표시/숨김 토글")}
         onSettings={() => console.log("설정 열기")}
-        className="flex-1"
+        className="flex-[0_0_calc(33.333%-0.667rem)]"
       />
       <ChartCard
         chipLabel="STT"
@@ -54,7 +54,7 @@ export default function ChartList() {
         onChartTypeChange={(type) => console.log("차트 타입 변경:", type)}
         onVisibilityToggle={() => console.log("표시/숨김 토글")}
         onSettings={() => console.log("설정 열기")}
-        className="flex-1"
+        className="flex-[0_0_calc(33.333%-0.667rem)]"
       />
       <ChartCard
         chipLabel="STT"
@@ -65,7 +65,7 @@ export default function ChartList() {
         onChartTypeChange={(type) => console.log("차트 타입 변경:", type)}
         onVisibilityToggle={() => console.log("표시/숨김 토글")}
         onSettings={() => console.log("설정 열기")}
-        className="flex-1"
+        className="flex-[0_0_calc(33.333%-0.667rem)]"
       />
     </div>
   );

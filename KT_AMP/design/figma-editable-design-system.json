@@ -1,0 +1,409 @@
+{
+  "name": "KT AMP 시스템 모니터링 대시보드",
+  "description": "Figma에서 편집 가능한 시스템 모니터링 대시보드 디자인 시스템",
+  "version": "1.0",
+  "created": "2024-12-19",
+  
+  "designTokens": {
+    "colors": {
+      "primary": {
+        "blue": "#6b7280",
+        "purple": "#4b5563",
+        "gradient": "linear-gradient(135deg, #6b7280, #4b5563)"
+      },
+      "system": {
+        "cpu": {
+          "primary": "#3b82f6",
+          "light": "#60a5fa",
+          "gradient": "linear-gradient(135deg, #3b82f6, #60a5fa)"
+        },
+        "memory": {
+          "primary": "#10b981",
+          "light": "#34d399",
+          "gradient": "linear-gradient(135deg, #10b981, #34d399)"
+        },
+        "storage": {
+          "primary": "#8b5cf6",
+          "light": "#a78bfa",
+          "gradient": "linear-gradient(135deg, #8b5cf6, #a78bfa)"
+        },
+        "network": {
+          "primary": "#f59e0b",
+          "light": "#fbbf24",
+          "gradient": "linear-gradient(135deg, #f59e0b, #fbbf24)"
+        }
+      },
+      "status": {
+        "success": "#48bb78",
+        "warning": "#ed8936",
+        "error": "#f56565",
+        "info": "#6b7280"
+      },
+      "neutral": {
+        "50": "#f9fafb",
+        "100": "#f3f4f6",
+        "200": "#e5e7eb",
+        "300": "#d1d5db",
+        "400": "#9ca3af",
+        "500": "#6b7280",
+        "600": "#4b5563",
+        "700": "#374151",
+        "800": "#1f2937",
+        "900": "#111827"
+      },
+      "background": {
+        "primary": "#ffffff",
+        "secondary": "rgba(255, 255, 255, 0.8)",
+        "overlay": "rgba(255, 255, 255, 0.1)",
+        "sidebar": "rgba(255, 255, 255, 0.95)"
+      },
+      "text": {
+        "primary": "#1a202c",
+        "secondary": "rgba(26, 32, 44, 0.7)",
+        "tertiary": "rgba(26, 32, 44, 0.5)"
+      }
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "fontSizes": {
+        "xs": 10,
+        "sm": 12,
+        "base": 14,
+        "lg": 16,
+        "xl": 20,
+        "2xl": 24,
+        "3xl": 28,
+        "4xl": 32
+      },
+      "fontWeights": {
+        "light": 300,
+        "normal": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700
+      },
+      "lineHeights": {
+        "tight": 1.2,
+        "normal": 1.5,
+        "relaxed": 1.6
+      }
+    },
+    "spacing": {
+      "xs": 4,
+      "sm": 8,
+      "md": 12,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 32,
+      "4xl": 40,
+      "5xl": 48
+    },
+    "borderRadius": {
+      "sm": 6,
+      "md": 8,
+      "lg": 12,
+      "xl": 16,
+      "2xl": 20,
+      "full": 9999
+    },
+    "shadows": {
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.07)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.1)",
+      "xl": "0 20px 25px rgba(0, 0, 0, 0.1)",
+      "2xl": "0 25px 50px rgba(0, 0, 0, 0.25)"
+    }
+  },
+  
+  "components": {
+    "MetricCard": {
+      "name": "Metric Card",
+      "type": "component",
+      "width": 300,
+      "height": 140,
+      "properties": {
+        "variant": {
+          "type": "variant",
+          "options": ["cpu", "memory", "storage", "network"],
+          "default": "cpu"
+        },
+        "title": {
+          "type": "text",
+          "default": "CPU 사용률"
+        },
+        "description": {
+          "type": "text", 
+          "default": "전체 서버 평균 CPU 사용량"
+        },
+        "value": {
+          "type": "text",
+          "default": "45.2%"
+        },
+        "change": {
+          "type": "text",
+          "default": "2.3% 감소"
+        },
+        "status": {
+          "type": "variant",
+          "options": ["excellent", "good", "warning", "critical"],
+          "default": "excellent"
+        },
+        "progress": {
+          "type": "number",
+          "default": 45.2,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "variants": {
+        "cpu": {
+          "topBorder": "#3b82f6",
+          "iconBackground": "linear-gradient(135deg, #3b82f6, #60a5fa)",
+          "valueColor": "#3b82f6",
+          "progressColor": "linear-gradient(90deg, #3b82f6, #60a5fa)"
+        },
+        "memory": {
+          "topBorder": "#10b981",
+          "iconBackground": "linear-gradient(135deg, #10b981, #34d399)",
+          "valueColor": "#10b981",
+          "progressColor": "linear-gradient(90deg, #10b981, #34d399)"
+        },
+        "storage": {
+          "topBorder": "#8b5cf6",
+          "iconBackground": "linear-gradient(135deg, #8b5cf6, #a78bfa)",
+          "valueColor": "#8b5cf6",
+          "progressColor": "linear-gradient(90deg, #8b5cf6, #a78bfa)"
+        },
+        "network": {
+          "topBorder": "#f59e0b",
+          "iconBackground": "linear-gradient(135deg, #f59e0b, #fbbf24)",
+          "valueColor": "#f59e0b",
+          "progressColor": "linear-gradient(90deg, #f59e0b, #fbbf24)"
+        }
+      }
+    },
+    
+    "ChartCard": {
+      "name": "Chart Card",
+      "type": "component",
+      "width": 1200,
+      "height": 350,
+      "properties": {
+        "title": {
+          "type": "text",
+          "default": "시스템 리소스 추이"
+        },
+        "activeFilter": {
+          "type": "variant",
+          "options": ["1h", "6h", "24h", "7d"],
+          "default": "6h"
+        }
+      }
+    },
+    
+    "ServerItem": {
+      "name": "Server Item",
+      "type": "component",
+      "width": 380,
+      "height": 60,
+      "properties": {
+        "serverName": {
+          "type": "text",
+          "default": "c-pod-487"
+        },
+        "cpuUsage": {
+          "type": "text",
+          "default": "42%"
+        },
+        "memoryUsage": {
+          "type": "text",
+          "default": "65%"
+        },
+        "diskUsage": {
+          "type": "text",
+          "default": "28%"
+        },
+        "status": {
+          "type": "variant",
+          "options": ["online", "warning", "offline"],
+          "default": "online"
+        }
+      },
+      "variants": {
+        "online": {
+          "statusColor": "#48bb78",
+          "backgroundColor": "#f9fafb"
+        },
+        "warning": {
+          "statusColor": "#ed8936",
+          "backgroundColor": "#fffbeb"
+        },
+        "offline": {
+          "statusColor": "#f56565",
+          "backgroundColor": "#fef2f2"
+        }
+      }
+    },
+    
+    "StatusBadge": {
+      "name": "Status Badge",
+      "type": "component",
+      "width": 80,
+      "height": 24,
+      "properties": {
+        "status": {
+          "type": "variant",
+          "options": ["excellent", "good", "warning", "critical"],
+          "default": "excellent"
+        },
+        "text": {
+          "type": "text",
+          "default": "EXCELLENT"
+        }
+      },
+      "variants": {
+        "excellent": {
+          "background": "rgba(72, 187, 120, 0.1)",
+          "color": "#48bb78"
+        },
+        "good": {
+          "background": "rgba(72, 187, 120, 0.1)",
+          "color": "#48bb78"
+        },
+        "warning": {
+          "background": "rgba(237, 137, 54, 0.1)",
+          "color": "#ed8936"
+        },
+        "critical": {
+          "background": "rgba(245, 101, 101, 0.1)",
+          "color": "#f56565"
+        }
+      }
+    },
+    
+    "ProgressBar": {
+      "name": "Progress Bar",
+      "type": "component",
+      "width": 280,
+      "height": 6,
+      "properties": {
+        "value": {
+          "type": "number",
+          "default": 45.2,
+          "min": 0,
+          "max": 100
+        },
+        "variant": {
+          "type": "variant",
+          "options": ["cpu", "memory", "storage", "network"],
+          "default": "cpu"
+        }
+      }
+    },
+    
+    "ChartControl": {
+      "name": "Chart Control",
+      "type": "component",
+      "width": 50,
+      "height": 32,
+      "properties": {
+        "text": {
+          "type": "text",
+          "default": "6시간"
+        },
+        "active": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": {
+        "default": {
+          "background": "#ffffff",
+          "border": "#e5e7eb",
+          "color": "rgba(26, 32, 44, 0.7)"
+        },
+        "active": {
+          "background": "linear-gradient(135deg, #6b7280, #4b5563)",
+          "border": "transparent",
+          "color": "#ffffff"
+        },
+        "hover": {
+          "background": "#f3f4f6",
+          "border": "#6b7280",
+          "color": "#6b7280"
+        }
+      }
+    }
+  },
+  
+  "layouts": {
+    "Dashboard": {
+      "name": "시스템 모니터링 대시보드",
+      "type": "frame",
+      "width": 1920,
+      "height": 1080,
+      "structure": {
+        "sidebar": {
+          "width": 280,
+          "height": 1080,
+          "background": "rgba(255, 255, 255, 0.95)",
+          "backdropFilter": "blur(20px)",
+          "components": ["Logo", "Navigation"]
+        },
+        "mainContent": {
+          "width": 1640,
+          "height": 1080,
+          "sections": [
+            {
+              "name": "header",
+              "height": 72,
+              "components": ["Breadcrumb", "StatusIndicator", "UserAvatar"]
+            },
+            {
+              "name": "pageHeader",
+              "height": 80,
+              "components": ["PageTitle", "PageSubtitle"]
+            },
+            {
+              "name": "metricsGrid",
+              "height": 156,
+              "layout": "4-column-grid",
+              "gap": 16,
+              "components": ["MetricCard"]
+            },
+            {
+              "name": "chartSection",
+              "height": 374,
+              "components": ["ChartCard"]
+            },
+            {
+              "name": "serverSection",
+              "height": 180,
+              "components": ["ServerStatusCard"]
+            }
+          ]
+        }
+      }
+    }
+  },
+  
+  "responsiveBreakpoints": {
+    "desktop": {
+      "minWidth": 1200,
+      "metricsColumns": 4,
+      "sidebarWidth": 280
+    },
+    "tablet": {
+      "minWidth": 768,
+      "maxWidth": 1199,
+      "metricsColumns": 2,
+      "sidebarWidth": 280
+    },
+    "mobile": {
+      "maxWidth": 767,
+      "metricsColumns": 1,
+      "sidebarHidden": true
+    }
+  }
+}

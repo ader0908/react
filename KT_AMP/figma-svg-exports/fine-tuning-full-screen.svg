@@ -1,0 +1,282 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  
+  <!-- Left Sidebar -->
+  <rect x="0" y="0" width="260" height="800" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  
+  <!-- Logo Section -->
+  <rect x="20" y="20" width="220" height="60" fill="#ffffff"/>
+  <circle cx="50" cy="50" r="20" fill="#3b82f6"/>
+  <text x="80" y="45" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1e293b">KT</text>
+  <text x="80" y="60" font-family="Arial, sans-serif" font-size="10" fill="#64748b">AMP MANAGEMENT PORTAL</text>
+  
+  <!-- Menu Items -->
+  <!-- 공통메뉴 (닫힌 상태) -->
+  <g transform="translate(20, 100)">
+    <rect width="220" height="40" fill="#f8f9fa" rx="6"/>
+    <path d="M15 20 L20 15 L25 20" stroke="#6b7280" stroke-width="1.5" fill="none" transform="rotate(-90 20 17.5)"/>
+    <text x="35" y="25" font-family="Arial, sans-serif" font-size="14" fill="#374151">공통메뉴</text>
+  </g>
+  
+  <!-- 사이트 관리자메뉴 (닫힌 상태) -->
+  <g transform="translate(20, 150)">
+    <rect width="220" height="40" fill="#f8f9fa" rx="6"/>
+    <path d="M15 20 L20 15 L25 20" stroke="#6b7280" stroke-width="1.5" fill="none" transform="rotate(-90 20 17.5)"/>
+    <text x="35" y="25" font-family="Arial, sans-serif" font-size="14" fill="#374151">사이트 관리자메뉴</text>
+  </g>
+  
+  <!-- 프로젝트 관리자메뉴 (열린 상태) -->
+  <g transform="translate(20, 200)">
+    <rect width="220" height="40" fill="#f8f9fa" rx="6"/>
+    <path d="M15 20 L20 15 L25 20" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+    <text x="35" y="25" font-family="Arial, sans-serif" font-size="14" fill="#374151">프로젝트 관리자메뉴</text>
+    
+    <!-- raapeech-cpod KT-STT 4.0 -->
+    <g transform="translate(0, 50)">
+      <rect width="220" height="35" fill="#ffffff" rx="4"/>
+      <text x="20" y="23" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#3b82f6">raapeech-cpod KT-STT 4.0</text>
+      
+      <!-- 설정 (닫힌 상태) -->
+      <g transform="translate(0, 40)">
+        <rect width="200" height="30" fill="#f8f9fa" rx="4" x="20"/>
+        <path d="M35 15 L40 10 L45 15" stroke="#6b7280" stroke-width="1" fill="none" transform="rotate(-90 40 12.5)"/>
+        <text x="50" y="20" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">설정</text>
+      </g>
+      
+      <!-- AI학습 관리 (활성화, 하위메뉴 없음) -->
+      <g transform="translate(0, 75)">
+        <rect width="200" height="30" fill="linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%)" rx="4" x="20"/>
+        <rect x="20" y="0" width="3" height="30" fill="#3b82f6"/>
+        <text x="30" y="20" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#3b82f6">AI학습 관리</text>
+      </g>
+      
+      <!-- 운영관리 (닫힌 상태) -->
+      <g transform="translate(0, 110)">
+        <rect width="200" height="30" fill="#f8f9fa" rx="4" x="20"/>
+        <path d="M35 15 L40 10 L45 15" stroke="#6b7280" stroke-width="1" fill="none" transform="rotate(-90 40 12.5)"/>
+        <text x="50" y="20" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">운영관리</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- 라이선스 관리 (닫힌 상태) -->
+  <g transform="translate(20, 400)">
+    <rect width="220" height="40" fill="#f8f9fa" rx="6"/>
+    <path d="M15 20 L20 15 L25 20" stroke="#6b7280" stroke-width="1.5" fill="none" transform="rotate(-90 20 17.5)"/>
+    <text x="35" y="25" font-family="Arial, sans-serif" font-size="14" fill="#374151">라이선스 관리</text>
+  </g>
+  
+  <!-- Main Content Area -->
+  <rect x="260" y="0" width="940" height="800" fill="#ffffff"/>
+  
+  <!-- Header -->
+  <rect x="260" y="0" width="940" height="80" fill="#ffffff" stroke="#e2e8f0" stroke-width="0 0 1 0"/>
+  
+  <!-- Header Content -->
+  <g transform="translate(280, 20)">
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">STT 통합 워크플로우</text>
+    <text x="0" y="45" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">음성인식 모델의 학습부터 배포까지 통합 관리</text>
+    
+    <!-- User Info -->
+    <g transform="translate(750, 0)">
+      <text x="0" y="25" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#6b7280">홍길동</text>
+    </g>
+  </g>
+  
+  <!-- Workflow Progress Section -->
+  <rect x="280" y="100" width="900" height="120" fill="#f8fafc" rx="12"/>
+  
+  <!-- Progress Steps -->
+  <g transform="translate(350, 130)">
+    <!-- 학습관리 (활성화) -->
+    <g>
+      <circle cx="0" cy="30" r="20" fill="#3b82f6" stroke="#ffffff" stroke-width="3"/>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#3b82f6" text-anchor="middle">학습관리</text>
+    </g>
+    
+    <!-- Progress Line -->
+    <line x1="20" y1="30" x2="200" y2="30" stroke="#3b82f6" stroke-width="3"/>
+    
+    <!-- 배포관리 -->
+    <g transform="translate(220, 0)">
+      <circle cx="0" cy="30" r="20" fill="#e2e8f0" stroke="#ffffff" stroke-width="3"/>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="middle">2</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">배포관리</text>
+    </g>
+    
+    <!-- Progress Line -->
+    <line x1="240" y1="30" x2="420" y2="30" stroke="#e2e8f0" stroke-width="3"/>
+    
+    <!-- 검증관리 -->
+    <g transform="translate(440, 0)">
+      <circle cx="0" cy="30" r="20" fill="#e2e8f0" stroke="#ffffff" stroke-width="3"/>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="middle">3</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">검증관리</text>
+    </g>
+    
+    <!-- 단건테스트 (별개) -->
+    <g transform="translate(600, 0)">
+      <circle cx="0" cy="30" r="20" fill="#e2e8f0" stroke="#ffffff" stroke-width="3"/>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#6b7280" text-anchor="middle">4</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">단건테스트</text>
+    </g>
+  </g>
+  
+  <!-- Tab Navigation -->
+  <g transform="translate(280, 240)">
+    <!-- 모니터링 탭 -->
+    <rect x="0" y="0" width="100" height="40" fill="#f8f9fa" stroke="#e2e8f0" stroke-width="1" rx="6 6 0 0"/>
+    <text x="50" y="25" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">모니터링</text>
+    
+    <!-- Fine Tuning 데이터 탭 (활성화) -->
+    <rect x="100" y="0" width="150" height="40" fill="#ffffff" stroke="#3b82f6" stroke-width="2" rx="6 6 0 0"/>
+    <text x="175" y="25" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#3b82f6" text-anchor="middle">Fine Tuning 데이터</text>
+    
+    <!-- Biasing Code 데이터 탭 -->
+    <rect x="250" y="0" width="150" height="40" fill="#f8f9fa" stroke="#e2e8f0" stroke-width="1" rx="6 6 0 0"/>
+    <text x="325" y="25" font-family="Arial, sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">Biasing Code 데이터</text>
+  </g>
+  
+  <!-- Fine Tuning 데이터 Content -->
+  <g transform="translate(280, 280)">
+    <!-- Search Filter Section -->
+    <rect x="0" y="0" width="900" height="80" fill="#f8f9fa" rx="12"/>
+    
+    <!-- Filter Labels and Inputs -->
+    <g transform="translate(20, 15)">
+      <!-- 서비스모델 -->
+      <text x="0" y="15" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">서비스모델</text>
+      <rect x="0" y="20" width="120" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="10" y="38" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">전체</text>
+      
+      <!-- 모델타입 -->
+      <text x="140" y="15" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">모델타입</text>
+      <rect x="140" y="20" width="120" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="150" y="38" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">전체</text>
+      
+      <!-- 파일명 -->
+      <text x="280" y="15" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">파일명</text>
+      <rect x="280" y="20" width="180" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="290" y="38" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af">파일명 검색...</text>
+      
+      <!-- 작성자 -->
+      <text x="480" y="15" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">작성자</text>
+      <rect x="480" y="20" width="120" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="490" y="38" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af">작성자 검색...</text>
+      
+      <!-- 등록일시 -->
+      <text x="620" y="15" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">등록일시</text>
+      <rect x="620" y="20" width="120" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      
+      <!-- 검색 버튼 -->
+      <rect x="760" y="20" width="80" height="32" fill="#3b82f6" rx="6"/>
+      <text x="800" y="38" font-family="Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff" text-anchor="middle">검색</text>
+    </g>
+    
+    <!-- Action Buttons -->
+    <g transform="translate(0, 100)">
+      <rect x="0" y="0" width="80" height="32" fill="#10b981" rx="6"/>
+      <text x="40" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff" text-anchor="middle">+ 등록</text>
+      
+      <rect x="90" y="0" width="80" height="32" fill="#f59e0b" rx="6"/>
+      <text x="130" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff" text-anchor="middle">일괄 수정</text>
+      
+      <rect x="180" y="0" width="80" height="32" fill="#ef4444" rx="6"/>
+      <text x="220" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff" text-anchor="middle">선택 삭제</text>
+    </g>
+    
+    <!-- Results Info -->
+    <text x="0" y="160" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">총 156개 중 156개 표시</text>
+    
+    <!-- Table -->
+    <rect x="0" y="180" width="900" height="300" fill="#ffffff" stroke="#e2e8f0" rx="8"/>
+    
+    <!-- Table Header -->
+    <rect x="0" y="180" width="900" height="45" fill="#f8f9fa" stroke="#e2e8f0" stroke-width="0 0 1 0" rx="8 8 0 0"/>
+    
+    <!-- Table Header Text -->
+    <g transform="translate(0, 202)">
+      <rect x="20" y="-10" width="16" height="16" fill="none" stroke="#d1d5db" stroke-width="1" rx="2"/>
+      <text x="60" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">No.</text>
+      <text x="120" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">서비스모델</text>
+      <text x="220" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">모델타입</text>
+      <text x="320" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">파일명</text>
+      <text x="480" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">문장개수</text>
+      <text x="580" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">작성자</text>
+      <text x="680" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">등록일시</text>
+      <text x="800" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#374151">상태조회</text>
+    </g>
+    
+    <!-- Sample Table Rows -->
+    <g transform="translate(0, 225)">
+      <!-- Row 1 -->
+      <g>
+        <rect x="20" y="5" width="16" height="16" fill="none" stroke="#d1d5db" stroke-width="1" rx="2"/>
+        <text x="60" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">1</text>
+        <text x="120" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">콜봇</text>
+        <text x="220" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">일반모델</text>
+        <text x="320" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">fine_tuning_data_v1.txt</text>
+        <text x="480" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">1,250</text>
+        <text x="580" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">김개발</text>
+        <text x="680" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">2025-01-15 14:32</text>
+        <circle cx="820" cy="13" r="8" fill="#06b6d4"/>
+        <path d="M816 13 L820 9 L824 13 L820 17 Z" fill="#ffffff" stroke="none"/>
+      </g>
+      
+      <!-- Row 2 -->
+      <g transform="translate(0, 40)">
+        <rect x="20" y="5" width="16" height="16" fill="none" stroke="#d1d5db" stroke-width="1" rx="2"/>
+        <text x="60" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">2</text>
+        <text x="120" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">챗봇</text>
+        <text x="220" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">특화모델</text>
+        <text x="320" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">chatbot_training_v2.txt</text>
+        <text x="480" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">890</text>
+        <text x="580" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">이분석</text>
+        <text x="680" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">2025-01-14 09:15</text>
+        <circle cx="820" cy="13" r="8" fill="#06b6d4"/>
+        <path d="M816 13 L820 9 L824 13 L820 17 Z" fill="#ffffff" stroke="none"/>
+      </g>
+      
+      <!-- Row 3 -->
+      <g transform="translate(0, 80)">
+        <rect x="20" y="5" width="16" height="16" fill="none" stroke="#d1d5db" stroke-width="1" rx="2"/>
+        <text x="60" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">3</text>
+        <text x="120" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">음성인식</text>
+        <text x="220" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">일반모델</text>
+        <text x="320" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">voice_model_data.txt</text>
+        <text x="480" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">2,100</text>
+        <text x="580" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">박음성</text>
+        <text x="680" y="17" font-family="Arial, sans-serif" font-size="13" fill="#374151">2025-01-13 16:45</text>
+        <circle cx="820" cy="13" r="8" fill="#06b6d4"/>
+        <path d="M816 13 L820 9 L824 13 L820 17 Z" fill="#ffffff" stroke="none"/>
+      </g>
+    </g>
+    
+    <!-- Pagination -->
+    <g transform="translate(0, 500)">
+      <!-- Items per page -->
+      <rect x="0" y="0" width="80" height="32" fill="#ffffff" stroke="#d1d5db" rx="6"/>
+      <text x="40" y="20" font-family="Arial, sans-serif" font-size="14" fill="#374151" text-anchor="middle">10개</text>
+      
+      <!-- Pagination buttons -->
+      <g transform="translate(750, 0)">
+        <rect x="0" y="0" width="32" height="32" fill="#f8f9fa" stroke="#d1d5db" rx="4"/>
+        <text x="16" y="20" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">‹‹</text>
+        
+        <rect x="40" y="0" width="32" height="32" fill="#f8f9fa" stroke="#d1d5db" rx="4"/>
+        <text x="56" y="20" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">‹</text>
+        
+        <rect x="80" y="0" width="32" height="32" fill="#3b82f6" stroke="#3b82f6" rx="4"/>
+        <text x="96" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+        
+        <rect x="120" y="0" width="32" height="32" fill="#f8f9fa" stroke="#d1d5db" rx="4"/>
+        <text x="136" y="20" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">›</text>
+        
+        <rect x="160" y="0" width="32" height="32" fill="#f8f9fa" stroke="#d1d5db" rx="4"/>
+        <text x="176" y="20" font-family="Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">››</text>
+      </g>
+    </g>
+  </g>
+</svg>

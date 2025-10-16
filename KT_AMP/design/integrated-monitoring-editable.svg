@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- 편집 가능한 통합 모니터링 대시보드 SVG -->
+  
+  <!-- 정의 및 그라디언트 -->
+  <defs>
+    <!-- 브랜드 그라디언트 -->
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b7280"/>
+      <stop offset="100%" style="stop-color:#4b5563"/>
+    </linearGradient>
+    
+    <!-- 시스템 리소스 그라디언트 -->
+    <linearGradient id="cpuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#60a5fa"/>
+    </linearGradient>
+    
+    <linearGradient id="memoryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+    
+    <linearGradient id="storageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+    
+    <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#fbbf24"/>
+    </linearGradient>
+    
+    <!-- 서비스 그라디언트 -->
+    <linearGradient id="sttGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#67e8f9"/>
+    </linearGradient>
+    
+    <linearGradient id="ttsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#c4b5fd"/>
+    </linearGradient>
+    
+    <linearGradient id="nlpGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899"/>
+      <stop offset="100%" style="stop-color:#f9a8d4"/>
+    </linearGradient>
+    
+    <linearGradient id="translateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#fed7aa"/>
+    </linearGradient>
+    
+    <!-- 프로그레스 바 그라디언트 -->
+    <linearGradient id="cpuProgress" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#60a5fa"/>
+    </linearGradient>
+    
+    <linearGradient id="memoryProgress" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+    
+    <linearGradient id="sttProgress" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#67e8f9"/>
+    </linearGradient>
+    
+    <linearGradient id="ttsProgress" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#c4b5fd"/>
+    </linearGradient>
+    
+    <!-- 그림자 필터 -->
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-opacity="0.1"/>
+    </filter>
+    
+    <filter id="largeCardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="25" flood-opacity="0.1"/>
+    </filter>
+    
+    <!-- 블러 효과 -->
+    <filter id="glassmorphism" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="20"/>
+      <feComponentTransfer>
+        <feFuncA type="discrete" tableValues=".9"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  
+  <!-- 배경 -->
+  <rect width="1920" height="1080" fill="url(#primaryGradient)"/>
+  
+  <!-- 사이드바 -->
+  <g id="sidebar">
+    <rect x="0" y="0" width="280" height="1080" fill="rgba(255,255,255,0.95)" filter="url(#glassmorphism)"/>
+    
+    <!-- 로고 섹션 -->
+    <g id="logo-section">
+      <rect x="24" y="24" width="232" height="72" fill="none"/>
+      
+      <!-- 로고 아이콘 -->
+      <rect x="24" y="36" width="40" height="40" rx="12" fill="url(#primaryGradient)"/>
+      <text x="44" y="60" font-family="Inter" font-size="16" font-weight="700" text-anchor="middle" fill="white">KT</text>
+      
+      <!-- 로고 텍스트 -->
+      <text x="76" y="60" font-family="Inter" font-size="20" font-weight="700" fill="#1a202c">AMP</text>
+    </g>
+    
+    <!-- 네비게이션 -->
+    <g id="navigation">
+      <!-- 공통메뉴 섹션 -->
+      <text x="24" y="136" font-family="Inter" font-size="12" font-weight="600" fill="#6b7280" text-transform="uppercase">공통메뉴</text>
+      
+      <!-- 홈 -->
+      <g id="nav-home">
+        <rect x="24" y="156" width="232" height="44" rx="12" fill="transparent"/>
+        <text x="60" y="182" font-family="Inter" font-size="14" font-weight="500" fill="rgba(26,32,44,0.7)">🏠 홈</text>
+      </g>
+      
+      <!-- 프로젝트 관리자메뉴 섹션 -->
+      <text x="24" y="236" font-family="Inter" font-size="12" font-weight="600" fill="#6b7280" text-transform="uppercase">프로젝트 관리자메뉴</text>
+      
+      <!-- 라이선스 관리 -->
+      <g id="nav-license">
+        <rect x="24" y="256" width="232" height="44" rx="12" fill="transparent"/>
+        <text x="60" y="282" font-family="Inter" font-size="14" font-weight="500" fill="rgba(26,32,44,0.7)">🔑 라이선스 관리</text>
+      </g>
+      
+      <!-- AI학습 관리 -->
+      <g id="nav-ai">
+        <rect x="24" y="308" width="232" height="44" rx="12" fill="transparent"/>
+        <text x="60" y="334" font-family="Inter" font-size="14" font-weight="500" fill="rgba(26,32,44,0.7)">🧠 AI학습 관리</text>
+      </g>
+      
+      <!-- 통합 모니터링 (활성) -->
+      <g id="nav-monitoring">
+        <rect x="24" y="360" width="232" height="44" rx="12" fill="url(#primaryGradient)" filter="url(#cardShadow)"/>
+        <text x="60" y="386" font-family="Inter" font-size="14" font-weight="500" fill="white">📊 통합 모니터링</text>
+      </g>
+      
+      <!-- 운영관리 -->
+      <g id="nav-operations">
+        <rect x="24" y="412" width="232" height="44" rx="12" fill="transparent"/>
+        <text x="60" y="438" font-family="Inter" font-size="14" font-weight="500" fill="rgba(26,32,44,0.7)">⚙️ 운영관리</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- 메인 콘텐츠 -->
+  <g id="main-content" transform="translate(280,0)">
+    <!-- 헤더 -->
+    <g id="header">
+      <rect x="0" y="0" width="1640" height="72" fill="rgba(255,255,255,0.8)" filter="url(#glassmorphism)"/>
+      
+      <!-- 브레드크럼 -->
+      <text x="32" y="42" font-family="Inter" font-size="14" fill="rgba(26,32,44,0.7)">홈 / 프로젝트 관리자메뉴 / 통합 모니터링</text>
+      
+      <!-- 상태 표시기 -->
+      <g id="status-indicator" transform="translate(1320,28)">
+        <rect x="0" y="0" width="160" height="32" rx="12" fill="rgba(72,187,120,0.1)"/>
+        <circle cx="16" cy="16" r="4" fill="#48bb78">
+          <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <text x="32" y="20" font-family="Inter" font-size="14" font-weight="500" fill="#48bb78">All Services 정상</text>
+      </g>
+      
+      <!-- 사용자 아바타 -->
+      <g id="user-avatar" transform="translate(1500,18)">
+        <circle cx="18" cy="18" r="18" fill="url(#primaryGradient)"/>
+        <text x="18" y="23" font-family="Inter" font-size="14" font-weight="600" text-anchor="middle" fill="white">홍</text>
+      </g>
+    </g>
+    
+    <!-- 페이지 헤더 -->
+    <g id="page-header" transform="translate(16,88)">
+      <text x="0" y="28" font-family="Inter" font-size="24" font-weight="700" fill="#1a202c">📊 통합 모니터링 대시보드</text>
+      <text x="0" y="50" font-family="Inter" font-size="14" fill="rgba(26,32,44,0.7)">시스템 리소스와 AI 서비스 통계를 종합적으로 모니터링합니다</text>
+    </g>
+    
+    <!-- 모니터링 탭 -->
+    <g id="monitoring-tabs" transform="translate(16,152)">
+      <rect x="0" y="0" width="1608" height="56" rx="20" fill="white" filter="url(#cardShadow)"/>
+      
+      <!-- 통합 현황 탭 (활성) -->
+      <g id="tab-overview">
+        <rect x="4" y="4" width="398" height="48" rx="16" fill="url(#primaryGradient)" filter="url(#cardShadow)"/>
+        <text x="202" y="32" font-family="Inter" font-size="14" font-weight="500" text-anchor="middle" fill="white">📊 통합 현황</text>
+      </g>
+      
+      <!-- 시스템 리소스 탭 -->
+      <g id="tab-system">
+        <rect x="406" y="4" width="398" height="48" rx="16" fill="transparent"/>
+        <text x="605" y="32" font-family="Inter" font-size="14" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">🖥️ 시스템 리소스</text>
+      </g>
+      
+      <!-- AI 서비스 탭 -->
+      <g id="tab-services">
+        <rect x="808" y="4" width="398" height="48" rx="16" fill="transparent"/>
+        <text x="1007" y="32" font-family="Inter" font-size="14" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">🎤 AI 서비스</text>
+      </g>
+      
+      <!-- 실시간 활동 탭 -->
+      <g id="tab-activity">
+        <rect x="1210" y="4" width="398" height="48" rx="16" fill="transparent"/>
+        <text x="1409" y="32" font-family="Inter" font-size="14" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">🔔 실시간 활동</text>
+      </g>
+    </g>
+    
+    <!-- 메트릭 카드 그리드 -->
+    <g id="metrics-grid" transform="translate(16,224)">
+      <!-- CPU 메트릭 카드 -->
+      <g id="metric-cpu">
+        <rect x="0" y="0" width="300" height="140" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        <rect x="0" y="0" width="300" height="4" rx="2" fill="#3b82f6"/>
+        
+        <!-- 헤더 -->
+        <g id="cpu-header">
+          <text x="16" y="32" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">CPU 사용률</text>
+          <text x="16" y="48" font-family="Inter" font-size="11" fill="rgba(26,32,44,0.7)">전체 서버 평균 CPU 사용량</text>
+          
+          <!-- 아이콘 -->
+          <rect x="248" y="16" width="36" height="36" rx="12" fill="url(#cpuGradient)"/>
+          <text x="266" y="38" font-family="Inter" font-size="16" text-anchor="middle" fill="white">🔧</text>
+        </g>
+        
+        <!-- 값 -->
+        <text x="16" y="84" font-family="Inter" font-size="24" font-weight="700" fill="#3b82f6" id="cpu-value">45.2%</text>
+        
+        <!-- 상세 정보 -->
+        <g id="cpu-details">
+          <text x="16" y="104" font-family="Inter" font-size="11" font-weight="500" fill="#48bb78">▼ 2.3% 감소</text>
+          <rect x="228" y="88" width="56" height="16" rx="4" fill="rgba(72,187,120,0.1)"/>
+          <text x="256" y="99" font-family="Inter" font-size="9" font-weight="600" text-anchor="middle" fill="#48bb78">EXCELLENT</text>
+        </g>
+        
+        <!-- 프로그레스 바 -->
+        <g id="cpu-progress">
+          <rect x="16" y="124" width="268" height="6" rx="3" fill="#f3f4f6"/>
+          <rect x="16" y="124" width="121" height="6" rx="3" fill="url(#cpuProgress)"/>
+        </g>
+      </g>
+      
+      <!-- Memory 메트릭 카드 -->
+      <g id="metric-memory" transform="translate(316,0)">
+        <rect x="0" y="0" width="300" height="140" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        <rect x="0" y="0" width="300" height="4" rx="2" fill="#10b981"/>
+        
+        <!-- 헤더 -->
+        <g id="memory-header">
+          <text x="16" y="32" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">메모리 사용률</text>
+          <text x="16" y="48" font-family="Inter" font-size="11" fill="rgba(26,32,44,0.7)">전체 서버 평균 메모리 사용량</text>
+          
+          <!-- 아이콘 -->
+          <rect x="248" y="16" width="36" height="36" rx="12" fill="url(#memoryGradient)"/>
+          <text x="266" y="38" font-family="Inter" font-size="16" text-anchor="middle" fill="white">💾</text>
+        </g>
+        
+        <!-- 값 -->
+        <text x="16" y="84" font-family="Inter" font-size="24" font-weight="700" fill="#10b981" id="memory-value">68.7%</text>
+        
+        <!-- 상세 정보 -->
+        <g id="memory-details">
+          <text x="16" y="104" font-family="Inter" font-size="11" font-weight="500" fill="#f56565">▲ 5.1% 증가</text>
+          <rect x="240" y="88" width="44" height="16" rx="4" fill="rgba(72,187,120,0.1)"/>
+          <text x="262" y="99" font-family="Inter" font-size="9" font-weight="600" text-anchor="middle" fill="#48bb78">GOOD</text>
+        </g>
+        
+        <!-- 프로그레스 바 -->
+        <g id="memory-progress">
+          <rect x="16" y="124" width="268" height="6" rx="3" fill="#f3f4f6"/>
+          <rect x="16" y="124" width="184" height="6" rx="3" fill="url(#memoryProgress)"/>
+        </g>
+      </g>
+      
+      <!-- STT 메트릭 카드 -->
+      <g id="metric-stt" transform="translate(632,0)">
+        <rect x="0" y="0" width="300" height="140" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        <rect x="0" y="0" width="300" height="4" rx="2" fill="#06b6d4"/>
+        
+        <!-- 헤더 -->
+        <g id="stt-header">
+          <text x="16" y="32" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">STT 요청 수</text>
+          <text x="16" y="48" font-family="Inter" font-size="11" fill="rgba(26,32,44,0.7)">음성인식 서비스 처리 건수</text>
+          
+          <!-- 아이콘 -->
+          <rect x="248" y="16" width="36" height="36" rx="12" fill="url(#sttGradient)"/>
+          <text x="266" y="38" font-family="Inter" font-size="16" text-anchor="middle" fill="white">🎤</text>
+        </g>
+        
+        <!-- 값 -->
+        <text x="16" y="84" font-family="Inter" font-size="24" font-weight="700" fill="#06b6d4" id="stt-value">1,247</text>
+        
+        <!-- 상세 정보 -->
+        <g id="stt-details">
+          <text x="16" y="104" font-family="Inter" font-size="11" font-weight="500" fill="#48bb78">▲ 12.5% 증가</text>
+          <rect x="228" y="88" width="56" height="16" rx="4" fill="rgba(72,187,120,0.1)"/>
+          <text x="256" y="99" font-family="Inter" font-size="9" font-weight="600" text-anchor="middle" fill="#48bb78">EXCELLENT</text>
+        </g>
+        
+        <!-- 프로그레스 바 -->
+        <g id="stt-progress">
+          <rect x="16" y="124" width="268" height="6" rx="3" fill="#f3f4f6"/>
+          <rect x="16" y="124" width="228" height="6" rx="3" fill="url(#sttProgress)"/>
+        </g>
+      </g>
+      
+      <!-- TTS 메트릭 카드 -->
+      <g id="metric-tts" transform="translate(948,0)">
+        <rect x="0" y="0" width="300" height="140" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        <rect x="0" y="0" width="300" height="4" rx="2" fill="#8b5cf6"/>
+        
+        <!-- 헤더 -->
+        <g id="tts-header">
+          <text x="16" y="32" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">TTS 변환 수</text>
+          <text x="16" y="48" font-family="Inter" font-size="11" fill="rgba(26,32,44,0.7)">음성합성 서비스 처리 건수</text>
+          
+          <!-- 아이콘 -->
+          <rect x="248" y="16" width="36" height="36" rx="12" fill="url(#ttsGradient)"/>
+          <text x="266" y="38" font-family="Inter" font-size="16" text-anchor="middle" fill="white">🔊</text>
+        </g>
+        
+        <!-- 값 -->
+        <text x="16" y="84" font-family="Inter" font-size="24" font-weight="700" fill="#8b5cf6" id="tts-value">892</text>
+        
+        <!-- 상세 정보 -->
+        <g id="tts-details">
+          <text x="16" y="104" font-family="Inter" font-size="11" font-weight="500" fill="#48bb78">▲ 8.3% 증가</text>
+          <rect x="228" y="88" width="56" height="16" rx="4" fill="rgba(72,187,120,0.1)"/>
+          <text x="256" y="99" font-family="Inter" font-size="9" font-weight="600" text-anchor="middle" fill="#48bb78">EXCELLENT</text>
+        </g>
+        
+        <!-- 프로그레스 바 -->
+        <g id="tts-progress">
+          <rect x="16" y="124" width="268" height="6" rx="3" fill="#f3f4f6"/>
+          <rect x="16" y="124" width="194" height="6" rx="3" fill="url(#ttsProgress)"/>
+        </g>
+      </g>
+    </g>
+    
+    <!-- 차트 섹션 -->
+    <g id="charts-section" transform="translate(16,380)">
+      <!-- 시스템 리소스 차트 -->
+      <g id="system-chart">
+        <rect x="0" y="0" width="794" height="350" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        
+        <!-- 차트 헤더 -->
+        <g id="system-chart-header">
+          <text x="24" y="44" font-family="Inter" font-size="20" font-weight="700" fill="#1a202c">📈 시스템 리소스 추이</text>
+          
+          <!-- 차트 컨트롤 -->
+          <g id="system-chart-controls" transform="translate(580,24)">
+            <rect x="0" y="0" width="50" height="32" rx="8" fill="transparent" stroke="#e5e7eb"/>
+            <text x="25" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">1시간</text>
+            
+            <rect x="54" y="0" width="50" height="32" rx="8" fill="url(#primaryGradient)"/>
+            <text x="79" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="white">6시간</text>
+            
+            <rect x="108" y="0" width="50" height="32" rx="8" fill="transparent" stroke="#e5e7eb"/>
+            <text x="133" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">24시간</text>
+          </g>
+        </g>
+        
+        <!-- 차트 영역 (단순화된 라인 차트) -->
+        <g id="system-chart-area" transform="translate(24,64)">
+          <rect x="0" y="0" width="746" height="266" fill="#f9fafb" rx="8"/>
+          
+          <!-- 샘플 라인 차트 -->
+          <g id="chart-lines">
+            <!-- CPU 라인 -->
+            <path d="M20,200 Q100,180 180,160 T340,140 T500,120 T660,100 L720,80" 
+                  stroke="#3b82f6" stroke-width="3" fill="none"/>
+            
+            <!-- Memory 라인 -->
+            <path d="M20,180 Q100,170 180,150 T340,130 T500,110 T660,90 L720,70" 
+                  stroke="#10b981" stroke-width="3" fill="none"/>
+            
+            <!-- Storage 라인 -->
+            <path d="M20,220 Q100,210 180,200 T340,190 T500,180 T660,170 L720,160" 
+                  stroke="#8b5cf6" stroke-width="3" fill="none"/>
+            
+            <!-- Network 라인 -->
+            <path d="M20,240 Q100,230 180,220 T340,210 T500,200 T660,190 L720,180" 
+                  stroke="#f59e0b" stroke-width="3" fill="none"/>
+          </g>
+          
+          <!-- 범례 -->
+          <g id="chart-legend" transform="translate(20,230)">
+            <g id="cpu-legend">
+              <circle cx="5" cy="5" r="3" fill="#3b82f6"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">CPU</text>
+            </g>
+            
+            <g id="memory-legend" transform="translate(60,0)">
+              <circle cx="5" cy="5" r="3" fill="#10b981"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">Memory</text>
+            </g>
+            
+            <g id="storage-legend" transform="translate(140,0)">
+              <circle cx="5" cy="5" r="3" fill="#8b5cf6"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">Storage</text>
+            </g>
+            
+            <g id="network-legend" transform="translate(220,0)">
+              <circle cx="5" cy="5" r="3" fill="#f59e0b"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">Network</text>
+            </g>
+          </g>
+        </g>
+      </g>
+      
+      <!-- AI 서비스 차트 -->
+      <g id="service-chart" transform="translate(814,0)">
+        <rect x="0" y="0" width="794" height="350" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+        
+        <!-- 차트 헤더 -->
+        <g id="service-chart-header">
+          <text x="24" y="44" font-family="Inter" font-size="20" font-weight="700" fill="#1a202c">📊 AI 서비스 사용량</text>
+          
+          <!-- 차트 컨트롤 -->
+          <g id="service-chart-controls" transform="translate(580,24)">
+            <rect x="0" y="0" width="50" height="32" rx="8" fill="transparent" stroke="#e5e7eb"/>
+            <text x="25" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">1시간</text>
+            
+            <rect x="54" y="0" width="50" height="32" rx="8" fill="url(#primaryGradient)"/>
+            <text x="79" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="white">6시간</text>
+            
+            <rect x="108" y="0" width="50" height="32" rx="8" fill="transparent" stroke="#e5e7eb"/>
+            <text x="133" y="20" font-family="Inter" font-size="13" font-weight="500" text-anchor="middle" fill="rgba(26,32,44,0.7)">24시간</text>
+          </g>
+        </g>
+        
+        <!-- 차트 영역 -->
+        <g id="service-chart-area" transform="translate(24,64)">
+          <rect x="0" y="0" width="746" height="266" fill="#f9fafb" rx="8"/>
+          
+          <!-- 서비스 라인 차트 -->
+          <g id="service-lines">
+            <!-- STT 라인 -->
+            <path d="M20,160 Q100,140 180,120 T340,100 T500,80 T660,60 L720,40" 
+                  stroke="#06b6d4" stroke-width="3" fill="none"/>
+            
+            <!-- TTS 라인 -->
+            <path d="M20,180 Q100,170 180,150 T340,140 T500,120 T660,100 L720,80" 
+                  stroke="#8b5cf6" stroke-width="3" fill="none"/>
+            
+            <!-- NLP 라인 -->
+            <path d="M20,200 Q100,190 180,180 T340,170 T500,160 T660,150 L720,140" 
+                  stroke="#ec4899" stroke-width="3" fill="none"/>
+            
+            <!-- 번역 라인 -->
+            <path d="M20,220 Q100,210 180,200 T340,190 T500,180 T660,170 L720,160" 
+                  stroke="#f59e0b" stroke-width="3" fill="none"/>
+          </g>
+          
+          <!-- 범례 -->
+          <g id="service-legend" transform="translate(20,230)">
+            <g id="stt-legend">
+              <circle cx="5" cy="5" r="3" fill="#06b6d4"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">STT</text>
+            </g>
+            
+            <g id="tts-legend" transform="translate(60,0)">
+              <circle cx="5" cy="5" r="3" fill="#8b5cf6"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">TTS</text>
+            </g>
+            
+            <g id="nlp-legend" transform="translate(100,0)">
+              <circle cx="5" cy="5" r="3" fill="#ec4899"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">NLP</text>
+            </g>
+            
+            <g id="translate-legend" transform="translate(140,0)">
+              <circle cx="5" cy="5" r="3" fill="#f59e0b"/>
+              <text x="15" y="9" font-family="Inter" font-size="12" font-weight="500" fill="#1a202c">번역</text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    
+    <!-- 서버 현황 섹션 -->
+    <g id="server-status-section" transform="translate(16,746)">
+      <rect x="0" y="0" width="1608" height="180" rx="16" fill="white" filter="url(#largeCardShadow)"/>
+      
+      <!-- 헤더 -->
+      <g id="server-status-header">
+        <rect x="0" y="0" width="1608" height="72" fill="#f9fafb"/>
+        <text x="24" y="44" font-family="Inter" font-size="18" font-weight="600" fill="#1a202c">🖥️ 서버 현황</text>
+      </g>
+      
+      <!-- 서버 리스트 -->
+      <g id="server-list" transform="translate(24,88)">
+        <!-- 서버 1 -->
+        <g id="server-1">
+          <rect x="0" y="0" width="380" height="60" rx="12" fill="#f9fafb"/>
+          <circle cx="16" cy="30" r="6" fill="#48bb78"/>
+          <text x="36" y="24" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">c-pod-487</text>
+          <text x="36" y="42" font-family="Inter" font-size="13" fill="rgba(26,32,44,0.7)">🔧 CPU: 42% 💾 MEM: 65% 💽 DISK: 28%</text>
+        </g>
+        
+        <!-- 서버 2 -->
+        <g id="server-2" transform="translate(400,0)">
+          <rect x="0" y="0" width="380" height="60" rx="12" fill="#f9fafb"/>
+          <circle cx="16" cy="30" r="6" fill="#48bb78"/>
+          <text x="36" y="24" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">c-pod-49</text>
+          <text x="36" y="42" font-family="Inter" font-size="13" fill="rgba(26,32,44,0.7)">🔧 CPU: 48% 💾 MEM: 72% 💽 DISK: 41%</text>
+        </g>
+        
+        <!-- 서버 3 -->
+        <g id="server-3" transform="translate(800,0)">
+          <rect x="0" y="0" width="380" height="60" rx="12" fill="#fffbeb"/>
+          <circle cx="16" cy="30" r="6" fill="#ed8936"/>
+          <text x="36" y="24" font-family="Inter" font-size="14" font-weight="600" fill="#1a202c">c-pod-50</text>
+          <text x="36" y="42" font-family="Inter" font-size="13" fill="rgba(26,32,44,0.7)">🔧 CPU: 76% 💾 MEM: 89% 💽 DISK: 33%</text>
+        </g>
+      </g>
+    </g>
+  </g>
+  
+  <!-- 편집 가능한 데이터 바인딩을 위한 메타데이터 -->
+  <metadata>
+    <editableElements>
+      <element id="cpu-value" type="text" property="value" default="45.2%" />
+      <element id="memory-value" type="text" property="value" default="68.7%" />
+      <element id="stt-value" type="text" property="value" default="1,247" />
+      <element id="tts-value" type="text" property="value" default="892" />
+      
+      <!-- 프로그레스 바 너비 -->
+      <element id="cpu-progress" type="width" property="progress" default="121" max="268" />
+      <element id="memory-progress" type="width" property="progress" default="184" max="268" />
+      <element id="stt-progress" type="width" property="progress" default="228" max="268" />
+      <element id="tts-progress" type="width" property="progress" default="194" max="268" />
+      
+      <!-- 서버 상태 -->
+      <element id="server-1" type="status" property="status" default="online" />
+      <element id="server-2" type="status" property="status" default="online" />
+      <element id="server-3" type="status" property="status" default="warning" />
+      
+      <!-- 탭 활성 상태 -->
+      <element id="tab-overview" type="active" property="active" default="true" />
+      <element id="tab-system" type="active" property="active" default="false" />
+      <element id="tab-services" type="active" property="active" default="false" />
+      <element id="tab-activity" type="active" property="active" default="false" />
+    </editableElements>
+    
+    <figmaCompatibility>
+      <componentProperties>
+        <property name="CPUValue" type="text" default="45.2%" target="cpu-value" />
+        <property name="MemoryValue" type="text" default="68.7%" target="memory-value" />
+        <property name="STTValue" type="text" default="1,247" target="stt-value" />
+        <property name="TTSValue" type="text" default="892" target="tts-value" />
+        <property name="CPUProgress" type="number" default="45.2" min="0" max="100" target="cpu-progress" />
+        <property name="MemoryProgress" type="number" default="68.7" min="0" max="100" target="memory-progress" />
+        <property name="STTProgress" type="number" default="85.2" min="0" max="100" target="stt-progress" />
+        <property name="TTSProgress" type="number" default="72.4" min="0" max="100" target="tts-progress" />
+        <property name="ActiveTab" type="variant" options="overview,system,services,activity" default="overview" />
+      </componentProperties>
+      
+      <variants>
+        <variant name="ActiveTab=overview">
+          <state target="tab-overview" fill="url(#primaryGradient)" textColor="white" />
+          <state target="tab-system" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-services" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-activity" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+        </variant>
+        
+        <variant name="ActiveTab=system">
+          <state target="tab-overview" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-system" fill="url(#primaryGradient)" textColor="white" />
+          <state target="tab-services" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-activity" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+        </variant>
+        
+        <variant name="ActiveTab=services">
+          <state target="tab-overview" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-system" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-services" fill="url(#primaryGradient)" textColor="white" />
+          <state target="tab-activity" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+        </variant>
+        
+        <variant name="ActiveTab=activity">
+          <state target="tab-overview" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-system" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-services" fill="transparent" textColor="rgba(26,32,44,0.7)" />
+          <state target="tab-activity" fill="url(#primaryGradient)" textColor="white" />
+        </variant>
+      </variants>
+    </figmaCompatibility>
+  </metadata>
+</svg>

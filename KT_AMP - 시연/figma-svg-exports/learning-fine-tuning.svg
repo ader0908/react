@@ -1,0 +1,199 @@
+<svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#ffffff"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1400" height="70" fill="#f8f9fa"/>
+  <text x="24" y="40" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#1f2937">학습관리 - Fine Tuning 데이터</text>
+  
+  <!-- Search and Filter Section -->
+  <g transform="translate(24, 90)">
+    <rect x="0" y="0" width="1352" height="120" rx="12" fill="#f8f9fa" stroke="#e5e7eb"/>
+    
+    <!-- First Row -->
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">검색 및 필터</text>
+    
+    <!-- Service Type -->
+    <text x="20" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">서비스타입</text>
+    <rect x="20" y="60" width="120" height="32" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="30" y="80" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">전체</text>
+    
+    <!-- Domain -->
+    <text x="160" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">도메인</text>
+    <rect x="160" y="60" width="120" height="32" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="170" y="80" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">전체</text>
+    
+    <!-- Data Type -->
+    <text x="300" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">데이터타입</text>
+    <rect x="300" y="60" width="120" height="32" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="310" y="80" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">전체</text>
+    
+    <!-- Search -->
+    <text x="440" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="500" fill="#374151">데이터셋명</text>
+    <rect x="440" y="60" width="200" height="32" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="450" y="80" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af">데이터셋명 검색...</text>
+    
+    <!-- Buttons -->
+    <rect x="660" y="60" width="60" height="32" rx="6" fill="#4b5563"/>
+    <text x="680" y="80" font-family="Arial, sans-serif" font-size="12" fill="#ffffff">검색</text>
+    
+    <rect x="730" y="60" width="60" height="32" rx="6" fill="#e5e7eb"/>
+    <text x="750" y="80" font-family="Arial, sans-serif" font-size="12" fill="#374151">초기화</text>
+  </g>
+  
+  <!-- Action Buttons -->
+  <g transform="translate(24, 230)">
+    <rect x="0" y="0" width="120" height="36" rx="6" fill="#22c55e"/>
+    <text x="30" y="22" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">선택 다운로드</text>
+    
+    <rect x="140" y="0" width="80" height="36" rx="6" fill="#ef4444"/>
+    <text x="165" y="22" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">선택 삭제</text>
+  </g>
+  
+  <!-- Results Info -->
+  <g transform="translate(24, 280)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">총 <tspan font-weight="600">2,847</tspan>개 중 <tspan font-weight="600">2,847</tspan>개 표시</text>
+  </g>
+  
+  <!-- Data Table -->
+  <g transform="translate(24, 310)">
+    <rect x="0" y="0" width="1352" height="550" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    
+    <!-- Table Header -->
+    <rect x="0" y="0" width="1352" height="45" rx="12" fill="#f9fafb"/>
+    <line x1="0" y1="45" x2="1352" y2="45" stroke="#e5e7eb"/>
+    
+    <!-- Header Cells -->
+    <text x="20" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">□</text>
+    <text x="60" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">No.</text>
+    <text x="120" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">데이터셋명</text>
+    <text x="300" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">서비스타입</text>
+    <text x="420" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">도메인</text>
+    <text x="520" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">데이터타입</text>
+    <text x="640" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">파일크기</text>
+    <text x="740" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">데이터량</text>
+    <text x="840" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">등록일시</text>
+    <text x="980" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">등록자</text>
+    <text x="1080" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">상태조회</text>
+    <text x="1180" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">액션</text>
+    
+    <!-- Table Rows -->
+    <g transform="translate(0, 45)">
+      <!-- Row 1 -->
+      <rect x="0" y="0" width="1352" height="40" fill="#ffffff"/>
+      <text x="20" y="25" font-family="Arial, sans-serif" font-size="12" fill="#374151">☑</text>
+      <text x="60" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">1</text>
+      <text x="120" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">콜센터_음성데이터_v2.1</text>
+      <text x="300" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">STT</text>
+      <text x="420" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">콜센터</text>
+      <text x="520" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">음성</text>
+      <text x="640" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2.3GB</text>
+      <text x="740" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">15,847건</text>
+      <text x="840" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 09:30</text>
+      <text x="980" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">김영희</text>
+      <circle cx="1110" cy="20" r="8" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <path d="M1106 16 L1110 20 L1114 16" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+      <rect x="1180" y="10" width="40" height="20" rx="4" fill="#3b82f6"/>
+      <text x="1195" y="23" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">수정</text>
+      <rect x="1230" y="10" width="40" height="20" rx="4" fill="#ef4444"/>
+      <text x="1245" y="23" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">삭제</text>
+      
+      <!-- Row 2 -->
+      <rect x="0" y="40" width="1352" height="40" fill="#f9fafb"/>
+      <text x="20" y="65" font-family="Arial, sans-serif" font-size="12" fill="#374151">☐</text>
+      <text x="60" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2</text>
+      <text x="120" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">금융_텍스트데이터_v1.8</text>
+      <text x="300" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">챗봇</text>
+      <text x="420" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">금융</text>
+      <text x="520" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">텍스트</text>
+      <text x="640" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">850MB</text>
+      <text x="740" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">45,239건</text>
+      <text x="840" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-17 14:22</text>
+      <text x="980" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">박민수</text>
+      <circle cx="1110" cy="60" r="8" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <path d="M1106 56 L1110 60 L1114 56" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+      <rect x="1180" y="50" width="40" height="20" rx="4" fill="#3b82f6"/>
+      <text x="1195" y="63" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">수정</text>
+      <rect x="1230" y="50" width="40" height="20" rx="4" fill="#ef4444"/>
+      <text x="1245" y="63" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">삭제</text>
+      
+      <!-- Row 3 -->
+      <rect x="0" y="80" width="1352" height="40" fill="#ffffff"/>
+      <text x="20" y="105" font-family="Arial, sans-serif" font-size="12" fill="#374151">☐</text>
+      <text x="60" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">3</text>
+      <text x="120" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">의료_음성인식_v3.2</text>
+      <text x="300" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">STT</text>
+      <text x="420" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">의료</text>
+      <text x="520" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">음성</text>
+      <text x="640" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">1.7GB</text>
+      <text x="740" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">12,456건</text>
+      <text x="840" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-16 11:15</text>
+      <text x="980" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">이상철</text>
+      <circle cx="1110" cy="100" r="8" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <path d="M1106 96 L1110 100 L1114 96" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+      <rect x="1180" y="90" width="40" height="20" rx="4" fill="#3b82f6"/>
+      <text x="1195" y="103" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">수정</text>
+      <rect x="1230" y="90" width="40" height="20" rx="4" fill="#ef4444"/>
+      <text x="1245" y="103" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">삭제</text>
+      
+      <!-- Row 4 -->
+      <rect x="0" y="120" width="1352" height="40" fill="#f9fafb"/>
+      <text x="20" y="145" font-family="Arial, sans-serif" font-size="12" fill="#374151">☐</text>
+      <text x="60" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">4</text>
+      <text x="120" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">교육_TTS_데이터_v1.5</text>
+      <text x="300" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">TTS</text>
+      <text x="420" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">교육</text>
+      <text x="520" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">음성</text>
+      <text x="640" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">3.1GB</text>
+      <text x="740" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">22,183건</text>
+      <text x="840" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-15 16:45</text>
+      <text x="980" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">최지영</text>
+      <circle cx="1110" cy="140" r="8" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <path d="M1106 136 L1110 140 L1114 136" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+      <rect x="1180" y="130" width="40" height="20" rx="4" fill="#3b82f6"/>
+      <text x="1195" y="143" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">수정</text>
+      <rect x="1230" y="130" width="40" height="20" rx="4" fill="#ef4444"/>
+      <text x="1245" y="143" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">삭제</text>
+      
+      <!-- Row 5 -->
+      <rect x="0" y="160" width="1352" height="40" fill="#ffffff"/>
+      <text x="20" y="185" font-family="Arial, sans-serif" font-size="12" fill="#374151">☐</text>
+      <text x="60" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">5</text>
+      <text x="120" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">쇼핑몰_챗봇_v2.3</text>
+      <text x="300" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">챗봇</text>
+      <text x="420" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">이커머스</text>
+      <text x="520" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">텍스트</text>
+      <text x="640" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">1.2GB</text>
+      <text x="740" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">67,891건</text>
+      <text x="840" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-14 13:20</text>
+      <text x="980" y="185" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">정수진</text>
+      <circle cx="1110" cy="180" r="8" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <path d="M1106 176 L1110 180 L1114 176" stroke="#6b7280" stroke-width="1.5" fill="none"/>
+      <rect x="1180" y="170" width="40" height="20" rx="4" fill="#3b82f6"/>
+      <text x="1195" y="183" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">수정</text>
+      <rect x="1230" y="170" width="40" height="20" rx="4" fill="#ef4444"/>
+      <text x="1245" y="183" font-family="Arial, sans-serif" font-size="10" fill="#ffffff">삭제</text>
+    </g>
+  </g>
+  
+  <!-- Pagination -->
+  <g transform="translate(24, 870)">
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">1-10 of 2,847 결과</text>
+    
+    <!-- Items per page -->
+    <text x="200" y="15" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">페이지당</text>
+    <rect x="260" y="0" width="60" height="20" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="280" y="13" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">10</text>
+    <text x="330" y="15" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">개</text>
+    
+    <!-- Page numbers -->
+    <rect x="1200" y="0" width="30" height="20" rx="4" fill="#f3f4f6"/>
+    <text x="1210" y="13" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">‹</text>
+    <rect x="1240" y="0" width="30" height="20" rx="4" fill="#3b82f6"/>
+    <text x="1252" y="13" font-family="Arial, sans-serif" font-size="12" fill="#ffffff">1</text>
+    <rect x="1280" y="0" width="30" height="20" rx="4" fill="#f3f4f6"/>
+    <text x="1292" y="13" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">2</text>
+    <rect x="1320" y="0" width="30" height="20" rx="4" fill="#f3f4f6"/>
+    <text x="1330" y="13" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">›</text>
+  </g>
+</svg>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="180" viewBox="0 0 1200 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 그림자 필터 -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.1)"/>
+    </filter>
+  </defs>
+  
+  <!-- 배경 -->
+  <rect width="1200" height="180" fill="#f1f5f9"/>
+  
+  <!-- 패널 배경 -->
+  <rect x="20" y="20" width="1160" height="140" rx="8" fill="white" stroke="#e9ecef" stroke-width="1" filter="url(#shadow)"/>
+  
+  <!-- 패널 헤더 -->
+  <rect x="20" y="20" width="1160" height="40" rx="8" fill="white"/>
+  <text x="40" y="45" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#212529">표시 항목 선택</text>
+  
+  <!-- 초기화 버튼 -->
+  <rect x="1000" y="30" width="70" height="25" rx="4" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1"/>
+  <text x="1020" y="45" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" fill="#495057">초기화</text>
+  
+  <!-- 적용 버튼 -->
+  <rect x="1080" y="30" width="70" height="25" rx="4" fill="#3b82f6"/>
+  <text x="1100" y="45" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="500" fill="white">적용</text>
+  
+  <!-- 구분선 -->
+  <line x1="40" y1="60" x2="1160" y2="60" stroke="#e9ecef" stroke-width="1"/>
+  
+  <!-- 공통 하드웨어 리소스 그룹 (파란색) -->
+  <rect x="40" y="80" width="280" height="45" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="1"/>
+  <rect x="50" y="88" width="120" height="20" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.3)" stroke-width="1"/>
+  <text x="60" y="100" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700" fill="#0369a1">공통 하드웨어 리소스:</text>
+  
+  <!-- CPU 사용률 -->
+  <rect x="180" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="183" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="200" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">CPU 사용률</text>
+  
+  <!-- 메모리 사용률 -->
+  <rect x="280" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="283" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="300" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">메모리 사용률</text>
+  
+  <!-- 디스크 사용률 -->
+  <rect x="380" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="383" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="400" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">디스크 사용률</text>
+  
+  <!-- STT 그룹 (초록색) -->
+  <rect x="340" y="80" width="400" height="45" rx="6" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+  <rect x="350" y="88" width="50" height="20" rx="4" fill="rgba(34, 197, 94, 0.1)" stroke="rgba(34, 197, 94, 0.3)" stroke-width="1"/>
+  <text x="360" y="100" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700" fill="#15803d">STT:</text>
+  
+  <!-- 요청 건수 -->
+  <rect x="410" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="413" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="430" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">요청 건수</text>
+  
+  <!-- 실패 건수 -->
+  <rect x="500" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="503" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="520" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">실패 건수</text>
+  
+  <!-- 실시간 콜정보 -->
+  <rect x="590" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="593" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="610" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">실시간 콜정보</text>
+  
+  <!-- 사용량 동계 -->
+  <rect x="680" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="683" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="700" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">사용량 동계</text>
+  
+  <!-- EPD 시간 동계 -->
+  <rect x="770" y="88" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="773" y="95" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="790" y="97" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">EPD 시간 동계</text>
+  
+  <!-- TTS 그룹 (주황색) -->
+  <rect x="40" y="135" width="600" height="45" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <rect x="50" y="143" width="40" height="20" rx="4" fill="rgba(245, 158, 11, 0.1)" stroke="rgba(245, 158, 11, 0.3)" stroke-width="1"/>
+  <text x="60" y="155" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700" fill="#d97706">TTS:</text>
+  
+  <!-- 요청 건수 -->
+  <rect x="100" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="103" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="120" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">요청 건수</text>
+  
+  <!-- 실패 건수 -->
+  <rect x="190" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="193" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="210" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">실패 건수</text>
+  
+  <!-- TPS 정보 -->
+  <rect x="280" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="283" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="300" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">TPS 정보</text>
+  
+  <!-- 사용량 동계 -->
+  <rect x="370" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="373" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="390" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">사용량 동계</text>
+  
+  <!-- 캐시 히트율 -->
+  <rect x="460" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="463" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="480" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">캐시 히트율</text>
+  
+  <!-- 음성 합성율 -->
+  <rect x="550" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="553" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="570" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">음성 합성율</text>
+  
+  <!-- SV 그룹 (핑크색) -->
+  <rect x="660" y="135" width="200" height="45" rx="6" fill="#fdf2f8" stroke="#ec4899" stroke-width="1"/>
+  <rect x="670" y="143" width="30" height="20" rx="4" fill="rgba(236, 72, 153, 0.1)" stroke="rgba(236, 72, 153, 0.3)" stroke-width="1"/>
+  <text x="680" y="155" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700" fill="#be185d">SV:</text>
+  
+  <!-- 인증률 -->
+  <rect x="710" y="143" width="12" height="12" rx="2" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="713" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="7" fill="#3b82f6">✓</text>
+  <text x="730" y="152" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" fill="#495057">인증률</text>
+</svg>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

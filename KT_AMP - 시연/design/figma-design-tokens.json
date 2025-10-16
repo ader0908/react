@@ -1,0 +1,231 @@
+{
+  "name": "KT-STT System Monitoring Dashboard",
+  "description": "시스템 모니터링 대시보드 디자인 토큰",
+  "version": "1.0.0",
+  "date": "2024-12-19",
+  
+  "colors": {
+    "brand": {
+      "kt-red": {
+        "primary": "#e31e24",
+        "light": "#ff4449",
+        "dark": "#c41e3a"
+      }
+    },
+    "system": {
+      "cpu": {
+        "primary": "#3b82f6",
+        "light": "#60a5fa",
+        "dark": "#1d4ed8",
+        "background": "#eff6ff"
+      },
+      "memory": {
+        "primary": "#10b981",
+        "light": "#34d399", 
+        "dark": "#047857",
+        "background": "#ecfdf5"
+      },
+      "storage": {
+        "primary": "#8b5cf6",
+        "light": "#a78bfa",
+        "dark": "#7c3aed", 
+        "background": "#f3e8ff"
+      },
+      "network": {
+        "primary": "#f59e0b",
+        "light": "#fbbf24",
+        "dark": "#d97706",
+        "background": "#fffbeb"
+      }
+    },
+    "status": {
+      "excellent": "#059669",
+      "good": "#65a30d",
+      "warning": "#d97706",
+      "critical": "#dc2626",
+      "offline": "#6b7280"
+    },
+    "neutral": {
+      "50": "#f9fafb",
+      "100": "#f3f4f6",
+      "200": "#e5e7eb",
+      "300": "#d1d5db",
+      "400": "#9ca3af",
+      "500": "#6b7280",
+      "600": "#4b5563",
+      "700": "#374151",
+      "800": "#1f2937",
+      "900": "#111827"
+    },
+    "background": {
+      "primary": "#ffffff",
+      "secondary": "#f8fafc",
+      "tertiary": "#f1f5f9"
+    }
+  },
+  
+  "typography": {
+    "fontFamily": {
+      "primary": "Noto Sans KR",
+      "fallback": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    },
+    "fontSize": {
+      "xs": "12px",
+      "sm": "14px", 
+      "base": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px",
+      "3xl": "30px",
+      "4xl": "36px",
+      "5xl": "48px"
+    },
+    "fontWeight": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.25,
+      "normal": 1.5,
+      "relaxed": 1.75
+    }
+  },
+  
+  "spacing": {
+    "1": "4px",
+    "2": "8px", 
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px"
+  },
+  
+  "borderRadius": {
+    "sm": "4px",
+    "md": "6px",
+    "lg": "8px",
+    "xl": "12px",
+    "2xl": "16px",
+    "3xl": "24px",
+    "full": "9999px"
+  },
+  
+  "boxShadow": {
+    "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "base": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+    "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+  },
+  
+  "components": {
+    "sidebar": {
+      "width": "280px",
+      "height": "100vh",
+      "background": "#ffffff",
+      "padding": "24px",
+      "borderRight": "1px solid #e5e7eb"
+    },
+    "header": {
+      "height": "120px",
+      "background": "linear-gradient(135deg, #e31e24 0%, #c41e3a 100%)",
+      "padding": "24px",
+      "borderRadius": "12px",
+      "marginBottom": "24px"
+    },
+    "metricCard": {
+      "width": "395px",
+      "height": "180px",
+      "background": "#ffffff",
+      "padding": "20px",
+      "borderRadius": "12px",
+      "boxShadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+      "topBorderHeight": "4px"
+    },
+    "chartContainer": {
+      "background": "#ffffff",
+      "padding": "24px",
+      "borderRadius": "12px",
+      "boxShadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+    },
+    "mainChart": {
+      "width": "1093px",
+      "height": "420px"
+    },
+    "donutChart": {
+      "width": "547px", 
+      "height": "420px"
+    }
+  },
+  
+  "layout": {
+    "desktop": {
+      "container": "1920px",
+      "sidebar": "280px",
+      "content": "1640px",
+      "metricGrid": "repeat(4, 1fr)",
+      "chartGrid": "2fr 1fr"
+    },
+    "tablet": {
+      "container": "768px", 
+      "sidebarHeight": "80px",
+      "metricGrid": "repeat(2, 1fr)",
+      "chartGrid": "1fr"
+    },
+    "mobile": {
+      "container": "375px",
+      "metricGrid": "1fr",
+      "chartGrid": "1fr"
+    }
+  },
+  
+  "animation": {
+    "duration": {
+      "fast": "0.2s",
+      "base": "0.3s", 
+      "slow": "0.5s",
+      "chart": "0.75s"
+    },
+    "easing": {
+      "ease": "ease",
+      "easeIn": "ease-in",
+      "easeOut": "ease-out",
+      "easeInOut": "ease-in-out",
+      "chart": "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+    }
+  },
+  
+  "iconSizes": {
+    "sm": "16px",
+    "md": "20px",
+    "lg": "24px",
+    "xl": "32px",
+    "2xl": "40px"
+  },
+  
+  "breakpoints": {
+    "sm": "480px",
+    "md": "768px", 
+    "lg": "1024px",
+    "xl": "1200px",
+    "2xl": "1400px"
+  },
+  
+  "gradients": {
+    "ktRed": "linear-gradient(135deg, #e31e24 0%, #c41e3a 100%)",
+    "cpu": "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+    "memory": "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
+    "storage": "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+    "network": "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
+    "background": "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)"
+  }
+}

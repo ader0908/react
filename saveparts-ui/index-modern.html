@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saveparts - 스마트 자동차 부품 마켓플레이스</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Modern Korean fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="./styles-modern.css">
+    
+    <!-- Meta tags for SEO and sharing -->
+    <meta name="description" content="신뢰할 수 있는 자동차 부품을 찾아보세요. Saveparts에서 OEM 및 애프터마켓 부품을 최저가로 만나보세요.">
+    <meta name="keywords" content="자동차부품, 자동차수리, OEM부품, 애프터마켓, 브레이크패드, 엔진오일">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Saveparts - 스마트 자동차 부품 마켓플레이스">
+    <meta property="og:description" content="신뢰할 수 있는 자동차 부품을 찾아보세요">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a class="skip-link" href="#main-content">본문 바로가기</a>
+    
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader">
+            <div class="loader-spinner"></div>
+            <p>부품을 검색하고 있습니다...</p>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-container">
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-btn" aria-label="메뉴 열기" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            
+            <!-- Brand logo -->
+            <div class="brand">
+                <a href="#" class="logo" aria-label="Saveparts 홈페이지">
+                    <i class="fas fa-cog logo-icon"></i>
+                    <span class="logo-text">Saveparts</span>
+                </a>
+            </div>
+            
+            <!-- Main search -->
+            <div class="search-container">
+                <form class="search-form" role="search" aria-label="부품 검색">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="search" 
+                            id="main-search" 
+                            placeholder="부품명, OEM 번호, 차량 모델로 검색하세요"
+                            autocomplete="off"
+                            aria-label="부품 검색어 입력"
+                        >
+                        <button type="button" class="search-clear" aria-label="검색어 지우기">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="search-btn">
+                        <span>검색</span>
+                    </button>
+                </form>
+                
+                <!-- Quick search suggestions -->
+                <div class="search-suggestions" id="search-suggestions">
+                    <div class="suggestion-category">
+                        <h4>인기 검색어</h4>
+                        <ul>
+                            <li><button type="button">브레이크 패드</button></li>
+                            <li><button type="button">엔진 오일 필터</button></li>
+                            <li><button type="button">배터리</button></li>
+                            <li><button type="button">타이어</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="main-nav" role="navigation" aria-label="주요 메뉴">
+                <ul class="nav-list">
+                    <li><a href="#" class="nav-link active" aria-current="page">
+                        <i class="fas fa-home"></i>
+                        <span>홈</span>
+                    </a></li>
+                    <li><a href="#" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>부품</span>
+                    </a></li>
+                    <li><a href="#" class="nav-link">
+                        <i class="fas fa-car"></i>
+                        <span>차량별</span>
+                    </a></li>
+                    <li><a href="#" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>장바구니</span>
+                        <span class="cart-count">3</span>
+                    </a></li>
+                    <li><a href="#" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>마이페이지</span>
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Mobile navigation overlay -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+        <nav class="mobile-nav" role="navigation" aria-label="모바일 메뉴">
+            <div class="mobile-nav-header">
+                <h2>메뉴</h2>
+                <button class="mobile-nav-close" aria-label="메뉴 닫기">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="mobile-nav-list">
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>홈</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>부품 검색</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-car"></i>
+                    <span>차량별 부품</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>장바구니</span>
+                    <span class="cart-count">3</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>마이페이지</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-heart"></i>
+                    <span>찜한 상품</span>
+                </a></li>
+                <li><a href="#" class="mobile-nav-link">
+                    <i class="fas fa-history"></i>
+                    <span>최근 본 상품</span>
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <div class="content-container">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar" role="complementary" aria-label="검색 필터">
+                <div class="filters-header">
+                    <h2>
+                        <i class="fas fa-filter"></i>
+                        필터
+                    </h2>
+                    <button class="filters-clear-all" id="clear-all-filters">
+                        <i class="fas fa-refresh"></i>
+                        전체 초기화
+                    </button>
+                </div>
+                
+                <!-- Active filters chips -->
+                <div class="active-filters" id="active-filters" aria-live="polite">
+                    <!-- Dynamic filter chips will be inserted here -->
+                </div>
+                
+                <!-- Vehicle filter -->
+                <div class="filter-section">
+                    <button class="filter-toggle" aria-expanded="true">
+                        <i class="fas fa-car"></i>
+                        <span>차량 정보</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                    <div class="filter-content">
+                        <div class="filter-grid">
+                            <div class="input-group">
+                                <label for="brand-select">제조사</label>
+                                <select id="brand-select" class="select-input">
+                                    <option value="">전체</option>
+                                    <option value="hyundai">현대</option>
+                                    <option value="kia">기아</option>
+                                    <option value="gm">GM</option>
+                                    <option value="toyota">도요타</option>
+                                    <option value="bmw">BMW</option>
+                                    <option value="mercedes">벤츠</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="model-select">모델</label>
+                                <select id="model-select" class="select-input">
+                                    <option value="">전체</option>
+                                    <option value="avante">아반떼</option>
+                                    <option value="sonata">소나타</option>
+                                    <option value="sportage">스포티지</option>
+                                    <option value="camry">캠리</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="year-select">연식</label>
+                                <select id="year-select" class="select-input">
+                                    <option value="">전체</option>
+                                    <option value="2024">2024년</option>
+                                    <option value="2023">2023년</option>
+                                    <option value="2022">2022년</option>
+                                    <option value="2021">2021년</option>
+                                    <option value="2020">2020년</option>
+                                    <option value="2019">2019년 이전</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Condition filter -->
+                <div class="filter-section">
+                    <button class="filter-toggle" aria-expanded="true">
+                        <i class="fas fa-star"></i>
+                        <span>상품 상태</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="condition" value="new">
+                                <span class="checkmark"></span>
+                                <span class="label-text">새상품</span>
+                                <span class="count">(1,234)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="condition" value="used">
+                                <span class="checkmark"></span>
+                                <span class="label-text">중고</span>
+                                <span class="count">(856)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="condition" value="refurbished">
+                                <span class="checkmark"></span>
+                                <span class="label-text">리퍼비시</span>
+                                <span class="count">(432)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Price filter -->
+                <div class="filter-section">
+                    <button class="filter-toggle" aria-expanded="false">
+                        <i class="fas fa-won-sign"></i>
+                        <span>가격대</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                    <div class="filter-content">
+                        <div class="price-range">
+                            <div class="range-inputs">
+                                <div class="input-group">
+                                    <label for="min-price">최소 금액</label>
+                                    <input type="number" id="min-price" placeholder="0" min="0">
+                                </div>
+                                <span class="range-separator">~</span>
+                                <div class="input-group">
+                                    <label for="max-price">최대 금액</label>
+                                    <input type="number" id="max-price" placeholder="1,000,000" min="0">
+                                </div>
+                            </div>
+                            <div class="price-shortcuts">
+                                <button type="button" class="price-chip" data-range="0,50000">5만원 이하</button>
+                                <button type="button" class="price-chip" data-range="50000,100000">5-10만원</button>
+                                <button type="button" class="price-chip" data-range="100000,300000">10-30만원</button>
+                                <button type="button" class="price-chip" data-range="300000,">30만원 이상</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compatibility filter -->
+                <div class="filter-section">
+                    <button class="filter-toggle" aria-expanded="false">
+                        <i class="fas fa-check-circle"></i>
+                        <span>호환성</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="compatibility" value="oem">
+                                <span class="checkmark"></span>
+                                <span class="label-text">OEM 호환</span>
+                                <span class="count">(892)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="compatibility" value="aftermarket">
+                                <span class="checkmark"></span>
+                                <span class="label-text">애프터마켓</span>
+                                <span class="count">(1,567)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="compatibility" value="universal">
+                                <span class="checkmark"></span>
+                                <span class="label-text">범용</span>
+                                <span class="count">(234)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Apply filters button -->
+                <div class="filter-actions">
+                    <button class="apply-filters-btn" id="apply-filters">
+                        <i class="fas fa-search"></i>
+                        필터 적용
+                    </button>
+                </div>
+            </aside>
+            
+            <!-- Results Content -->
+            <section class="results-section" role="main" aria-label="검색 결과">
+                <!-- Results header -->
+                <div class="results-header">
+                    <div class="results-info">
+                        <h1 class="results-title">부품 검색 결과</h1>
+                        <p class="results-count" id="results-count">총 <strong>2,847</strong>개의 부품을 찾았습니다</p>
+                    </div>
+                    
+                    <div class="results-controls">
+                        <!-- View toggle -->
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" aria-label="격자 보기">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" aria-label="목록 보기">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Sort dropdown -->
+                        <div class="sort-dropdown">
+                            <label for="sort-select" class="visually-hidden">정렬 기준</label>
+                            <select id="sort-select" class="sort-select">
+                                <option value="relevance">관련도순</option>
+                                <option value="price-low">가격 낮은순</option>
+                                <option value="price-high">가격 높은순</option>
+                                <option value="rating">평점순</option>
+                                <option value="latest">최신순</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product grid -->
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be dynamically inserted here -->
+                </div>
+                
+                <!-- Load more / Pagination -->
+                <div class="pagination-section">
+                    <button class="load-more-btn" id="load-more-btn">
+                        <span>더 많은 부품 보기</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <a href="#" class="footer-logo">
+                            <i class="fas fa-cog"></i>
+                            <span>Saveparts</span>
+                        </a>
+                        <p class="footer-description">
+                            신뢰할 수 있는 자동차 부품 마켓플레이스<br>
+                            최고 품질의 부품을 최저가로 만나보세요
+                        </p>
+                        <div class="social-links">
+                            <a href="#" aria-label="페이스북"><i class="fab fa-facebook"></i></a>
+                            <a href="#" aria-label="인스타그램"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="유튜브"><i class="fab fa-youtube"></i></a>
+                            <a href="#" aria-label="카카오톡"><i class="fab fa-kick"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>고객 서비스</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">고객센터</a></li>
+                        <li><a href="#">자주 묻는 질문</a></li>
+                        <li><a href="#">반품/교환</a></li>
+                        <li><a href="#">배송 정보</a></li>
+                        <li><a href="#">품질 보증</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">회사 소개</a></li>
+                        <li><a href="#">채용 정보</a></li>
+                        <li><a href="#">제휴 문의</a></li>
+                        <li><a href="#">언론 보도</a></li>
+                        <li><a href="#">투자자 정보</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>약관 및 정책</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">이용약관</a></li>
+                        <li><a href="#">개인정보처리방침</a></li>
+                        <li><a href="#">위치정보 이용약관</a></li>
+                        <li><a href="#">청소년 보호정책</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="company-info">
+                    <p>
+                        <strong>세이브파츠 주식회사</strong> | 
+                        대표: 홍길동 | 
+                        사업자등록번호: 123-45-67890 | 
+                        통신판매업신고: 2024-서울강남-1234
+                    </p>
+                    <p>
+                        주소: 서울특별시 강남구 테헤란로 123, 4층 | 
+                        이메일: contact@saveparts.com | 
+                        고객센터: 1588-1234
+                    </p>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 Saveparts. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container" aria-live="polite">
+        <!-- Toast messages will appear here -->
+    </div>
+    
+    <!-- Scripts -->
+    <script src="./script-modern.js" defer></script>
+</body>
+</html>

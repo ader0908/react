@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>공통설정 - Saveparts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./settings.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문 바로가기</a>
+
+    <header class="app-header" role="banner">
+      <div class="container header-grid">
+        <div class="brand">
+          <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="global-nav">☰</button>
+          <a href="./index.html" class="logo" aria-label="Saveparts 홈">Saveparts</a>
+        </div>
+
+        <nav id="global-nav" class="nav" role="navigation" aria-label="주요 메뉴">
+          <ul>
+            <li><a href="./index.html">홈</a></li>
+            <li><a href="./index.html">부품</a></li>
+            <li><a href="#">차량별</a></li>
+            <li><a href="#">장바구니</a></li>
+            <li><a href="#" aria-current="page">설정</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="app-main container" tabindex="-1">
+      <div class="page-header">
+        <h1>공통설정</h1>
+        <p class="page-description">시스템의 기본 설정을 관리합니다.</p>
+      </div>
+
+      <div class="settings-grid">
+        <!-- 시스템 설정 카드 -->
+        <article class="settings-card collapsed">
+          <header class="card-header" role="button" tabindex="0">
+            <div class="card-info">
+              <h2 class="card-title">시스템 설정</h2>
+              <p class="card-description">기본 시스템 환경 설정</p>
+            </div>
+            <button class="card-toggle" aria-label="시스템 설정 펼치기/접기" aria-expanded="false">
+              ▼
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="setting-group">
+              <h3>언어 설정</h3>
+              <label class="setting-item">
+                <span class="setting-label">기본 언어</span>
+                <select class="setting-control">
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                  <option value="ja">日本語</option>
+                </select>
+              </label>
+            </div>
+            <div class="setting-group">
+              <h3>표시 설정</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">다크 모드 사용</span>
+              </label>
+              <label class="setting-item">
+                <span class="setting-label">페이지당 항목 수</span>
+                <select class="setting-control">
+                  <option value="10">10개</option>
+                  <option value="20" selected>20개</option>
+                  <option value="50">50개</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </article>
+
+        <!-- 알림 설정 카드 -->
+        <article class="settings-card collapsed">
+          <header class="card-header" role="button" tabindex="0">
+            <div class="card-info">
+              <h2 class="card-title">알림 설정</h2>
+              <p class="card-description">푸시 알림 및 이메일 알림 관리</p>
+            </div>
+            <button class="card-toggle" aria-label="알림 설정 펼치기/접기" aria-expanded="false">
+              ▼
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="setting-group">
+              <h3>푸시 알림</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">새 주문 알림</span>
+              </label>
+              <label class="setting-item checkbox">
+                <input type="checkbox">
+                <span class="setting-label">재고 부족 알림</span>
+              </label>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">가격 변동 알림</span>
+              </label>
+            </div>
+            <div class="setting-group">
+              <h3>이메일 알림</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox">
+                <span class="setting-label">주간 리포트</span>
+              </label>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">시스템 공지사항</span>
+              </label>
+            </div>
+          </div>
+        </article>
+
+        <!-- 보안 설정 카드 -->
+        <article class="settings-card collapsed">
+          <header class="card-header" role="button" tabindex="0">
+            <div class="card-info">
+              <h2 class="card-title">보안 설정</h2>
+              <p class="card-description">계정 보안 및 접근 권한 관리</p>
+            </div>
+            <button class="card-toggle" aria-label="보안 설정 펼치기/접기" aria-expanded="false">
+              ▼
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="setting-group">
+              <h3>인증 설정</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">2단계 인증 사용</span>
+              </label>
+              <label class="setting-item">
+                <span class="setting-label">세션 만료 시간</span>
+                <select class="setting-control">
+                  <option value="30">30분</option>
+                  <option value="60" selected>1시간</option>
+                  <option value="120">2시간</option>
+                  <option value="480">8시간</option>
+                </select>
+              </label>
+            </div>
+            <div class="setting-group">
+              <h3>접근 로그</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">로그인 기록 저장</span>
+              </label>
+              <label class="setting-item">
+                <span class="setting-label">로그 보관 기간</span>
+                <select class="setting-control">
+                  <option value="30">30일</option>
+                  <option value="90" selected>90일</option>
+                  <option value="365">1년</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </article>
+
+        <!-- 데이터 관리 카드 -->
+        <article class="settings-card collapsed">
+          <header class="card-header" role="button" tabindex="0">
+            <div class="card-info">
+              <h2 class="card-title">데이터 관리</h2>
+              <p class="card-description">백업, 동기화 및 데이터 관리</p>
+            </div>
+            <button class="card-toggle" aria-label="데이터 관리 펼치기/접기" aria-expanded="false">
+              ▼
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="setting-group">
+              <h3>백업 설정</h3>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">자동 백업 사용</span>
+              </label>
+              <label class="setting-item">
+                <span class="setting-label">백업 주기</span>
+                <select class="setting-control">
+                  <option value="daily" selected>매일</option>
+                  <option value="weekly">매주</option>
+                  <option value="monthly">매월</option>
+                </select>
+              </label>
+            </div>
+            <div class="setting-group">
+              <h3>데이터 정리</h3>
+              <label class="setting-item">
+                <span class="setting-label">임시 파일 정리</span>
+                <select class="setting-control">
+                  <option value="7">7일</option>
+                  <option value="30" selected>30일</option>
+                  <option value="90">90일</option>
+                </select>
+              </label>
+              <div class="setting-actions">
+                <button class="btn secondary">지금 정리</button>
+                <button class="btn primary">백업 실행</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- API 설정 카드 -->
+        <article class="settings-card collapsed">
+          <header class="card-header" role="button" tabindex="0">
+            <div class="card-info">
+              <h2 class="card-title">API 설정</h2>
+              <p class="card-description">외부 서비스 연동 및 API 키 관리</p>
+            </div>
+            <button class="card-toggle" aria-label="API 설정 펼치기/접기" aria-expanded="false">
+              ▼
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="setting-group">
+              <h3>API 키 관리</h3>
+              <label class="setting-item">
+                <span class="setting-label">결제 API 키</span>
+                <input type="password" class="setting-control" placeholder="••••••••••••••••" />
+              </label>
+              <label class="setting-item">
+                <span class="setting-label">배송 API 키</span>
+                <input type="password" class="setting-control" placeholder="••••••••••••••••" />
+              </label>
+            </div>
+            <div class="setting-group">
+              <h3>API 제한</h3>
+              <label class="setting-item">
+                <span class="setting-label">시간당 요청 제한</span>
+                <input type="number" class="setting-control" value="1000" min="100" max="10000" />
+              </label>
+              <label class="setting-item checkbox">
+                <input type="checkbox" checked>
+                <span class="setting-label">API 로깅 활성화</span>
+              </label>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="settings-footer">
+        <button class="btn secondary" id="resetSettings">기본값으로 복원</button>
+        <button class="btn primary" id="saveSettings">설정 저장</button>
+      </div>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+      <div class="container footer-grid">
+        <div>
+          <strong>Saveparts</strong>
+          <p class="muted">신뢰할 수 있는 자동차 부품 마켓플레이스</p>
+        </div>
+        <nav aria-label="푸터 메뉴">
+          <ul>
+            <li><a href="#">고객센터</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+            <li><a href="#">이용약관</a></li>
+          </ul>
+        </nav>
+        <small class="muted">© 2025 Saveparts. All rights reserved.</small>
+      </div>
+    </footer>
+
+    <script src="./settings.js" defer></script>
+  </body>
+</html>

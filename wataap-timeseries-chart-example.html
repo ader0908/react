@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>와탭 스타일 시계열 비교차트 예시</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors - 와탭 스타일 */
+            --primary-blue: #3b82f6;
+            --primary-green: #10b981;
+            --primary-purple: #8b5cf6;
+            --primary-orange: #f59e0b;
+            --primary-red: #ef4444;
+            
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            
+            /* Text Colors */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            
+            /* Border & Shadow */
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 2.5rem;
+            --space-3xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease-in-out;
+            --transition-normal: 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: var(--space-lg);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .chart-section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .chart-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-title i {
+            color: var(--primary-blue);
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .time-range-selector {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .metric-selector {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .metric-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .metric-checkbox:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .metric-checkbox input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 2px solid var(--border-color);
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+
+        .metric-checkbox input[type="checkbox"]:checked + .checkmark {
+            border-color: var(--text-primary);
+        }
+
+        .metric-checkbox input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .chart-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .chart-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-blue);
+        }
+
+        .chart-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .chart-content {
+            position: relative;
+            height: 400px;
+            margin-bottom: var(--space-lg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .chart-content canvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            flex-wrap: wrap;
+        }
+
+        .chart-legend .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-legend .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .legend-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: var(--space-sm);
+        }
+
+        /* 비교 모드 스타일 */
+        .comparison-panel {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .comparison-header h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .comparison-header h4 i {
+            color: var(--primary-blue);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: var(--space-xs);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .close-btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .comparison-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            align-items: end;
+        }
+
+        .date-selector {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .date-selector label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .date-selector input[type="date"] {
+            padding: var(--space-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .date-selector input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .comparison-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .comparison-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-primary);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .comparison-option:hover {
+            background: var(--bg-primary);
+        }
+
+        .comparison-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .comparison-actions {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: end;
+        }
+
+        /* 비교 모드에서 범례 스타일 */
+        .comparison-mode .legend-item {
+            position: relative;
+        }
+
+        .comparison-mode .legend-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            width: 8px;
+            height: 2px;
+            background: var(--text-muted);
+            transform: translateY(-50%);
+        }
+
+        .comparison-mode .legend-item.current::after {
+            background: var(--primary-blue);
+        }
+
+        .comparison-mode .legend-item.compare::after {
+            background: var(--primary-orange);
+        }
+
+        .chart-info {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .chart-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .chart-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .chart-info li {
+            padding: var(--space-xs) 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .chart-info li i {
+            color: var(--primary-blue);
+            width: 16px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-md);
+            }
+            
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .chart-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .metric-selector {
+                flex-wrap: wrap;
+            }
+            
+            .chart-legend {
+                gap: var(--space-md);
+            }
+            
+            .chart-content {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> 와탭 스타일 시계열 비교차트</h1>
+            <p>여러 메트릭을 하나의 차트에서 비교 분석할 수 있는 통합 시계열 차트 예시입니다.</p>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="fas fa-chart-area"></i>
+                    서버 성능 지표 통합 모니터링
+                </div>
+                <div class="chart-controls">
+                    <select id="timeRange" class="time-range-selector">
+                        <option value="1h">최근 1시간</option>
+                        <option value="6h" selected>최근 6시간</option>
+                        <option value="24h">최근 24시간</option>
+                        <option value="7d">최근 7일</option>
+                    </select>
+                    
+                    <div class="metric-selector">
+                        <label class="metric-checkbox">
+                            <input type="checkbox" id="cpu-check" checked onchange="updateChart()">
+                            <span class="checkmark" style="background: #3b82f6;"></span>
+                            <span>CPU</span>
+                        </label>
+                        <label class="metric-checkbox">
+                            <input type="checkbox" id="memory-check" checked onchange="updateChart()">
+                            <span class="checkmark" style="background: #10b981;"></span>
+                            <span>Memory</span>
+                        </label>
+                        <label class="metric-checkbox">
+                            <input type="checkbox" id="tps-check" checked onchange="updateChart()">
+                            <span class="checkmark" style="background: #8b5cf6;"></span>
+                            <span>TPS</span>
+                        </label>
+                        <label class="metric-checkbox">
+                            <input type="checkbox" id="response-check" checked onchange="updateChart()">
+                            <span class="checkmark" style="background: #f59e0b;"></span>
+                            <span>응답시간</span>
+                        </label>
+                    </div>
+                    
+                    <div class="chart-actions">
+                        <button class="chart-btn" id="comparisonBtn" onclick="toggleComparison()">
+                            <i class="fas fa-balance-scale"></i> 비교 모드
+                        </button>
+                        <button class="chart-btn" onclick="resetZoom()">
+                            <i class="fas fa-search-minus"></i> 줌 리셋
+                        </button>
+                        <button class="chart-btn" onclick="exportChart()">
+                            <i class="fas fa-download"></i> 내보내기
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 비교 모드 설정 패널 -->
+            <div id="comparisonPanel" class="comparison-panel" style="display: none;">
+                <div class="comparison-header">
+                    <h4><i class="fas fa-calendar-alt"></i> 날짜 비교 설정</h4>
+                    <button class="close-btn" onclick="closeComparisonPanel()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="comparison-content">
+                    <div class="date-selector">
+                        <label>현재 기간:</label>
+                        <input type="date" id="currentDate" value="">
+                    </div>
+                    <div class="date-selector">
+                        <label>비교 기간:</label>
+                        <input type="date" id="compareDate" value="">
+                    </div>
+                    <div class="comparison-options">
+                        <label class="comparison-option">
+                            <input type="radio" name="alignmentMode" value="time" checked>
+                            <span>시간 일치 (같은 시간대 비교)</span>
+                        </label>
+                        <label class="comparison-option">
+                            <input type="radio" name="alignmentMode" value="relative">
+                            <span>상대 위치 (데이터 순서 비교)</span>
+                        </label>
+                    </div>
+                    <div class="comparison-actions">
+                        <button class="chart-btn" onclick="applyComparison()">
+                            <i class="fas fa-check"></i> 비교 적용
+                        </button>
+                        <button class="chart-btn" onclick="clearComparison()">
+                            <i class="fas fa-trash"></i> 비교 해제
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-content">
+                <canvas id="unifiedChart" width="1200" height="400"></canvas>
+            </div>
+            
+            <!-- 범례 -->
+            <div class="chart-legend">
+                <div class="legend-item" data-metric="cpu">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>CPU 사용률 (%)</span>
+                    <span class="legend-value" id="cpu-value">--</span>
+                </div>
+                <div class="legend-item" data-metric="memory">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>Memory 사용률 (%)</span>
+                    <span class="legend-value" id="memory-value">--</span>
+                </div>
+                <div class="legend-item" data-metric="tps">
+                    <div class="legend-color" style="background: #8b5cf6;"></div>
+                    <span>TPS (초당 요청)</span>
+                    <span class="legend-value" id="tps-value">--</span>
+                </div>
+                <div class="legend-item" data-metric="response">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>응답시간 (ms)</span>
+                    <span class="legend-value" id="response-value">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Info -->
+        <div class="chart-info">
+            <h3><i class="fas fa-info-circle"></i> 와탭 시계열 비교차트 사용법</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> <strong>메트릭 선택:</strong> 상단의 체크박스로 표시할 지표를 선택/해제할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>시간 범위:</strong> 드롭다운에서 분석할 시간 범위를 선택할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>날짜 비교:</strong> "비교 모드" 버튼을 클릭하여 다른 날짜와 비교할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>정렬 방식:</strong> "시간 일치"는 같은 시간대 비교, "상대 위치"는 데이터 순서 비교입니다.</li>
+                <li><i class="fas fa-check"></i> <strong>줌 기능:</strong> 마우스 휠로 차트를 확대/축소할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>팬 기능:</strong> 마우스로 드래그하여 차트를 이동할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>툴팁:</strong> 마우스를 차트 위에 올리면 정확한 값과 시간을 확인할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>범례:</strong> 하단의 범례에서 현재 값을 확인하고 클릭하여 해당 지표를 토글할 수 있습니다.</li>
+                <li><i class="fas fa-check"></i> <strong>비교 모드:</strong> 실선은 현재 데이터, 점선은 비교 데이터를 나타냅니다.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let chartData = {
+            cpu: [],
+            memory: [],
+            tps: [],
+            response: []
+        };
+        let compareData = {
+            cpu: [],
+            memory: [],
+            tps: [],
+            response: []
+        };
+        let chartContext;
+        let isZoomed = false;
+        let zoomStart = 0;
+        let zoomEnd = 1;
+        let isComparisonMode = false;
+        let alignmentMode = 'time'; // 'time' or 'relative'
+
+        // 차트 초기화
+        function initializeChart() {
+            const canvas = document.getElementById('unifiedChart');
+            chartContext = canvas.getContext('2d');
+            
+            // 샘플 데이터 생성
+            generateSampleData();
+            
+            // 차트 그리기
+            drawChart();
+            
+            // 이벤트 리스너 추가
+            setupEventListeners();
+        }
+
+        // 샘플 데이터 생성
+        function generateSampleData() {
+            const now = Date.now();
+            const dataPoints = 100;
+            
+            for (let i = 0; i < dataPoints; i++) {
+                const time = now - (dataPoints - i) * 60000; // 1분 간격
+                
+                chartData.cpu.push({
+                    time: time,
+                    value: 30 + Math.sin(i * 0.1) * 20 + Math.random() * 10
+                });
+                
+                chartData.memory.push({
+                    time: time,
+                    value: 50 + Math.cos(i * 0.15) * 15 + Math.random() * 8
+                });
+                
+                chartData.tps.push({
+                    time: time,
+                    value: 10 + Math.sin(i * 0.2) * 5 + Math.random() * 3
+                });
+                
+                chartData.response.push({
+                    time: time,
+                    value: 100 + Math.sin(i * 0.08) * 30 + Math.random() * 20
+                });
+            }
+        }
+
+        // 차트 그리기
+        function drawChart() {
+            const canvas = document.getElementById('unifiedChart');
+            const ctx = chartContext;
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // 캔버스 클리어
+            ctx.clearRect(0, 0, width, height);
+            
+            // 배경 그리기
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            
+            // 격자 그리기
+            drawGrid(ctx, width, height);
+            
+            // 데이터 그리기
+            const visibleData = getVisibleData();
+            const visibleCompareData = getVisibleCompareData();
+            const metrics = ['cpu', 'memory', 'tps', 'response'];
+            const colors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b'];
+            const compareColors = ['#1d4ed8', '#059669', '#7c3aed', '#d97706'];
+            
+            metrics.forEach((metric, index) => {
+                if (document.getElementById(`${metric}-check`).checked) {
+                    // 현재 데이터 그리기
+                    drawMetricLine(ctx, visibleData[metric], colors[index], width, height, 'solid');
+                    
+                    // 비교 데이터 그리기 (비교 모드일 때)
+                    if (isComparisonMode && visibleCompareData[metric].length > 0) {
+                        drawMetricLine(ctx, visibleCompareData[metric], compareColors[index], width, height, 'dashed');
+                    }
+                }
+            });
+            
+            // 축 라벨 그리기
+            drawAxisLabels(ctx, width, height);
+        }
+
+        // 격자 그리기
+        function drawGrid(ctx, width, height) {
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            
+            // 수평 격자
+            for (let i = 0; i <= 10; i++) {
+                const y = (height - 60) * (i / 10) + 30;
+                ctx.beginPath();
+                ctx.moveTo(60, y);
+                ctx.lineTo(width - 20, y);
+                ctx.stroke();
+            }
+            
+            // 수직 격자
+            for (let i = 0; i <= 10; i++) {
+                const x = 60 + (width - 80) * (i / 10);
+                ctx.beginPath();
+                ctx.moveTo(x, 30);
+                ctx.lineTo(x, height - 30);
+                ctx.stroke();
+            }
+        }
+
+        // 메트릭 라인 그리기
+        function drawMetricLine(ctx, data, color, width, height, lineStyle = 'solid') {
+            if (data.length < 2) return;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            
+            // 라인 스타일 설정
+            if (lineStyle === 'dashed') {
+                ctx.setLineDash([5, 5]);
+            } else {
+                ctx.setLineDash([]);
+            }
+            
+            ctx.beginPath();
+            
+            const chartWidth = width - 80;
+            const chartHeight = height - 60;
+            const minValue = Math.min(...data.map(d => d.value));
+            const maxValue = Math.max(...data.map(d => d.value));
+            const valueRange = maxValue - minValue || 1;
+            
+            // X축 계산 방식 결정
+            let xPositions = [];
+            if (isComparisonMode && alignmentMode === 'time' && data.length > 0) {
+                // 시간 기반 X축 계산
+                const allTimes = [...chartData.cpu, ...compareData.cpu].map(d => d.time);
+                const minTime = Math.min(...allTimes);
+                const maxTime = Math.max(...allTimes);
+                const timeRange = maxTime - minTime || 1;
+                
+                // 시간 기반 X 위치 계산
+                xPositions = data.map(point => {
+                    const timeRatio = (point.time - minTime) / timeRange;
+                    return 60 + (chartWidth * timeRatio);
+                });
+            } else {
+                // 상대적 위치 방식
+                xPositions = data.map((point, index) => {
+                    return 60 + (chartWidth * index) / (data.length - 1);
+                });
+            }
+            
+            data.forEach((point, index) => {
+                const x = xPositions[index];
+                const y = 30 + chartHeight - (chartHeight * (point.value - minValue) / valueRange);
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // 데이터 포인트 그리기
+            ctx.fillStyle = color;
+            data.forEach((point, index) => {
+                const x = xPositions[index];
+                const y = 30 + chartHeight - (chartHeight * (point.value - minValue) / valueRange);
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // 라인 스타일 리셋
+            ctx.setLineDash([]);
+        }
+
+        // 축 라벨 그리기
+        function drawAxisLabels(ctx, width, height) {
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px Inter';
+            ctx.textAlign = 'center';
+            
+            // Y축 라벨 (값)
+            for (let i = 0; i <= 10; i++) {
+                const y = (height - 60) * (i / 10) + 30;
+                const value = 100 - (i * 10);
+                ctx.fillText(value.toString(), 30, y + 4);
+            }
+            
+            // X축 라벨 (시간)
+            ctx.textAlign = 'center';
+            const timeLabels = getTimeLabels();
+            timeLabels.forEach((label, index) => {
+                const x = 60 + (width - 80) * (index / (timeLabels.length - 1));
+                ctx.fillText(label, x, height - 10);
+            });
+        }
+
+        // 시간 라벨 생성
+        function getTimeLabels() {
+            const now = new Date();
+            const labels = [];
+            
+            for (let i = 0; i < 6; i++) {
+                const time = new Date(now.getTime() - (5 - i) * 60 * 60 * 1000);
+                labels.push(time.toLocaleTimeString('ko-KR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false 
+                }));
+            }
+            
+            return labels;
+        }
+
+        // 표시할 데이터 가져오기
+        function getVisibleData() {
+            const startIndex = Math.floor(zoomStart * chartData.cpu.length);
+            const endIndex = Math.floor(zoomEnd * chartData.cpu.length);
+            
+            return {
+                cpu: chartData.cpu.slice(startIndex, endIndex),
+                memory: chartData.memory.slice(startIndex, endIndex),
+                tps: chartData.tps.slice(startIndex, endIndex),
+                response: chartData.response.slice(startIndex, endIndex)
+            };
+        }
+
+        // 비교 데이터 가져오기
+        function getVisibleCompareData() {
+            if (!isComparisonMode || compareData.cpu.length === 0) {
+                return { cpu: [], memory: [], tps: [], response: [] };
+            }
+            
+            const startIndex = Math.floor(zoomStart * compareData.cpu.length);
+            const endIndex = Math.floor(zoomEnd * compareData.cpu.length);
+            
+            return {
+                cpu: compareData.cpu.slice(startIndex, endIndex),
+                memory: compareData.memory.slice(startIndex, endIndex),
+                tps: compareData.tps.slice(startIndex, endIndex),
+                response: compareData.response.slice(startIndex, endIndex)
+            };
+        }
+
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            const canvas = document.getElementById('unifiedChart');
+            
+            // 마우스 휠 줌
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.1 : -0.1;
+                const zoomFactor = 0.1;
+                
+                if (e.deltaY > 0) {
+                    // 확대
+                    const center = zoomStart + (zoomEnd - zoomStart) / 2;
+                    const newRange = (zoomEnd - zoomStart) * (1 - zoomFactor);
+                    zoomStart = Math.max(0, center - newRange / 2);
+                    zoomEnd = Math.min(1, center + newRange / 2);
+                } else {
+                    // 축소
+                    const center = zoomStart + (zoomEnd - zoomStart) / 2;
+                    const newRange = (zoomEnd - zoomStart) * (1 + zoomFactor);
+                    zoomStart = Math.max(0, center - newRange / 2);
+                    zoomEnd = Math.min(1, center + newRange / 2);
+                }
+                
+                isZoomed = true;
+                drawChart();
+            });
+            
+            // 마우스 이동으로 팬
+            let isDragging = false;
+            let lastX = 0;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                lastX = e.clientX;
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDragging && isZoomed) {
+                    const deltaX = e.clientX - lastX;
+                    const deltaRange = (zoomEnd - zoomStart) * (deltaX / canvas.width);
+                    
+                    zoomStart = Math.max(0, zoomStart - deltaRange);
+                    zoomEnd = Math.min(1, zoomEnd - deltaRange);
+                    
+                    lastX = e.clientX;
+                    drawChart();
+                }
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+        }
+
+        // 차트 업데이트
+        function updateChart() {
+            drawChart();
+            updateLegendValues();
+        }
+
+        // 범례 값 업데이트
+        function updateLegendValues() {
+            const visibleData = getVisibleData();
+            const metrics = ['cpu', 'memory', 'tps', 'response'];
+            
+            metrics.forEach(metric => {
+                if (visibleData[metric].length > 0) {
+                    const latestValue = visibleData[metric][visibleData[metric].length - 1].value;
+                    document.getElementById(`${metric}-value`).textContent = 
+                        metric === 'response' ? Math.round(latestValue) + 'ms' : 
+                        Math.round(latestValue) + (metric === 'tps' ? '/s' : '%');
+                }
+            });
+        }
+
+        // 줌 리셋
+        function resetZoom() {
+            zoomStart = 0;
+            zoomEnd = 1;
+            isZoomed = false;
+            drawChart();
+        }
+
+        // 차트 내보내기
+        function exportChart() {
+            const canvas = document.getElementById('unifiedChart');
+            const link = document.createElement('a');
+            link.download = 'wataap-chart-' + new Date().toISOString().slice(0, 10) + '.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // 비교 모드 토글
+        function toggleComparison() {
+            const panel = document.getElementById('comparisonPanel');
+            const btn = document.getElementById('comparisonBtn');
+            
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                btn.classList.add('active');
+                setDefaultDates();
+            } else {
+                panel.style.display = 'none';
+                btn.classList.remove('active');
+            }
+        }
+
+        // 비교 패널 닫기
+        function closeComparisonPanel() {
+            document.getElementById('comparisonPanel').style.display = 'none';
+            document.getElementById('comparisonBtn').classList.remove('active');
+        }
+
+        // 기본 날짜 설정
+        function setDefaultDates() {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            document.getElementById('currentDate').value = today.toISOString().slice(0, 10);
+            document.getElementById('compareDate').value = yesterday.toISOString().slice(0, 10);
+        }
+
+        // 비교 적용
+        function applyComparison() {
+            const currentDate = document.getElementById('currentDate').value;
+            const compareDate = document.getElementById('compareDate').value;
+            
+            if (!currentDate || !compareDate) {
+                alert('현재 기간과 비교 기간을 모두 선택해주세요.');
+                return;
+            }
+            
+            if (currentDate === compareDate) {
+                alert('현재 기간과 비교 기간이 같을 수 없습니다.');
+                return;
+            }
+            
+            // 정렬 모드 업데이트
+            const selectedMode = document.querySelector('input[name="alignmentMode"]:checked');
+            alignmentMode = selectedMode ? selectedMode.value : 'time';
+            
+            // 비교 데이터 생성 (실제로는 서버에서 가져와야 함)
+            generateCompareData(compareDate);
+            
+            isComparisonMode = true;
+            document.getElementById('comparisonBtn').classList.add('active');
+            document.getElementById('comparisonPanel').style.display = 'none';
+            
+            // 범례 업데이트
+            updateLegendForComparison();
+            
+            // 차트 다시 그리기
+            drawChart();
+        }
+
+        // 비교 데이터 생성 (시뮬레이션)
+        function generateCompareData(date) {
+            const targetDate = new Date(date);
+            const dataPoints = 100;
+            
+            // 비교 데이터 초기화
+            compareData = { cpu: [], memory: [], tps: [], response: [] };
+            
+            for (let i = 0; i < dataPoints; i++) {
+                const time = targetDate.getTime() + i * 60000; // 1분 간격
+                
+                // 다른 패턴의 데이터 생성
+                compareData.cpu.push({
+                    time: time,
+                    value: 25 + Math.sin(i * 0.12) * 15 + Math.random() * 8
+                });
+                
+                compareData.memory.push({
+                    time: time,
+                    value: 45 + Math.cos(i * 0.18) * 12 + Math.random() * 6
+                });
+                
+                compareData.tps.push({
+                    time: time,
+                    value: 8 + Math.sin(i * 0.25) * 4 + Math.random() * 2
+                });
+                
+                compareData.response.push({
+                    time: time,
+                    value: 80 + Math.sin(i * 0.1) * 25 + Math.random() * 15
+                });
+            }
+        }
+
+        // 비교 해제
+        function clearComparison() {
+            isComparisonMode = false;
+            compareData = { cpu: [], memory: [], tps: [], response: [] };
+            
+            document.getElementById('comparisonBtn').classList.remove('active');
+            document.getElementById('comparisonPanel').style.display = 'none';
+            
+            // 범례 원래대로 복원
+            updateLegendForComparison();
+            
+            // 차트 다시 그리기
+            drawChart();
+        }
+
+        // 비교 모드용 범례 업데이트
+        function updateLegendForComparison() {
+            const legendItems = document.querySelectorAll('.legend-item');
+            
+            if (isComparisonMode) {
+                legendItems.forEach(item => {
+                    item.classList.add('comparison-mode');
+                    item.classList.add('current');
+                });
+            } else {
+                legendItems.forEach(item => {
+                    item.classList.remove('comparison-mode', 'current', 'compare');
+                });
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChart();
+            
+            // 실시간 업데이트 (5초마다)
+            setInterval(() => {
+                // 새로운 데이터 포인트 추가
+                const now = Date.now();
+                const newData = {
+                    cpu: 30 + Math.sin(Date.now() * 0.001) * 20 + Math.random() * 10,
+                    memory: 50 + Math.cos(Date.now() * 0.0015) * 15 + Math.random() * 8,
+                    tps: 10 + Math.sin(Date.now() * 0.002) * 5 + Math.random() * 3,
+                    response: 100 + Math.sin(Date.now() * 0.0008) * 30 + Math.random() * 20
+                };
+                
+                // 기존 데이터에 새 데이터 추가
+                Object.keys(chartData).forEach(metric => {
+                    chartData[metric].push({
+                        time: now,
+                        value: newData[metric]
+                    });
+                    
+                    // 최대 100개 데이터 포인트 유지
+                    if (chartData[metric].length > 100) {
+                        chartData[metric].shift();
+                    }
+                });
+                
+                drawChart();
+                updateLegendValues();
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

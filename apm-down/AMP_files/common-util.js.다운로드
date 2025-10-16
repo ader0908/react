@@ -1,0 +1,244 @@
+/**
+기본적으로 많이 사용되는 기능을 함수로 제공함.
+namespace : fn
+author : ku.ji@kt.com
+date : 2022.09.14
+ */
+ (function () {
+    const LABEL = {
+        message: {
+        // 공통
+        VALID_ID: "사용 가능한 ID 입니다.",
+        }
+    }
+
+	window.fn = {
+		/**
+		 입력된 수자에 3자리수 마다 ,를 추가한 문자열을 반환
+		 예> 10000 => 10,000
+		 */
+		addComma: function(num) {
+			var regexp = /\B(?=(\d{3})+(?!\d))/g;
+  			return num.toString().replace(regexp, ',');
+		},
+
+    /**
+    * 아이디 유효성 검사
+    */
+    checkValidationId: function (id, message) {
+        let retValue = false;
+
+        let hangulCheck = /[ㄱ-ㅎ]|[ㅏ-ㅣ]|[가-힣]/;                                      // 한글
+        let lengthMinCheck = /^\S{0,6}$/;                                               // 지나치게 짧은 길이의 계정명
+        let lengthMaxCheck = /^.{50,}$/;                                                // 50자리 이상이면 안됨.
+        let birthdayDateCheck = /^(19|20)?\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;  // yyMMdd 생년월일
+        let attackPatternCheck = /(select|update|insert|delete|--|@@|#)/;        // DB 공격 관련 문자
+        let securityCheck =	/(administrator|admin|root)/;                               // 특정 관리자 수준의 계정명
+
+        if(hangulCheck.test(id)) {				// 비밀번호 8자리 이상, 숫자 포함, 영대 문자 포함, 영소 문자 포함, 특수문자 포함
+            message.html("아이디에 한글을 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else if (lengthMinCheck.test(id)) {
+            message.html("너무 짧은(6자리 이하) 아이디는 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else if (lengthMaxCheck.test(id)) {
+            message.html("너무 긴(16자리 이상) 아이디는 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else if (birthdayDateCheck.test(id)) {
+            message.html("생년월일 아이디는 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else if (attackPatternCheck.test(id)) {
+            message.html("보안성에 위배되는 아이디는 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else if (securityCheck.test(id)) {
+            message.html("관지자 수준의 계정명은 사용 할 수 없습니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else {
+            retValue = true;
+        }
+        return retValue;
+    },
+
+    /**
+     * 패스워드 유효성 검사
+     */
+	checkValidationPassword: function (pw, message, id, tel) {
+        let self = this;
+
+        let retValue = false;
+
+        let reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        let hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+        let forbiddenWords = /root|1234|qwer/;
+        let sameLetters = /(\w)\1\1\1/;
+        let lengthCheck = /^.{21,}$/g;
+
+        if(id == undefined) id = null;
+        else if(id != null) id = id.length > 0 ? id : null;
+
+        if(tel == undefined) tel = null;
+        else if(tel != null) tel = tel.length > 0 ? tel : null;
+
+        if(false === reg.test(pw)) {				// 비밀번호 8자리 이상, 숫자 포함, 영대 문자 포함, 영소 문자 포함, 특수문자 포함
+          message.html("비밀번호는 8자 이상이어야 하며, 숫자/<br/>대문자/소문자/특수문자를 모두 포함해야 합니다.");
+        }else if(sameLetters.test(pw)){		// 같은문자 4번 반복 검사
+          message.html("같은 문자를 4번 이상 사용하실 수 없습니다.");
+        }else if(pw.search(id) > -1){				// ID 검사
+          message.html("비밀번호에 아이디가 포함되었습니다.");
+        }else if(pw.search(tel) > -1){			// 전화번호 검사
+          message.html("비밀번호에 전화번호가 포함되었습니다.");
+        }else if(pw.search(/\s/) != -1){		// 공백 검사
+          message.html("비밀번호는 공백 없이 입력해주세요.");
+        }else if(hangulcheck.test(pw)){			// 한글 검사
+          message.html("비밀번호에 한글을 사용 할 수 없습니다.");
+        }else if(forbiddenWords.test(pw.toLowerCase())){	// 금지단어 검사
+          message.html("비밀번호에 금지단어가 포함되어있습니다.");
+        }else if(lengthCheck.test(pw)){
+          message.html("비밀번호는 20자리를 넘을 수 없습니다.");
+        }else {
+        message.html('');
+        retValue = true;
+      }
+
+      return retValue;
+    },
+
+    /**
+     * 길이 검증
+     */
+    checkValidationLength: function (data, message, ment) {
+        let retValue = false;
+
+        if (data.length > 10) {  // 10자리 초과 검사
+            message.html( ment + " 길이가 10자리 이하여야 합니다.");
+            message.removeClass('mdc-theme--success').addClass('mdc-theme--error');
+        } else {
+            message.html("");
+            message.removeClass('mdc-theme--error').addClass('mdc-theme--success');
+            retValue = true;
+        }
+
+        return retValue;
+    },
+
+    /**
+     * email 검증
+     */
+    checkValidationEmail: function (email, message) {
+    		let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    		let retValue = false;
+
+    		if(false === reg.test(email)) {
+    		  if(email.length > 0) message.html("email 형식에 맞지 않습니다. Ex) gil@kt.com 형식으로 입력해 주세요.");
+    		  else message.html("");
+    		  message.removeClass('mdc-theme--success');
+              message.addClass('mdc-theme--error');
+    		}
+    		else {
+    		  message.html("");
+        	  message.removeClass('mdc-theme--error');
+              message.addClass('mdc-theme--success');
+
+    		  retValue = true;
+    		}
+
+    		return retValue;
+    },
+
+    /**
+     * 휴대폰 번호 검증
+     */
+    checkValidationTelephone: function (tel, message) {
+    		let reg = /^01([0|1|6|7|8|9])\d{3,4}\d{4}$/;
+    		let retValue = false;
+
+    		if(false === reg.test(tel)) {
+    		  if(tel.length > 0) message.html("유효하지 않은 핸드폰 번호입니다. Ex) 01012345678 형식 처럼 입력해 주세요.");
+    		  else message.html("");
+    		  message.removeClass('mdc-theme--success');
+              message.addClass('mdc-theme--error');
+    		}
+    		else {
+    		  message.html("");
+        	message.removeClass('mdc-theme--error');
+          message.addClass('mdc-theme--success');
+
+    		  retValue = true;
+    		}
+
+    		return retValue;
+    },
+
+		/**
+		입력된 html status code에 대한 상태 메시지를 제공한다.
+		예> 200 => "Success" or "성공"
+		 */
+		getStatusMessage: function (code) {
+			var message = "unknown";
+			switch(code + "") {
+				case "200": message = "성공"; break;
+				case "400": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "401": message = "로그인이 필요합니다. 로그인 후 다시 요청해 주세요."; break;
+				case "403": message = "사용할 수 없는 기능입니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "404": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "405": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "406": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "408": message = "일시적인 오류가 발생하였습니다. 잠시 후 다시 요청해 주세요. 지속적으로 동일한 문제가 발생하는 경우 관리자에게 문의하시기 바랍니다."; break;
+				case "409": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "410": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "413": message = "요청 또는 파일의 크기가 너무 큽니다. 확인 후 다시 요청해 주세요."; break;
+				case "415": message = "지원하지 않는 요청 또는 파일 타입입니다. 확인 후 다시 요청해 주세요."; break;
+				case "423": message = "요청된 내용은 현재 잠겨 있습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "424": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "429": message = "승인된 사용량을 모두 사용하였습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "432": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "433": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "434": message = "잘못된 요청입니다. 확인 후 다시 요청해 주세요."; break;
+				case "500": message = "내부 오류가 발생하였습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "501": message = "내부 오류가 발생하였습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "502": message = "내부 오류가 발생하였습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "503": message = "내부 오류가 발생하였습니다. 관리자에게 문의하시기 바랍니다."; break;
+				case "504": message = "일시적인 오류가 발생하였습니다. 잠시 후 다시 요청해 주세요. 지속적으로 동일한 문제가 발생하는 경우 관리자에게 문의하시기 바랍니다."; break;
+				default:
+				
+			}
+			
+			return message;
+		}
+	};
+
+    window.commonObject = {
+		deleteNullOrDefaultFields: function (obj) {
+	        for (var key of Object.keys(obj)) {
+	            if (obj[key] == null || obj[key] == undefined) {
+	                delete obj[key];
+	            }
+	            if (typeof obj[key] == "number" && obj[key] == 0) {
+	                delete obj[key];
+	            }
+	            if (typeof obj[key] == "string" && obj[key] == '') {
+	                delete obj[key];
+	            }
+	        }
+	    }
+	}
+
+    window.SessionUtils = {
+
+	    getKeyName: function () {
+	        return "BULK_KEY";
+	    },
+
+	    getBulkKey: function () {
+	        return sessionStorage.getItem(this.getKeyName());
+	    },
+
+	    setBulkKey: function (key) {
+	        sessionStorage.setItem(this.getKeyName(), key);
+	    },
+
+	    clearBulkKey: function () {
+	        sessionStorage.setItem(this.getKeyName(), "");
+	    }
+	}
+})();

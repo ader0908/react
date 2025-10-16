@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP TTS 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 60px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 4em;
+            margin-bottom: 25px;
+            color: #667eea;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            background: #f8f9fa;
+            padding: 50px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .features h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .feature-item i {
+            color: #667eea;
+            margin-right: 15px;
+            font-size: 1.5em;
+            width: 30px;
+            text-align: center;
+        }
+
+        .feature-item span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+            opacity: 0.8;
+        }
+
+        .tech-stack {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .tech-stack h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .tech-items {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .content {
+                padding: 30px;
+            }
+            
+            .features {
+                padding: 30px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-microphone"></i> AMP TTS 시스템</h1>
+            <p>AI 음성 합성 및 서비스 연결 관리 플랫폼</p>
+            <div class="subtitle">고성능 TTS 엔진과 시각적 관리 도구의 완벽한 조합</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="content">
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-microphone-alt"></i>
+                        </div>
+                        <h3>TTS 메인 대시보드</h3>
+                        <p>AI 음성 합성 서비스의 전체 대시보드입니다. 서비스, 스피커, 채널, 서버를 통합 관리하고 실시간 모니터링을 제공합니다. 직관적인 UI로 모든 기능에 쉽게 접근할 수 있습니다.</p>
+                        <a href="tts.html" class="btn">
+                            <i class="fas fa-external-link-alt"></i> 대시보드 열기
+                        </a>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>서비스 연결 관리</h3>
+                        <p>서비스와 스피커, 채널, 서버 간의 연결 관계를 시각적으로 관리하는 전용 화면입니다. D3.js를 활용한 인터랙티브 다이어그램으로 복잡한 연결 구조를 한눈에 파악할 수 있습니다.</p>
+                        <a href="amp-service-connection-management.html" class="btn">
+                            <i class="fas fa-external-link-alt"></i> 연결 관리 열기
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tech-stack">
+                    <h2>기술 스택</h2>
+                    <div class="tech-items">
+                        <div class="tech-item">HTML5</div>
+                        <div class="tech-item">CSS3</div>
+                        <div class="tech-item">JavaScript</div>
+                        <div class="tech-item">D3.js</div>
+                        <div class="tech-item">Font Awesome</div>
+                        <div class="tech-item">반응형 디자인</div>
+                    </div>
+                </div>
+                
+                <div class="features">
+                    <h2>주요 기능</h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI 음성 합성 서비스 관리</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-volume-up"></i>
+                            <span>다양한 스피커 음성 관리</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <span>채널 및 서버 연결 관리</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-network"></i>
+                            <span>D3.js 기반 시각화</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-tags"></i>
+                            <span>DVS 스피커 구분 표시</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-cogs"></i>
+                            <span>배포 및 관리 모달</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>반응형 UI 디자인</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-palette"></i>
+                            <span>모던한 UI/UX</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-search"></i>
+                            <span>실시간 검색 및 필터링</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>통계 및 분석 대시보드</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>실시간 데이터 동기화</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>보안 및 권한 관리</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 AMP TTS 시스템. All rights reserved.</p>
+            <p>고성능 AI 음성 합성 솔루션</p>
+        </div>
+    </div>
+</body>
+</html>

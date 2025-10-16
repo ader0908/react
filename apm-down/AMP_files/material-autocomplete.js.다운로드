@@ -1,0 +1,222 @@
+"use strict";
+
+/**
+ * material ui에 자동완성 기능이 없어서 그냥 만듬..
+ * 참고 : https://stackoverflow.com/questions/61490873/material-design-for-web-how-to-make-an-autocomplete-input
+ * 참고 : https://codepen.io/lastofdead/pen/bGMZPzO
+ */
+window.MaterialAutocomplete = function (el, opt) {
+    var root = el;
+    var inputEl = el.querySelector(".mdc-text-field");
+    var listEl = el.querySelector(".mdc-menu");
+    var $input = $(inputEl);
+    var $inputInst = $input.data("textField");
+    var $list = $(listEl);
+    var $listInst = $list.data("menu");
+
+    var autoCompleteList = {
+        root: root,
+        inputEl: inputEl,
+        listEl: listEl,
+
+        $input: $input,
+        $inputInst: $inputInst,
+        $list: $list,
+        $listInst: $listInst,
+
+        autoCompleteListFocused: false,     // 자동완성 필드에 focus 여부
+        closeTimer: null,                   // 자동완성 필드 close timer
+
+        onchange: null,                     // on change function
+
+        /**
+         * 초기화
+         */
+        init: function (opt) {
+            if(this.$listInst != void 0)  this.$listInst.destroy();
+
+            // 자동완성 메뉴 생성
+            this.$listInst = mdc.menu.MDCMenu.attachTo(this.listEl);
+            this.autoCompleteListFocused = false;
+            this.closeTimer = null;
+
+            this.$listInst.setAnchorCorner(mdc.menuSurface.Corner.BOTTOM_LEFT);
+            this.$listInst.quickOpen = true;
+            if((opt||{})['max-height'] != void 0)
+                this.$listInst.menuSurface.foundation.setMaxHeight(opt['max-height']);
+            this.$list.data('menu', this.$listInst);
+
+            this.onchange = (opt||{})['onchange'];
+
+            this._changeItemsDisplay();
+            this.eventBinding();
+        },
+        
+        /**
+         * 자동완성 리스트를 재생성한다.
+         * @param items
+         * @param template
+         */
+        setList: function (items, template) {
+            var self = this;
+            var $list = self.$list.find('.mdc-deprecated-list');
+
+            // 기존의 리스트를 제거
+            $list.children('.mdc-deprecated-list-item:not(.menu-no-data)').remove();
+
+            // 신규 내용 적용
+            _.each(items, function (item) {
+                $list.append(template({
+                    id: item.id,
+                    name: item.name,
+                    value: item.name,
+                }));
+            });
+            // 변경된 내용으로 초기화
+            this.init(opt);
+        },
+
+        /**
+         * 자동 완성 목록 show
+         */
+        show: function () {
+            this.$listInst.open = true;
+        },
+
+        /**
+         * 자동 완성 목록 hide
+         */
+        hide: function () {
+            this.$listInst.open = false;
+        },
+
+        /**
+         * 이벤트 바인딩
+         */
+        eventBinding: function () {
+            var self = this;
+
+            // 자동완성 리스트에 대한 이벤트 바인딩
+            this.$list.unbind('focusin').bind('focusin', function (ev){
+                self.autoCompleteListFocused = true;
+            }).unbind('focusout').bind('focusout', function (ev){
+                setTimeout(function() {
+                    self.autoCompleteListFocused = false;
+                }, 0);
+            }).unbind('change keydown keyup').bind('change keydown keyup', function (ev){
+                // 방향키 입력 시 해당 내용으로 선택 내용 변경
+                if(ev.which == 38 || ev.which == 40 || ev.which == 13) {
+                    self.$inputInst.value = (ev.target.dataset||{}).value||'';
+                    if(ev.which == 13 && typeof self.onchange === "function") {
+                        self.onchange(self.$inputInst.value);
+                    }
+                } else {
+                    // 다른걸 입력하면 input으로 focus가 돌아감
+                    self.$inputInst.focus();
+                }
+            }).find('li').unbind('click').bind('click', function (ev) {
+                self.$inputInst.value = this.dataset.value;
+                if(typeof self.onchange === "function") {
+                    self.onchange(self.$inputInst.value);
+                }
+            });
+            
+            // 입력창에 대한 이벤트 바인딩
+            this.$input.unbind('focusin').bind('focusin', function (ev){
+                if (self.closeTimer != null)
+                    clearTimeout(self.closeTimer);
+                if (!self.autoCompleteListFocused) {
+                    self._changeItemsDisplay();
+                    self.$listInst.open = true;
+                }
+            }).unbind('focusout').bind('focusout', function (ev){
+                // 닫기 처리
+                self.closeTimer = setTimeout(function () {
+                    if (!self.autoCompleteListFocused) {
+                        self.$listInst.open = false;
+                    }
+                    self.closeTimer = null;
+                }, 100);
+            }).unbind('click').bind("click", function (ev){
+                if (self.closeTimer != null)
+                    clearTimeout(self.closeTimer);
+                if (self.$listInst.open == false) {
+                    self._changeItemsDisplay();
+                    self.$listInst.open = true;
+                }
+            }).unbind('change.autocomplete keyup.autocomplete').bind('change.autocomplete keyup.autocomplete', function (ev) {
+                if (self.closeTimer != null)
+                    clearTimeout(self.closeTimer);
+                if (self.$listInst.open == false)
+                    self.$listInst.open = true;
+
+                if(ev.which == 38) {    			// up
+                    var $last = self.$list.find('.mdc-deprecated-list-item:not(.d-none):not(.menu-no-data):last');
+                    if(0 < $last.length) {
+                        $last.focus();
+                    }
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                } else if (ev.which == 40) {        // down
+                    var $first = self.$list.find('.mdc-deprecated-list-item:not(.d-none):not(.menu-no-data):first');
+                    if(0 < $first.length) {
+                        $first.focus();
+                    }
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                } else {
+                    if (ev.which == 13) {            // enter
+                        var $selected = self.$list.find('.mdc-deprecated-list-item:not(.d-none):not(.menu-no-data)');
+                        if(1 == $selected.length) {
+                            self.$inputInst.value = $selected[0].dataset.value;
+                            if(typeof self.onchange === "function") {
+                                self.onchange(self.$inputInst.value);
+                                self.$listInst.open = false;
+                            }
+                        }
+                    } else {
+                        self._changeItemsDisplay();
+                    }
+                }
+            });
+        },
+        
+        /**
+         * 하위 아이템들에 대한 show/hide설정
+         * @private
+         */
+        _changeItemsDisplay: function () {
+            var $items = this.$list.find('.mdc-deprecated-list-item:not(.menu-no-data)');
+            var $noData = this.$list.find(".mdc-deprecated-list-item.menu-no-data");
+            if (0 == _.size($items)) {
+                $noData.removeClass('d-none');
+            } else {
+                var inputText = $.trim(this.$inputInst.value).toUpperCase();
+                var isFound = false;
+                // 입력된 내용에 따라 list 내용 show hide
+                $items.each(function (idx, el) {
+                    if($.trim(el.textContent).toUpperCase().includes(inputText)) {
+                        el.classList.remove('d-none');
+                        isFound = true;
+                    } else {
+                        el.classList.add('d-none');
+                    }
+                });
+                if (!isFound) {
+                    $noData.removeClass('d-none');
+                } else {
+                    $noData.addClass('d-none');
+                }
+            }
+        }
+    }
+
+    autoCompleteList.init(opt);
+
+    return autoCompleteList;
+
+    // 기존에 생성된 메뉴가 있다면 삭제
+
+
+
+}

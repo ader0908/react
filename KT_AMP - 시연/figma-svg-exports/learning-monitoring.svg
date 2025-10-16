@@ -1,0 +1,150 @@
+<svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#ffffff"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1400" height="70" fill="#f8f9fa"/>
+  <text x="24" y="40" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#1f2937">학습관리 - 모니터링</text>
+  
+  <!-- Stats Cards Row -->
+  <g transform="translate(24, 90)">
+    <!-- Card 1: 총 학습 요청 -->
+    <rect x="0" y="0" width="320" height="100" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">총 학습 요청</text>
+    <text x="20" y="60" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#1f2937">1,247</text>
+    <text x="20" y="80" font-family="Arial, sans-serif" font-size="12" fill="#22c55e">+12% 전월 대비</text>
+    
+    <!-- Card 2: 학습 중 -->
+    <rect x="340" y="0" width="320" height="100" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="360" y="30" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">학습 중</text>
+    <text x="360" y="60" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f59e0b">23</text>
+    <text x="360" y="80" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">현재 진행중</text>
+    
+    <!-- Card 3: 학습 완료 -->
+    <rect x="680" y="0" width="320" height="100" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="700" y="30" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">학습 완료</text>
+    <text x="700" y="60" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#22c55e">1,156</text>
+    <text x="700" y="80" font-family="Arial, sans-serif" font-size="12" fill="#22c55e">성공률 92.7%</text>
+    
+    <!-- Card 4: 학습 실패 -->
+    <rect x="1020" y="0" width="320" height="100" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="1040" y="30" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">학습 실패</text>
+    <text x="1040" y="60" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#ef4444">68</text>
+    <text x="1040" y="80" font-family="Arial, sans-serif" font-size="12" fill="#ef4444">오류율 5.5%</text>
+  </g>
+  
+  <!-- Charts Section -->
+  <g transform="translate(24, 220)">
+    <!-- Learning Progress Chart -->
+    <rect x="0" y="0" width="660" height="300" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#1f2937">학습 진행 현황</text>
+    
+    <!-- Chart Area -->
+    <rect x="40" y="60" width="600" height="200" fill="#f9fafb" stroke="#e5e7eb"/>
+    
+    <!-- Sample Chart Lines -->
+    <polyline points="60,220 120,180 180,160 240,140 300,120 360,100 420,90 480,85 540,80 600,75" 
+              fill="none" stroke="#3b82f6" stroke-width="3"/>
+    <polyline points="60,240 120,200 180,190 240,170 300,160 360,150 420,140 480,135 540,130 600,125" 
+              fill="none" stroke="#22c55e" stroke-width="3"/>
+    
+    <!-- Legend -->
+    <circle cx="40" cy="280" r="6" fill="#3b82f6"/>
+    <text x="55" y="285" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">정확도</text>
+    <circle cx="120" cy="280" r="6" fill="#22c55e"/>
+    <text x="135" y="285" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">손실률</text>
+  </g>
+  
+  <!-- Resource Usage Chart -->
+  <g transform="translate(704, 220)">
+    <rect x="0" y="0" width="660" height="300" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#1f2937">자원 사용률</text>
+    
+    <!-- CPU Usage -->
+    <text x="20" y="70" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">CPU 사용률</text>
+    <rect x="20" y="80" width="600" height="20" rx="10" fill="#f3f4f6"/>
+    <rect x="20" y="80" width="420" height="20" rx="10" fill="#3b82f6"/>
+    <text x="560" y="95" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">70%</text>
+    
+    <!-- Memory Usage -->
+    <text x="20" y="130" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">메모리 사용률</text>
+    <rect x="20" y="140" width="600" height="20" rx="10" fill="#f3f4f6"/>
+    <rect x="20" y="140" width="480" height="20" rx="10" fill="#22c55e"/>
+    <text x="560" y="155" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">80%</text>
+    
+    <!-- GPU Usage -->
+    <text x="20" y="190" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">GPU 사용률</text>
+    <rect x="20" y="200" width="600" height="20" rx="10" fill="#f3f4f6"/>
+    <rect x="20" y="200" width="540" height="20" rx="10" fill="#f59e0b"/>
+    <text x="560" y="215" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">90%</text>
+    
+    <!-- Storage Usage -->
+    <text x="20" y="250" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">스토리지 사용률</text>
+    <rect x="20" y="260" width="600" height="20" rx="10" fill="#f3f4f6"/>
+    <rect x="20" y="260" width="360" height="20" rx="10" fill="#6b7280"/>
+    <text x="560" y="275" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">60%</text>
+  </g>
+  
+  <!-- Recent Activities -->
+  <g transform="translate(24, 550)">
+    <rect x="0" y="0" width="1340" height="320" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#1f2937">최근 학습 활동</text>
+    
+    <!-- Table Header -->
+    <rect x="20" y="50" width="1300" height="40" fill="#f9fafb"/>
+    <text x="40" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">학습 ID</text>
+    <text x="180" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">모델명</text>
+    <text x="350" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">상태</text>
+    <text x="450" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">진행률</text>
+    <text x="580" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">시작 시간</text>
+    <text x="750" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">예상 완료</text>
+    <text x="920" y="75" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#374151">사용자</text>
+    
+    <!-- Table Rows -->
+    <g transform="translate(0, 90)">
+      <!-- Row 1 -->
+      <rect x="20" y="0" width="1300" height="40" fill="#ffffff"/>
+      <text x="40" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">LRN-2024-0156</text>
+      <text x="180" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">콜센터_STT_v2.1</text>
+      <rect x="350" y="10" width="60" height="20" rx="10" fill="#fef3c7"/>
+      <text x="365" y="23" font-family="Arial, sans-serif" font-size="10" fill="#92400e">학습중</text>
+      <text x="450" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">73%</text>
+      <text x="580" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 14:30</text>
+      <text x="750" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 18:45</text>
+      <text x="920" y="25" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">김영희</text>
+      
+      <!-- Row 2 -->
+      <rect x="20" y="40" width="1300" height="40" fill="#f9fafb"/>
+      <text x="40" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">LRN-2024-0155</text>
+      <text x="180" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">금융_챗봇_v1.8</text>
+      <rect x="350" y="50" width="60" height="20" rx="10" fill="#dcfce7"/>
+      <text x="365" y="63" font-family="Arial, sans-serif" font-size="10" fill="#166534">완료</text>
+      <text x="450" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">100%</text>
+      <text x="580" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 09:15</text>
+      <text x="750" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 13:22</text>
+      <text x="920" y="65" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">박민수</text>
+      
+      <!-- Row 3 -->
+      <rect x="20" y="80" width="1300" height="40" fill="#ffffff"/>
+      <text x="40" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">LRN-2024-0154</text>
+      <text x="180" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">의료_음성인식_v3.2</text>
+      <rect x="350" y="90" width="60" height="20" rx="10" fill="#fee2e2"/>
+      <text x="365" y="103" font-family="Arial, sans-serif" font-size="10" fill="#991b1b">실패</text>
+      <text x="450" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">45%</text>
+      <text x="580" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">2024-01-18 11:20</text>
+      <text x="750" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">-</text>
+      <text x="920" y="105" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">이상철</text>
+      
+      <!-- Row 4 -->
+      <rect x="20" y="120" width="1300" height="40" fill="#f9fafb"/>
+      <text x="40" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">LRN-2024-0153</text>
+      <text x="180" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">교육_TTS_v1.5</text>
+      <rect x="350" y="130" width="60" height="20" rx="10" fill="#dbeafe"/>
+      <text x="365" y="143" font-family="Arial, sans-serif" font-size="10" fill="#1e40af">대기중</text>
+      <text x="450" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">0%</text>
+      <text x="580" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">-</text>
+      <text x="750" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">-</text>
+      <text x="920" y="145" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">최지영</text>
+    </g>
+  </g>
+</svg>

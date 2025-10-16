@@ -1,0 +1,636 @@
+{
+  "figmaVersion": "1.0",
+  "name": "KT AMP 시스템 모니터링 - 컴포넌트 라이브러리",
+  "description": "편집 가능한 Figma 컴포넌트 라이브러리",
+  "lastModified": "2024-12-19",
+  
+  "pages": [
+    {
+      "name": "🎨 Design System",
+      "type": "designSystem",
+      "sections": [
+        {
+          "name": "Color Styles",
+          "components": [
+            {
+              "name": "Primary/Blue",
+              "type": "colorStyle",
+              "color": "#6b7280",
+              "usage": "Primary brand color, navigation active state"
+            },
+            {
+              "name": "Primary/Purple", 
+              "type": "colorStyle",
+              "color": "#4b5563",
+              "usage": "Secondary brand color, gradients"
+            },
+            {
+              "name": "System/CPU",
+              "type": "colorStyle",
+              "color": "#3b82f6", 
+              "usage": "CPU metrics, charts"
+            },
+            {
+              "name": "System/Memory",
+              "type": "colorStyle",
+              "color": "#10b981",
+              "usage": "Memory metrics, charts"
+            },
+            {
+              "name": "System/Storage",
+              "type": "colorStyle", 
+              "color": "#8b5cf6",
+              "usage": "Storage metrics, charts"
+            },
+            {
+              "name": "System/Network",
+              "type": "colorStyle",
+              "color": "#f59e0b",
+              "usage": "Network metrics, charts"
+            },
+            {
+              "name": "Status/Success",
+              "type": "colorStyle",
+              "color": "#48bb78",
+              "usage": "Success states, online servers"
+            },
+            {
+              "name": "Status/Warning", 
+              "type": "colorStyle",
+              "color": "#ed8936",
+              "usage": "Warning states, server alerts"
+            },
+            {
+              "name": "Status/Error",
+              "type": "colorStyle",
+              "color": "#f56565",
+              "usage": "Error states, critical alerts"
+            }
+          ]
+        },
+        {
+          "name": "Text Styles",
+          "components": [
+            {
+              "name": "Heading/Large",
+              "type": "textStyle",
+              "fontFamily": "Inter",
+              "fontSize": 24,
+              "fontWeight": 700,
+              "lineHeight": "120%",
+              "usage": "Page titles"
+            },
+            {
+              "name": "Heading/Medium",
+              "type": "textStyle", 
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": 700,
+              "lineHeight": "120%",
+              "usage": "Section titles, chart titles"
+            },
+            {
+              "name": "Body/Large",
+              "type": "textStyle",
+              "fontFamily": "Inter", 
+              "fontSize": 16,
+              "fontWeight": 600,
+              "lineHeight": "150%",
+              "usage": "Card titles, navigation items"
+            },
+            {
+              "name": "Body/Base",
+              "type": "textStyle",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "lineHeight": "150%",
+              "usage": "Body text, descriptions"
+            },
+            {
+              "name": "Body/Small", 
+              "type": "textStyle",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": 400,
+              "lineHeight": "150%",
+              "usage": "Captions, secondary text"
+            },
+            {
+              "name": "Metric/Value",
+              "type": "textStyle",
+              "fontFamily": "Inter",
+              "fontSize": 24,
+              "fontWeight": 700,
+              "lineHeight": "110%",
+              "usage": "Metric values, percentages"
+            },
+            {
+              "name": "Badge/Text",
+              "type": "textStyle",
+              "fontFamily": "Inter", 
+              "fontSize": 9,
+              "fontWeight": 600,
+              "lineHeight": "110%",
+              "letterSpacing": "0.5px",
+              "textTransform": "uppercase",
+              "usage": "Status badges, labels"
+            }
+          ]
+        },
+        {
+          "name": "Effect Styles",
+          "components": [
+            {
+              "name": "Shadow/Small",
+              "type": "effectStyle",
+              "effects": [
+                {
+                  "type": "dropShadow",
+                  "x": 0,
+                  "y": 1,
+                  "blur": 2,
+                  "spread": 0,
+                  "color": "rgba(0, 0, 0, 0.05)"
+                }
+              ]
+            },
+            {
+              "name": "Shadow/Medium",
+              "type": "effectStyle",
+              "effects": [
+                {
+                  "type": "dropShadow", 
+                  "x": 0,
+                  "y": 4,
+                  "blur": 6,
+                  "spread": 0,
+                  "color": "rgba(0, 0, 0, 0.07)"
+                }
+              ]
+            },
+            {
+              "name": "Shadow/Large",
+              "type": "effectStyle",
+              "effects": [
+                {
+                  "type": "dropShadow",
+                  "x": 0,
+                  "y": 10,
+                  "blur": 15,
+                  "spread": 0,
+                  "color": "rgba(0, 0, 0, 0.1)"
+                }
+              ]
+            },
+            {
+              "name": "Glassmorphism",
+              "type": "effectStyle",
+              "effects": [
+                {
+                  "type": "backgroundBlur",
+                  "blur": 20
+                },
+                {
+                  "type": "dropShadow",
+                  "x": 0,
+                  "y": 20,
+                  "blur": 25,
+                  "spread": 0,
+                  "color": "rgba(0, 0, 0, 0.1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🧩 Components",
+      "type": "components",
+      "sections": [
+        {
+          "name": "Metric Cards",
+          "components": [
+            {
+              "name": "MetricCard/Master",
+              "type": "component",
+              "width": 300,
+              "height": 140,
+              "componentProperties": [
+                {
+                  "name": "Type",
+                  "type": "variant",
+                  "variantOptions": ["CPU", "Memory", "Storage", "Network"],
+                  "defaultValue": "CPU"
+                },
+                {
+                  "name": "Title",
+                  "type": "text",
+                  "defaultValue": "CPU 사용률"
+                },
+                {
+                  "name": "Description", 
+                  "type": "text",
+                  "defaultValue": "전체 서버 평균 CPU 사용량"
+                },
+                {
+                  "name": "Value",
+                  "type": "text",
+                  "defaultValue": "45.2%"
+                },
+                {
+                  "name": "Change",
+                  "type": "text", 
+                  "defaultValue": "2.3% 감소"
+                },
+                {
+                  "name": "Status",
+                  "type": "variant",
+                  "variantOptions": ["Excellent", "Good", "Warning", "Critical"],
+                  "defaultValue": "Excellent"
+                },
+                {
+                  "name": "Progress",
+                  "type": "text",
+                  "defaultValue": "45.2"
+                }
+              ],
+              "structure": {
+                "frame": {
+                  "name": "MetricCard",
+                  "fills": [{"type": "solid", "color": "#ffffff"}],
+                  "cornerRadius": 16,
+                  "effects": ["Shadow/Large"],
+                  "autoLayout": {
+                    "direction": "vertical",
+                    "paddingTop": 16,
+                    "paddingBottom": 16,
+                    "paddingLeft": 16,
+                    "paddingRight": 16,
+                    "itemSpacing": 8
+                  },
+                  "children": [
+                    {
+                      "name": "TopBorder",
+                      "type": "rectangle",
+                      "width": "fill",
+                      "height": 4,
+                      "fills": [{"type": "solid", "color": "{variant.topBorder}"}],
+                      "cornerRadius": 16,
+                      "constraints": {"horizontal": "stretch", "vertical": "min"}
+                    },
+                    {
+                      "name": "Header",
+                      "type": "frame",
+                      "autoLayout": {
+                        "direction": "horizontal",
+                        "primaryAxisAlignItems": "spaceBetween",
+                        "counterAxisAlignItems": "min",
+                        "itemSpacing": 12
+                      },
+                      "children": [
+                        {
+                          "name": "Info",
+                          "type": "frame",
+                          "autoLayout": {
+                            "direction": "vertical",
+                            "itemSpacing": 4
+                          },
+                          "children": [
+                            {
+                              "name": "Title",
+                              "type": "text", 
+                              "content": "{Title}",
+                              "textStyle": "Body/Large",
+                              "fills": [{"type": "solid", "color": "#1a202c"}]
+                            },
+                            {
+                              "name": "Description",
+                              "type": "text",
+                              "content": "{Description}",
+                              "textStyle": "Body/Small",
+                              "fills": [{"type": "solid", "color": "rgba(26, 32, 44, 0.7)"}]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "Icon",
+                          "type": "frame",
+                          "width": 36,
+                          "height": 36,
+                          "cornerRadius": 12,
+                          "fills": [{"type": "gradient", "value": "{variant.iconGradient}"}],
+                          "children": [
+                            {
+                              "name": "IconElement",
+                              "type": "icon",
+                              "size": 16,
+                              "color": "#ffffff"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Value",
+                      "type": "text",
+                      "content": "{Value}",
+                      "textStyle": "Metric/Value",
+                      "fills": [{"type": "solid", "color": "{variant.valueColor}"}]
+                    },
+                    {
+                      "name": "Details",
+                      "type": "frame",
+                      "autoLayout": {
+                        "direction": "horizontal",
+                        "primaryAxisAlignItems": "spaceBetween",
+                        "counterAxisAlignItems": "center"
+                      },
+                      "children": [
+                        {
+                          "name": "Change",
+                          "type": "text",
+                          "content": "{Change}",
+                          "textStyle": "Body/Small",
+                          "fills": [{"type": "solid", "color": "#48bb78"}]
+                        },
+                        {
+                          "name": "StatusBadge",
+                          "type": "component",
+                          "componentName": "StatusBadge",
+                          "properties": {
+                            "Status": "{Status}"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "ProgressBar",
+                      "type": "component",
+                      "componentName": "ProgressBar",
+                      "properties": {
+                        "Progress": "{Progress}",
+                        "Variant": "{Type}"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Status & Controls",
+          "components": [
+            {
+              "name": "StatusBadge/Master",
+              "type": "component",
+              "width": 80,
+              "height": 24,
+              "componentProperties": [
+                {
+                  "name": "Status",
+                  "type": "variant",
+                  "variantOptions": ["Excellent", "Good", "Warning", "Critical"],
+                  "defaultValue": "Excellent"
+                },
+                {
+                  "name": "Text",
+                  "type": "text",
+                  "defaultValue": "EXCELLENT"
+                }
+              ],
+              "variants": [
+                {
+                  "name": "Status=Excellent",
+                  "properties": {
+                    "background": "rgba(72, 187, 120, 0.1)",
+                    "textColor": "#48bb78"
+                  }
+                },
+                {
+                  "name": "Status=Good", 
+                  "properties": {
+                    "background": "rgba(72, 187, 120, 0.1)",
+                    "textColor": "#48bb78"
+                  }
+                },
+                {
+                  "name": "Status=Warning",
+                  "properties": {
+                    "background": "rgba(237, 137, 54, 0.1)",
+                    "textColor": "#ed8936"
+                  }
+                },
+                {
+                  "name": "Status=Critical",
+                  "properties": {
+                    "background": "rgba(245, 101, 101, 0.1)",
+                    "textColor": "#f56565"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "ChartControl/Master",
+              "type": "component",
+              "width": 50,
+              "height": 32,
+              "componentProperties": [
+                {
+                  "name": "Text",
+                  "type": "text",
+                  "defaultValue": "6시간"
+                },
+                {
+                  "name": "State",
+                  "type": "variant",
+                  "variantOptions": ["Default", "Active", "Hover"],
+                  "defaultValue": "Default"
+                }
+              ]
+            },
+            {
+              "name": "ProgressBar/Master",
+              "type": "component",
+              "width": 280,
+              "height": 6,
+              "componentProperties": [
+                {
+                  "name": "Progress",
+                  "type": "text",
+                  "defaultValue": "45.2"
+                },
+                {
+                  "name": "Variant",
+                  "type": "variant",
+                  "variantOptions": ["CPU", "Memory", "Storage", "Network"],
+                  "defaultValue": "CPU"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Layout Components",
+          "components": [
+            {
+              "name": "ServerItem/Master",
+              "type": "component",
+              "width": 380,
+              "height": 60,
+              "componentProperties": [
+                {
+                  "name": "ServerName",
+                  "type": "text",
+                  "defaultValue": "c-pod-487"
+                },
+                {
+                  "name": "CPUUsage",
+                  "type": "text",
+                  "defaultValue": "42%"
+                },
+                {
+                  "name": "MemoryUsage",
+                  "type": "text",
+                  "defaultValue": "65%"
+                },
+                {
+                  "name": "DiskUsage",
+                  "type": "text",
+                  "defaultValue": "28%"
+                },
+                {
+                  "name": "Status",
+                  "type": "variant", 
+                  "variantOptions": ["Online", "Warning", "Offline"],
+                  "defaultValue": "Online"
+                }
+              ]
+            },
+            {
+              "name": "ChartCard/Master",
+              "type": "component",
+              "width": 1200,
+              "height": 350,
+              "componentProperties": [
+                {
+                  "name": "Title",
+                  "type": "text",
+                  "defaultValue": "시스템 리소스 추이"
+                },
+                {
+                  "name": "ActiveFilter",
+                  "type": "variant",
+                  "variantOptions": ["1시간", "6시간", "24시간", "7일"],
+                  "defaultValue": "6시간"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📱 Templates",
+      "type": "templates",
+      "sections": [
+        {
+          "name": "Desktop (1920x1080)",
+          "frames": [
+            {
+              "name": "시스템 모니터링 대시보드",
+              "width": 1920,
+              "height": 1080,
+              "components": [
+                {
+                  "name": "Sidebar",
+                  "x": 0,
+                  "y": 0,
+                  "component": "Sidebar/Master"
+                },
+                {
+                  "name": "Header",
+                  "x": 280,
+                  "y": 0,
+                  "component": "Header/Master"
+                },
+                {
+                  "name": "MetricsGrid",
+                  "x": 296,
+                  "y": 152,
+                  "component": "MetricsGrid/Master",
+                  "instances": [
+                    {
+                      "component": "MetricCard/Master",
+                      "properties": {
+                        "Type": "CPU",
+                        "Title": "CPU 사용률",
+                        "Value": "45.2%"
+                      }
+                    },
+                    {
+                      "component": "MetricCard/Master", 
+                      "properties": {
+                        "Type": "Memory",
+                        "Title": "메모리 사용률", 
+                        "Value": "68.7%"
+                      }
+                    },
+                    {
+                      "component": "MetricCard/Master",
+                      "properties": {
+                        "Type": "Storage",
+                        "Title": "스토리지 사용률",
+                        "Value": "34.8%"
+                      }
+                    },
+                    {
+                      "component": "MetricCard/Master",
+                      "properties": {
+                        "Type": "Network", 
+                        "Title": "네트워크 사용률",
+                        "Value": "23.1%"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "ChartSection",
+                  "x": 296,
+                  "y": 324,
+                  "component": "ChartCard/Master"
+                },
+                {
+                  "name": "ServerSection",
+                  "x": 296,
+                  "y": 700,
+                  "component": "ServerStatusCard/Master"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  
+  "exportSettings": {
+    "format": "figma",
+    "includeAssets": true,
+    "includeComponents": true,
+    "includeStyles": true,
+    "includePrototyping": true
+  },
+  
+  "figmaPluginData": {
+    "generateComponents": true,
+    "generateVariants": true,
+    "generateAutoLayout": true,
+    "generateConstraints": true,
+    "generateTextStyles": true,
+    "generateColorStyles": true,
+    "generateEffectStyles": true
+  }
+}

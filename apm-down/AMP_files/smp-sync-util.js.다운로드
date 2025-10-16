@@ -1,0 +1,65 @@
+/**
+ AMP의 서버 내용과 동기화를 위해서 WebSocket 연결
+ namespace : smpSync
+ author : ku.ji@kt.com
+ date : 2022.11.21
+ */
+(function () {
+
+    // 화면 변경 이벤트
+    window.smpSync = {
+        websocket: null,
+        syncFun: null,				// content root
+
+        /**
+         synchronize 초기화
+         */
+        initialize: function (syncFun) {
+            this.syncFun = syncFun;
+            this.doConnect();
+        },
+
+        /**
+         synchronize에 메시지 전달
+         */
+        send: function (message) {
+            this.websocket.send(message)
+        },
+
+        /**
+         * 서버와 연결을 해지한다.
+         */
+        close: function () {
+            // 기존의 연결이 있다면 종료
+            if (this.websocket != null) {
+                this.websocket.close();
+                this.websocket = null;
+            }
+        },
+
+        /**
+         * 서버와 연결 시도 및 이벤트 바인딩
+         */
+        doConnect: function () {
+            var self = this;
+
+            // 기존의 연결이 있다면 종료
+            if (this.websocket != null) {
+                this.websocket.close();
+            }
+            this.websocket = new WebSocket("ws://" + location.host + "/smp/synchronizer");
+            this.websocket.onmessage = function(event){
+                self.syncFun("receive", event)
+            }
+            this.websocket.onopen = function (event) {
+                self.syncFun("open", event)
+            }
+            this.websocket.onerror = function (event) {
+                self.syncFun("error", event)
+            }
+            this.websocket.onclose = function (event) {
+                self.syncFun("close", event)
+            }
+        }
+    }
+})();

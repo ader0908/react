@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KT AMP - 통합 관리 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors - 기존과 동일한 색상 */
+            --primary-blue: #2563eb;
+            --primary-purple: #7c3aed;
+            --primary-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+            
+            /* Status Colors */
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --info: #2563eb;
+            
+            /* Neutral Colors */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Text Colors */
+            --text-primary: #1f2937;
+            --text-secondary: rgba(31, 41, 55, 0.7);
+            --text-tertiary: rgba(31, 41, 55, 0.5);
+            
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(255, 255, 255, 0.8);
+            --bg-overlay: rgba(255, 255, 255, 0.1);
+            --bg-sidebar: rgba(255, 255, 255, 0.95);
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-lg: 16px;
+            --space-xl: 20px;
+            --space-2xl: 24px;
+            --space-3xl: 32px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #cbd5e1;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - 기존 스타일 유지 */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-xl);
+            transition: transform var(--transition-normal);
+            z-index: 1000;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            padding: var(--space-2xl);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: opacity var(--transition-normal);
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--gray-100);
+            color: var(--primary-blue);
+        }
+
+        .sidebar-nav {
+            padding: var(--space-lg) 0;
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .nav-section-title {
+            padding: var(--space-sm) var(--space-2xl);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            transition: opacity var(--transition-normal);
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-md) var(--space-2xl);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            position: relative;
+            margin: 0 var(--space-lg);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-item:hover {
+            background: var(--gray-100);
+            color: var(--primary-blue);
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -var(--space-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-md);
+            transition: margin var(--transition-normal);
+        }
+
+        .sidebar.collapsed .nav-icon {
+            margin-right: 0;
+        }
+
+        .nav-text {
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity var(--transition-normal);
+        }
+
+        .sidebar.collapsed .nav-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header - 기존 스타일 유지 */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        .time-display i {
+            font-size: 0.8rem;
+        }
+
+        .time-display span {
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 조회 기능 패널 */
+        .query-panel {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 36px;
+            flex-wrap: nowrap;
+            gap: 0.3rem;
+        }
+
+        .realtime-mode {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .query-mode {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .query-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.2rem 0.4rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .query-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .query-btn.stop-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .query-btn.start-btn {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .realtime-status {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        .status-indicator {
+            position: relative;
+            width: 8px;
+            height: 8px;
+        }
+
+        .pulse-circle {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .refresh-interval {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.15rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Content Body */
+        .content-body {
+            flex: 1;
+            padding: var(--space-2xl);
+            overflow-y: auto;
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Dashboard Styles - 기존 스타일 유지 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-card .change {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-card .change.positive {
+            color: var(--success);
+        }
+
+        .stat-card .change.negative {
+            color: var(--error);
+        }
+
+        .chart-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .chart-container h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xl);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+            margin-right: var(--space-md);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">KT</div>
+                    <div class="logo-text">AMP</div>
+                </div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인 메뉴</div>
+                    <a href="#" class="nav-item active" data-page="dashboard">
+                        <div class="nav-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="nav-text">대시보드</div>
+                    </a>
+                    <a href="#" class="nav-item" data-page="stt">
+                        <div class="nav-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="nav-text">STT 학습관리</div>
+                    </a>
+                    <a href="#" class="nav-item" data-page="tts">
+                        <div class="nav-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="nav-text">TTS 기초데이터관리</div>
+                    </a>
+                    <a href="#" class="nav-item" data-page="settings">
+                        <div class="nav-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="nav-text">공통설정</div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-title">
+                        <i class="fas fa-chart-line"></i>
+                        <h1 id="page-title">대시보드</h1>
+                    </div>
+                    <div class="header-info">
+                        <div class="query-panel">
+                            <div class="realtime-mode">
+                                <div class="query-mode">
+                                    <button class="query-btn start-btn" onclick="startRealtime()">
+                                        <i class="fas fa-play"></i>
+                                        <span>실시간</span>
+                                    </button>
+                                    <button class="query-btn stop-btn" onclick="stopRealtime()">
+                                        <i class="fas fa-stop"></i>
+                                        <span>중지</span>
+                                    </button>
+                                </div>
+                                <div class="realtime-status">
+                                    <div class="status-indicator">
+                                        <div class="pulse-circle"></div>
+                                    </div>
+                                    <span>실시간 모드</span>
+                                </div>
+                            </div>
+                            <div class="refresh-interval">
+                                <i class="fas fa-clock"></i>
+                                <span>5초</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="time-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page-content active">
+                <div class="content-body">
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <h3>총 프로젝트</h3>
+                            <div class="value">24</div>
+                            <div class="change positive">
+                                <i class="fas fa-arrow-up"></i> +12% 이번 달
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>활성 모델</h3>
+                            <div class="value">156</div>
+                            <div class="change positive">
+                                <i class="fas fa-arrow-up"></i> +8% 이번 주
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>처리된 요청</h3>
+                            <div class="value">1.2M</div>
+                            <div class="change positive">
+                                <i class="fas fa-arrow-up"></i> +23% 오늘
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>시스템 상태</h3>
+                            <div class="value" style="color: var(--success);">정상</div>
+                            <div class="change">
+                                <i class="fas fa-check-circle"></i> 모든 서비스 운영중
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>시스템 사용률 추이</h3>
+                        <canvas id="usageChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STT Page -->
+            <div id="stt" class="page-content">
+                <div class="content-body">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        STT 학습관리 페이지를 로딩중입니다...
+                    </div>
+                </div>
+            </div>
+
+            <!-- TTS Page -->
+            <div id="tts" class="page-content">
+                <div class="content-body">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        TTS 기초데이터관리 페이지를 로딩중입니다...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings" class="page-content">
+                <div class="content-body">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        공통설정 페이지를 로딩중입니다...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Chart.js 설정
+        Chart.register({
+            id: 'maxValueDisplay',
+            afterDraw: function(chart) {
+                const ctx = chart.ctx;
+                const options = chart.options.plugins.maxValueDisplay;
+                
+                if (!options || !options.display) return;
+                
+                let maxValue = 0;
+                let maxIndex = 0;
+                
+                chart.data.datasets.forEach((dataset) => {
+                    if (dataset.data && Array.isArray(dataset.data)) {
+                        dataset.data.forEach((value, index) => {
+                            if (typeof value === 'number' && value > maxValue) {
+                                maxValue = value;
+                                maxIndex = index;
+                            }
+                        });
+                    }
+                });
+                
+                if (maxValue === 0) return;
+                
+                const color = options.color || '#ef4444';
+                const fontSize = options.fontSize || 12;
+                const fontWeight = options.fontWeight || 'bold';
+                
+                const xScale = chart.scales.x;
+                const yScale = chart.scales.y;
+                const xPixel = xScale.getPixelForValue(chart.data.labels[maxIndex]);
+                const yPixel = yScale.getPixelForValue(maxValue);
+                
+                if (xPixel >= xScale.left && xPixel <= xScale.right && 
+                    yPixel >= yScale.top && yPixel <= yScale.bottom) {
+                    
+                    ctx.save();
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(xPixel, yPixel, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.restore();
+                    
+                    ctx.save();
+                    ctx.fillStyle = color;
+                    ctx.font = `${fontWeight} ${fontSize}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    
+                    const text = `MAX ${maxValue.toFixed(1)}%`;
+                    const textMetrics = ctx.measureText(text);
+                    const textWidth = textMetrics.width;
+                    const textHeight = fontSize;
+                    const padding = 6;
+                    
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                    ctx.fillRect(
+                        xPixel - textWidth / 2 - padding,
+                        yPixel - textHeight - padding * 2,
+                        textWidth + padding * 2,
+                        textHeight + padding * 2
+                    );
+                    
+                    ctx.fillStyle = color;
+                    ctx.fillText(text, xPixel, yPixel - padding);
+                    ctx.restore();
+                }
+            }
+        });
+
+        // 네비게이션 처리
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageContents = document.querySelectorAll('.page-content');
+            const pageTitle = document.getElementById('page-title');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 모든 활성 상태 제거
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    pageContents.forEach(page => page.classList.remove('active'));
+                    
+                    // 클릭된 항목 활성화
+                    this.classList.add('active');
+                    
+                    // 해당 페이지 표시
+                    const targetPage = this.getAttribute('data-page');
+                    const targetElement = document.getElementById(targetPage);
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                        
+                        // 페이지 제목 업데이트
+                        const pageNames = {
+                            'dashboard': '대시보드',
+                            'stt': 'STT 학습관리',
+                            'tts': 'TTS 기초데이터관리',
+                            'settings': '공통설정'
+                        };
+                        pageTitle.textContent = pageNames[targetPage] || '대시보드';
+                    }
+                });
+            });
+            
+            // 대시보드 차트 초기화
+            initDashboardChart();
+            
+            // 시간 업데이트
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+
+        // 대시보드 차트 초기화
+        function initDashboardChart() {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                    datasets: [{
+                        label: 'CPU 사용률',
+                        data: [65, 72, 68, 75, 82, 78, 85, 88, 92, 89, 86, 90],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: '메모리 사용률',
+                        data: [45, 52, 48, 55, 62, 58, 65, 68, 72, 69, 66, 70],
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        maxValueDisplay: {
+                            display: true,
+                            color: '#ef4444',
+                            fontSize: 12,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 사이드바 토글
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // 실시간 모드 시작
+        function startRealtime() {
+            console.log('실시간 모드 시작');
+        }
+
+        // 실시간 모드 중지
+        function stopRealtime() {
+            console.log('실시간 모드 중지');
+        }
+
+        // 시간 업데이트
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+    </script>
+</body>
+</html>

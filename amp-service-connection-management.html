@@ -1,0 +1,4336 @@
+<!DOCTYPE html>
+<!-- saved from url=(0093)file:///C:/work/%EB%9D%BC%ED%94%BC%EC%B9%98/amp-curser/amp-service-connection-management.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 연결 관리 - KT AMP</title>
+    <link href="./css2(1)" rel="stylesheet">
+    <link href="./all(1).min.css" rel="stylesheet">
+    <script src="./d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 i {
+            color: var(--primary-blue);
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+            height: calc(85vh - 120px);
+            max-height: 700px;
+        }
+
+        .drag-drop-container {
+            position: relative;
+            height: calc(85vh - 120px);
+            max-height: 700px;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        /* 초기 안내 화면 스타일 */
+        .initial-guide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            z-index: 5;
+        }
+
+        .guide-icon {
+            font-size: 48px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .initial-guide h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .guide-main-text {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+
+        .guide-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .guide-tips {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 15px 20px;
+            max-width: 400px;
+        }
+
+        .guide-tips p {
+            margin: 0;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .guide-tips i {
+            color: #f59e0b;
+            margin-right: 8px;
+        }
+
+        #mainSvg {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #mainSvg:active {
+            cursor: grabbing;
+        }
+
+        .service-circle {
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .service-circle:hover {
+            transform: scale(1.05);
+            filter: url(#glow);
+        }
+
+        .entity-node {
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .entity-node:hover {
+            transform: scale(1.1);
+            filter: url(#glow);
+        }
+
+        .entity-node.connected {
+            filter: url(#glow);
+        }
+
+        .drop-zone {
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .drop-zone.active {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.6;
+                stroke-dashoffset: 0;
+            }
+            50% {
+                opacity: 1;
+                stroke-dashoffset: -12;
+            }
+        }
+
+        .service-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            cursor: move;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .service-name {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .service-type {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .service-node:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        }
+
+        .service-node.dragging {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .service-name {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .service-type {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .entity-nodes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .entity-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 11px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.3s ease;
+            pointer-events: all;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            border: 3px solid transparent;
+        }
+
+        .entity-node:hover {
+            transform: scale(1.1);
+        }
+
+        .entity-node.dragging {
+            cursor: grabbing;
+            transform: scale(1.2);
+            z-index: 20;
+        }
+
+        .entity-node.connected {
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+            border: 3px solid var(--success);
+            transform: scale(1.05);
+        }
+
+        .entity-node.disconnected {
+            opacity: 0.7;
+            border: 2px dashed var(--gray-400);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .entity-node.speaker {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .entity-node.channel {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .entity-node.server {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .entity-name {
+            font-size: 9px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 50px;
+        }
+
+        .entity-code {
+            font-size: 8px;
+            opacity: 0.8;
+        }
+
+        .connection-line {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .connection-line svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .connection-line path {
+            stroke: var(--gray-400);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5,5;
+            animation: dash 1s linear infinite;
+        }
+
+        .connection-line.connected path {
+            stroke: var(--success);
+            stroke-width: 3;
+            stroke-dasharray: none;
+            animation: none;
+        }
+
+        .connection-line.dragging path {
+            stroke: var(--primary-blue);
+            stroke-width: 3;
+            stroke-dasharray: 8,4;
+            animation: dash 0.5s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -9;
+            }
+        }
+
+        .drop-zone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            border: 3px dashed var(--primary-blue);
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .drop-zone.active {
+            display: flex;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .drag-drop-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 25;
+        }
+
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn:hover {
+            background: var(--gray-50);
+            transform: scale(1.1);
+        }
+
+        .control-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .control-btn.apply-btn {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .control-btn.apply-btn:hover {
+            background: #059669;
+            border-color: #059669;
+            transform: scale(1.1);
+        }
+
+        .control-btn.apply-btn:disabled {
+            background: #9ca3af;
+            border-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+
+        .control-btn.cancel-btn {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .control-btn.cancel-btn:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .entity-panel {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: calc(85vh - 20px);
+            max-height: 850px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .entity-panel h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .entity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 6px;
+            background: white;
+            transition: all 0.2s;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .entity-item[draggable="true"] {
+            cursor: grab;
+        }
+
+        .entity-item[draggable="true"]:active {
+            cursor: grabbing;
+        }
+
+        .entity-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .entity-item.dragging {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+
+        .entity-item.connected {
+            border-color: var(--success);
+            background: #f0fff4;
+        }
+
+        .entity-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .entity-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .entity-icon.speaker {
+            background: #8b5cf6;
+        }
+
+        .entity-icon.channel {
+            background: #f59e0b;
+        }
+
+        .entity-icon.server {
+            background: #ef4444;
+        }
+
+        .entity-details h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .entity-details p {
+            font-size: 10px;
+            color: var(--gray-500);
+        }
+
+        .entity-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+
+        .connection-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 12px;
+            color: var(--gray-700);
+            z-index: 25;
+        }
+
+        .connection-info h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--gray-900);
+        }
+
+        .connection-stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* DVS 라벨 스타일 */
+        .dvs-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+            white-space: nowrap;
+        }
+
+        /* 스피커 통계 스타일 */
+        .speaker-stats {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--gray-600);
+            margin-left: 8px;
+        }
+
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .stat-dot.connected {
+            background: var(--success);
+        }
+
+        .stat-dot.disconnected {
+            background: var(--gray-300);
+        }
+
+        .stat-dot.error {
+            background: var(--error);
+        }
+
+        .service-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-selector {
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .selected-service-info {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .service-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .service-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-item i {
+            color: var(--primary-blue);
+        }
+
+        .connection-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-button.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab-button:hover:not(.active) {
+            color: var(--gray-700);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .entity-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .entity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .entity-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .entity-item.connected {
+            border-color: var(--success);
+            background: #f0fff4;
+        }
+
+        .entity-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .entity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .entity-icon.speaker {
+            background: #8b5cf6;
+        }
+
+        .entity-icon.channel {
+            background: #f59e0b;
+        }
+
+        .entity-icon.server {
+            background: #ef4444;
+        }
+
+        .entity-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .entity-details p {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .entity-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .connection-status {
+            margin-bottom: 24px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.connected {
+            background: var(--success);
+        }
+
+        .status-indicator.disconnected {
+            background: var(--gray-300);
+        }
+
+        .status-indicator.error {
+            background: var(--error);
+        }
+
+        .bulk-actions-panel {
+            position: sticky;
+            bottom: -25px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+            margin: 15px -20px -20px -20px;
+            padding: 15px 20px;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            z-index: 10;
+        }
+
+        .bulk-actions-panel .bulk-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .bulk-actions-panel .btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .bulk-actions-panel .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 도형 표시/숨김 토글 버튼들 */
+        .entity-visibility-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-md);
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .visibility-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: var(--radius-sm);
+            background: white;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .visibility-btn:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+        }
+
+        .visibility-btn.active {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .visibility-btn.service-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .visibility-btn.speaker-btn.active {
+            background: #8b5cf6;
+            border-color: #8b5cf6;
+        }
+
+        .visibility-btn.channel-btn.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .visibility-btn.server-btn.active {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+
+
+        /* 상단 통계 바 */
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .stats-bar .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stats-bar .stat-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+
+        /* 서비스 연결 상세 정보 */
+        .service-connection-details {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .connection-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .connection-detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+
+        .entity-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            border-color: #d97706;
+        }
+
+        .btn-info {
+            background: #06b6d4;
+            border-color: #06b6d4;
+        }
+
+        .btn-info:hover {
+            background: #0891b2;
+            border-color: #0891b2;
+        }
+
+        .bulk-actions-bottom .btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .bulk-actions-bottom .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--gray-300);
+        }
+
+        .empty-state h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-box input {
+            padding-left: 36px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-400);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .close:hover {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 8px 16px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .connection-form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            color: #0c4a6e;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .alert i {
+            color: inherit;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 상단 통계 정보 -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">총 서비스:</span>
+                <span class="stat-value" id="totalServices">4</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">총 스피커:</span>
+                <span class="stat-value" id="totalSpeakers">30</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">총 채널:</span>
+                <span class="stat-value" id="totalChannels">6</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">총 서버:</span>
+                <span class="stat-value" id="totalServers">6</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">연결됨:</span>
+                <span class="stat-value" id="connectedCount">2</span>
+            </div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="main-content">
+            <!-- 드래그 앤 드롭 영역 -->
+            <div class="service-section">
+                <!-- 서비스 선택 -->
+                <div class="service-selector">
+                    <div class="form-group">
+                        <label class="form-label">서비스 선택</label>
+                        <select class="form-control" id="serviceSelector" onchange="selectService()"><option value="">서비스를 선택하세요</option><option value="svc-1">정제스트 (TTS)</option><option value="svc-2">정제스트2 (TTS)</option><option value="svc-3">정제스트3 (TTS)</option><option value="svc-4">테스트서비스 (STT)</option></select>
+                    </div>
+                </div>
+
+                <!-- SVG 드래그 앤 드롭 컨테이너 -->
+                <div class="drag-drop-container" id="dragDropContainer">
+                    <!-- 연결 정보 -->
+                    <div class="connection-info" id="connectionInfo" style="display: block;">
+                        <h4>연결 상태</h4>
+                        <div class="connection-stats">
+                            <div class="stat-item">
+                                <div class="stat-dot connected"></div>
+                                <span>연결됨: <span id="connectedCountInfo">2</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span>스피커: <span id="connectedSpeakers">1</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span>채널: <span id="connectedChannels">0</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span>서버: <span id="connectedServers">1</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 초기 안내 화면 -->
+                    <div id="initialGuide" class="initial-guide">
+                        <div class="guide-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h3>서비스 연결 관리</h3>
+                        <p class="guide-main-text">서비스를 선택하여 연결을 시작하세요</p>
+                        <div class="guide-steps">
+                            <div class="guide-step">
+                                <span class="step-number">1</span>
+                                <span class="step-text">위의 드롭다운에서 서비스를 선택하세요</span>
+                            </div>
+                            <div class="guide-step">
+                                <span class="step-number">2</span>
+                                <span class="step-text">오른쪽에서 연결할 엔티티를 찾으세요</span>
+                            </div>
+                            <div class="guide-step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">"연결" 버튼을 클릭하여 연결하세요</span>
+                            </div>
+                        </div>
+                        <div class="guide-tips">
+                            <p><i class="fas fa-lightbulb"></i> <strong>팁:</strong> 일괄 작업 버튼으로 여러 엔티티를 한 번에 연결할 수 있습니다</p>
+                        </div>
+                    </div>
+                    
+                    <svg id="mainSvg" width="100%" height="600" viewBox="0 0 600 600" style="display: none;">
+                        <!-- 배경 그리드 -->
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1"></path>
+                            </pattern>
+                            
+                            <!-- 그라디언트 정의 -->
+                            <radialgradient id="serviceGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1"></stop>
+                            </radialgradient>
+                            
+                            <radialgradient id="speakerGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1"></stop>
+                            </radialgradient>
+                            
+                            <radialgradient id="channelGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#d97706;stop-opacity:1"></stop>
+                            </radialgradient>
+                            
+                            <radialgradient id="serverGradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1"></stop>
+                            </radialgradient>
+                            
+                            <!-- 필터 정의 -->
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <fegaussianblur stdDeviation="3" result="coloredBlur"></fegaussianblur>
+                                <femerge> 
+                                    <femergenode in="coloredBlur"></femergenode>
+                                    <femergenode in="SourceGraphic"></femergenode>
+                                </femerge>
+                            </filter>
+                            
+                            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                <fedropshadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.3)"></fedropshadow>
+                            </filter>
+                        </defs>
+                        
+                        <!-- 배경 그리드 -->
+                        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+                        
+                        <!-- 연결선들 -->
+                        <g id="connectionLines"><path stroke="#999" stroke-width="2" fill="none" opacity="0.6" d="M300,300L205.51230116941974,342.8965050582826"></path><path stroke="#999" stroke-width="2" fill="none" opacity="0.6" d="M300,300L394.50857322964924,257.0472971048886"></path></g>
+                        
+                        <!-- 엔티티 노드들 -->
+                        <g id="entityNodes"><g class="entity-node" transform="translate(205.51230116941974,342.8965050582826)" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><ellipse rx="20" ry="15" fill="#8b5cf6" stroke="#000" stroke-width="2" opacity="1"></ellipse><ellipse rx="18" ry="13" fill="rgba(255, 255, 255, 0.2)" opacity="0.8"></ellipse><text text-anchor="middle" dy="4" fill="white" font-size="10px" font-weight="bold" text-shadow="1px 1px 2px rgba(0,0,0,0.5)" opacity="1">철수</text></g><g class="entity-node" transform="translate(394.50857322964924,257.0472971048886)" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><ellipse rx="49" ry="15" fill="#ef4444" stroke="#000" stroke-width="2" opacity="1"></ellipse><ellipse rx="47" ry="13" fill="rgba(255, 255, 255, 0.2)" opacity="0.8"></ellipse><text text-anchor="middle" dy="4" fill="white" font-size="10px" font-weight="bold" text-shadow="1px 1px 2px rgba(0,0,0,0.5)" opacity="1">Emotion-서버-0...</text></g></g>
+                        
+                        <!-- 서비스 노드 -->
+                        <g id="serviceNode" style="display: block;">
+                            <circle cx="300" cy="300" r="35" fill="url(#serviceGradient)" stroke="#1e40af" stroke-width="2" filter="url(#shadow)" class="service-circle"></circle>
+                            <text x="300" y="295" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold" id="serviceNodeName">정제스트3</text>
+                            <text x="300" y="308" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" opacity="0.8" id="serviceNodeType">TTS</text>
+                        </g>
+                        
+                        <!-- 드롭 존 -->
+                        <circle id="dropZone" cx="300" cy="300" r="50" fill="none" stroke="#3b82f6" stroke-width="3" stroke-dasharray="8,4" opacity="0" class="drop-zone"></circle>
+                    </svg>
+                    
+                    <!-- 도형 표시/숨김 토글 버튼들 (오른쪽 상단 모서리) -->
+                    <div class="entity-visibility-controls">
+                        <button class="visibility-btn service-btn active" onclick="toggleEntityVisibility('service')" title="서비스 표시/숨김">
+                            <i class="fas fa-circle"></i> 서비스
+                        </button>
+                        <button class="visibility-btn speaker-btn active" onclick="toggleEntityVisibility('speaker')" title="스피커 표시/숨김">
+                            <i class="fas fa-volume-up"></i> 스피커
+                        </button>
+                        <button class="visibility-btn channel-btn active" onclick="toggleEntityVisibility('channel')" title="채널 표시/숨김">
+                            <i class="fas fa-broadcast-tower"></i> 채널
+                        </button>
+                        <button class="visibility-btn server-btn active" onclick="toggleEntityVisibility('server')" title="서버 표시/숨김">
+                            <i class="fas fa-server"></i> 서버
+                        </button>
+                    </div>
+
+                    
+
+                    
+                </div>
+            </div>
+
+            <!-- 엔티티 패널 -->
+            <div class="entity-panel">
+                <!-- 탭 네비게이션 -->
+                <div class="connection-tabs">
+                    <button class="tab-button active" onclick="switchTab('speakers')">
+                        <i class="fas fa-volume-up"></i> 스피커
+                    </button>
+                    <button class="tab-button" onclick="switchTab('channels')">
+                        <i class="fas fa-broadcast-tower active"></i> 채널
+                    </button>
+                    <button class="tab-button" onclick="switchTab('servers')">
+                        <i class="fas fa-server"></i> 서버
+                    </button>
+                </div>
+
+                <!-- 스피커 패널 -->
+                <div id="speakersPanel" class="tab-content active">
+                    <h3><i class="fas fa-volume-up"></i> 스피커 목록 <span class="speaker-stats" id="speakerStats">총 30개 중 DVS 15개</span></h3>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="스피커 검색..." id="speakerSearch" onkeyup="filterEntities('speakers')">
+                    </div>
+                    <div class="entity-list" id="speakersList">
+                    <div class="entity-item " data-entity-id="spk-1" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-1', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>다솜힘을</h4>
+                                <p>SPK-001 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-1', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-2" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-2', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>민수</h4>
+                                <p>SPK-002 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-2', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-3" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-3', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>432</h4>
+                                <p>SPK-003 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-3', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-4" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-4', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>영희</h4>
+                                <p>SPK-004 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-4', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-5" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-5', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>서연</h4>
+                                <p>SPK-005 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-5', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item connected" data-entity-id="spk-6" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-6', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>철수</h4>
+                                <p>SPK-006 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-danger btn-sm" onclick="disconnectEntity('spk-6', 'speakers')">
+                                    <i class="fas fa-unlink"></i> 해제
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-7" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-7', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>지영</h4>
+                                <p>SPK-007 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-7', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-8" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-8', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>현우</h4>
+                                <p>SPK-008 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-8', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-9" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-9', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>수진</h4>
+                                <p>SPK-009 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-9', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-10" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-10', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>준호</h4>
+                                <p>SPK-010 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-10', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-11" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-11', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>미래</h4>
+                                <p>SPK-011 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-11', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-12" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-12', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>태현</h4>
+                                <p>SPK-012 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-12', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-13" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-13', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>하늘</h4>
+                                <p>SPK-013 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-13', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-14" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-14', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>동현</h4>
+                                <p>SPK-014 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-14', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-15" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-15', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>예린</h4>
+                                <p>SPK-015 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-15', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-16" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-16', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>성민</h4>
+                                <p>SPK-016 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-16', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-17" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-17', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>지혜</h4>
+                                <p>SPK-017 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-17', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-18" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-18', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>민재</h4>
+                                <p>SPK-018 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-18', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-19" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-19', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>소영</h4>
+                                <p>SPK-019 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-19', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-20" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-20', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>재현</h4>
+                                <p>SPK-020 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-20', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-21" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-21', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>유진</h4>
+                                <p>SPK-021 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-21', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-22" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-22', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>준영</h4>
+                                <p>SPK-022 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-22', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-23" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-23', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>나연</h4>
+                                <p>SPK-023 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-23', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-24" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-24', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>현수</h4>
+                                <p>SPK-024 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-24', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-25" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-25', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>지은</h4>
+                                <p>SPK-025 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-25', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-26" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-26', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>승우</h4>
+                                <p>SPK-026 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-26', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-27" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-27', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>다은</h4>
+                                <p>SPK-027 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-27', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-28" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-28', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>건우</h4>
+                                <p>SPK-028 • 기본</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-28', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-29" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-29', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>서현</h4>
+                                <p>SPK-029 • 특화</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-29', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="spk-30" data-entity-type="speakers" draggable="true" ondragstart="handleEntityDragStart(event, 'spk-30', 'speakers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon speakers">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>민호</h4>
+                                <p>SPK-030 • 감정</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('spk-30', 'speakers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- 채널 패널 -->
+                <div id="channelsPanel" class="tab-content">
+                    <h3><i class="fas fa-broadcast-tower"></i> 채널 목록</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="채널 검색..." id="channelSearch" onkeyup="filterEntities('channels')">
+                    </div>
+                    <div class="entity-list" id="channelsList">
+                    <div class="entity-item " data-entity-id="ch-1" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-1', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-12</h4>
+                                <p>CH-012</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-1', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="ch-2" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-2', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-11</h4>
+                                <p>CH-011</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-2', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="ch-3" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-3', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-14</h4>
+                                <p>CH-014</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-3', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="ch-4" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-4', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-13</h4>
+                                <p>CH-013</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-4', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="ch-5" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-5', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-15</h4>
+                                <p>CH-015</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-5', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="ch-6" data-entity-type="channels" draggable="true" ondragstart="handleEntityDragStart(event, 'ch-6', 'channels')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon channels">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>채널-16</h4>
+                                <p>CH-016</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('ch-6', 'channels')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- 서버 패널 -->
+                <div id="serversPanel" class="tab-content">
+                    <h3><i class="fas fa-server"></i> 서버 목록</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="서버 검색..." id="serverSearch" onkeyup="filterEntities('servers')">
+                    </div>
+                    <div class="entity-list" id="serversList">
+                    <div class="entity-item " data-entity-id="srv-1" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-1', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>TTS-서버-01</h4>
+                                <p>192.168.1.10 • TCS</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('srv-1', 'servers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                    </div>
+                </div>
+
+                    <div class="entity-item " data-entity-id="srv-2" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-2', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                    </div>
+                            <div class="entity-details">
+                                <h4>TTS-서버-02</h4>
+                                <p>192.168.1.11 • TCS</p>
+                    </div>
+                    </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('srv-2', 'servers')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>
+                    </div>
+                </div>
+
+                    <div class="entity-item " data-entity-id="srv-3" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-3', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>TTS-서버-03</h4>
+                                <p>192.168.1.12 • TCS</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('srv-3', 'servers')">
+                                    <i class="fas fa-link"></i> 연결
+                        </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="srv-4" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-4', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>STT-서버-01</h4>
+                                <p>192.168.1.20 • DSE</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('srv-4', 'servers')">
+                                    <i class="fas fa-link"></i> 연결
+                        </button>
+                        </div>
+                    </div>
+                
+                    <div class="entity-item " data-entity-id="srv-5" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-5', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>STT-서버-02</h4>
+                                <p>192.168.1.21 • DSE</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-success btn-sm" onclick="connectEntity('srv-5', 'servers')">
+                                    <i class="fas fa-link"></i> 연결
+                        </button>
+                    </div>
+                </div>
+
+                    <div class="entity-item connected" data-entity-id="srv-6" data-entity-type="servers" draggable="true" ondragstart="handleEntityDragStart(event, 'srv-6', 'servers')" ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon servers">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>Emotion-서버-01</h4>
+                                <p>192.168.1.30 • TCS</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            <button class="btn btn-danger btn-sm" onclick="disconnectEntity('srv-6', 'servers')">
+                                    <i class="fas fa-unlink"></i> 해제
+                        </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+
+                <!-- 일괄 작업 버튼들 (엔티티 패널 내부 하단) -->
+                <div class="bulk-actions-panel">
+                    <div class="bulk-buttons">
+                        <button class="btn btn-success" onclick="bulkConnect()">
+                            <i class="fas fa-link"></i> 전체 연결
+                        </button>
+                        <button class="btn btn-danger" onclick="bulkDisconnect()">
+                            <i class="fas fa-unlink"></i> 전체 해제
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetToLastSaved()">
+                            <i class="fas fa-undo"></i> 초기화
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- 하단 액션 버튼들 -->
+        <div class="modal-footer" style="position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 8px 16px; border-top: 1px solid #e9ecef; display: flex; justify-content: center; gap: 15px; z-index: 1000;">
+            <button class="btn btn-secondary" onclick="cancelChanges()" style="min-width: 100px;">
+                <i class="fas fa-times"></i> 취소
+            </button>
+            <button class="btn btn-primary" onclick="saveChanges()" style="min-width: 100px;">
+                <i class="fas fa-save"></i> 저장
+            </button>
+        </div>
+    </div>
+
+    <!-- 연결 모달 -->
+    <div id="connectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">연결 설정</h3>
+                <button class="close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    선택한 항목을 현재 서비스에 연결합니다.
+                </div>
+                <div class="connection-form" id="connectionForm">
+                    <!-- 동적으로 생성됩니다 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+                <button class="btn btn-primary" onclick="confirmConnection()">연결</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let selectedService = null;
+        let currentTab = 'speakers';
+        let allEntities = {
+            speakers: [],
+            channels: [],
+            servers: []
+        };
+        let selectedEntities = [];
+        let isDragging = false;
+        let draggedElement = null;
+        let dragOffset = { x: 0, y: 0 };
+        let showConnections = true;
+        let entityPositions = {};
+        let pendingChanges = [];
+        let hasUnsavedChanges = false;
+        
+        // D3.js 관련 변수
+        let svg, simulation, nodes, links, nodeGroup, linkGroup;
+        let nodeData = [];
+        let linkData = [];
+
+        // 샘플 데이터
+        const sampleServices = [
+            { id: 'svc-1', name: '정제스트', language: '한국어', type: 'TTS' },
+            { id: 'svc-2', name: '정제스트2', language: '한국어', type: 'TTS' },
+            { id: 'svc-3', name: '정제스트3', language: '한국어', type: 'TTS' },
+            { id: 'svc-4', name: '테스트서비스', language: '한국어', type: 'STT' }
+        ];
+
+        const sampleEntities = {
+            speakers: [
+                { id: 'spk-1', name: '다솜힘을', code: 'SPK-001', type: '기본', status: 'active', connectedTo: 'svc-1', isDVS: false },
+                { id: 'spk-2', name: '민수', code: 'SPK-002', type: '기본', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-3', name: '432', code: 'SPK-003', type: '특화', status: 'active', connectedTo: 'svc-2', isDVS: false },
+                { id: 'spk-4', name: '영희', code: 'SPK-004', type: '기본', status: 'active', connectedTo: 'svc-4', isDVS: true },
+                { id: 'spk-5', name: '서연', code: 'SPK-005', type: '감정', status: 'warning', connectedTo: null, isDVS: false },
+                { id: 'spk-6', name: '철수', code: 'SPK-006', type: '감정', status: 'error', connectedTo: 'svc-3', isDVS: true },
+                { id: 'spk-7', name: '지영', code: 'SPK-007', type: '기본', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-8', name: '현우', code: 'SPK-008', type: '특화', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-9', name: '수진', code: 'SPK-009', type: '감정', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-10', name: '준호', code: 'SPK-010', type: '기본', status: 'warning', connectedTo: null, isDVS: true },
+                { id: 'spk-11', name: '미래', code: 'SPK-011', type: '특화', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-12', name: '태현', code: 'SPK-012', type: '감정', status: 'error', connectedTo: null, isDVS: true },
+                { id: 'spk-13', name: '하늘', code: 'SPK-013', type: '기본', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-14', name: '동현', code: 'SPK-014', type: '특화', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-15', name: '예린', code: 'SPK-015', type: '감정', status: 'warning', connectedTo: null, isDVS: false },
+                { id: 'spk-16', name: '성민', code: 'SPK-016', type: '기본', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-17', name: '지혜', code: 'SPK-017', type: '특화', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-18', name: '민재', code: 'SPK-018', type: '감정', status: 'error', connectedTo: null, isDVS: true },
+                { id: 'spk-19', name: '소영', code: 'SPK-019', type: '기본', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-20', name: '재현', code: 'SPK-020', type: '특화', status: 'warning', connectedTo: null, isDVS: true },
+                { id: 'spk-21', name: '유진', code: 'SPK-021', type: '감정', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-22', name: '준영', code: 'SPK-022', type: '기본', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-23', name: '나연', code: 'SPK-023', type: '특화', status: 'error', connectedTo: null, isDVS: false },
+                { id: 'spk-24', name: '현수', code: 'SPK-024', type: '감정', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-25', name: '지은', code: 'SPK-025', type: '기본', status: 'warning', connectedTo: null, isDVS: false },
+                { id: 'spk-26', name: '승우', code: 'SPK-026', type: '특화', status: 'active', connectedTo: null, isDVS: true },
+                { id: 'spk-27', name: '다은', code: 'SPK-027', type: '감정', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-28', name: '건우', code: 'SPK-028', type: '기본', status: 'error', connectedTo: null, isDVS: true },
+                { id: 'spk-29', name: '서현', code: 'SPK-029', type: '특화', status: 'active', connectedTo: null, isDVS: false },
+                { id: 'spk-30', name: '민호', code: 'SPK-030', type: '감정', status: 'warning', connectedTo: null, isDVS: true }
+            ],
+            channels: [
+                { id: 'ch-1', name: '채널-12', code: 'CH-012', status: 'active', connectedTo: 'svc-1' },
+                { id: 'ch-2', name: '채널-11', code: 'CH-011', status: 'active', connectedTo: 'svc-1' },
+                { id: 'ch-3', name: '채널-14', code: 'CH-014', status: 'active', connectedTo: 'svc-2' },
+                { id: 'ch-4', name: '채널-13', code: 'CH-013', status: 'warning', connectedTo: 'svc-4' },
+                { id: 'ch-5', name: '채널-15', code: 'CH-015', status: 'active', connectedTo: null },
+                { id: 'ch-6', name: '채널-16', code: 'CH-016', status: 'error', connectedTo: null }
+            ],
+            servers: [
+                { id: 'srv-1', name: 'TTS-서버-01', ip: '192.168.1.10', type: 'TCS', status: 'active', connectedTo: 'svc-1' },
+                { id: 'srv-2', name: 'TTS-서버-02', ip: '192.168.1.11', type: 'TCS', status: 'active', connectedTo: 'svc-1' },
+                { id: 'srv-3', name: 'TTS-서버-03', ip: '192.168.1.12', type: 'TCS', status: 'active', connectedTo: 'svc-2' },
+                { id: 'srv-4', name: 'STT-서버-01', ip: '192.168.1.20', type: 'DSE', status: 'active', connectedTo: 'svc-4' },
+                { id: 'srv-5', name: 'STT-서버-02', ip: '192.168.1.21', type: 'DSE', status: 'warning', connectedTo: null },
+                { id: 'srv-6', name: 'Emotion-서버-01', ip: '192.168.1.30', type: 'TCS', status: 'error', connectedTo: 'svc-3' }
+            ]
+        };
+
+        // D3.js 초기화
+        function initializeD3() {
+            // SVG 요소 선택
+            svg = d3.select("#mainSvg");
+            
+            // 그룹 생성
+            linkGroup = svg.select("#connectionLines");
+            nodeGroup = svg.select("#entityNodes");
+            
+            // Force Simulation 설정
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().distance(150))
+                .force("charge", d3.forceManyBody().strength(-80))
+                .force("center", d3.forceCenter(300, 300))
+                .force("collision", d3.forceCollide().radius(30))
+                .force("x", d3.forceX(300).strength(0.05))
+                .force("y", d3.forceY(300).strength(0.05));
+        }
+
+        // 노드 데이터 업데이트
+        function updateNodeData() {
+            // 연결된 엔티티만 D3.js 네트워크에 표시
+                nodeData = [];
+                
+            // 서비스 노드는 HTML의 serviceNode를 사용하므로 D3.js 데이터에 추가하지 않음
+            
+            if (!selectedService) return;
+            
+            // 연결된 엔티티들만 필터링
+            const connectedEntities = Object.values(allEntities).flat().filter(entity => 
+                entity.connectedTo === selectedService.id
+            );
+            
+            connectedEntities.forEach((entity, index) => {
+                // 엔티티의 실제 타입 결정 (speaker, channel, server)
+                let entityType = 'speaker'; // 기본값
+                if (allEntities.speakers.some(s => s.id === entity.id)) {
+                    entityType = 'speaker';
+                } else if (allEntities.channels.some(c => c.id === entity.id)) {
+                    entityType = 'channel';
+                } else if (allEntities.servers.some(s => s.id === entity.id)) {
+                    entityType = 'server';
+                }
+                
+                // entityVisibility 상태 확인 - 해당 타입이 숨겨져 있으면 추가하지 않음
+                if (!entityVisibility[entityType]) {
+                    return;
+                }
+                
+                // 서비스 노드(300, 300) 주변에 원형으로 배치
+                const angle = (index / Math.max(connectedEntities.length, 1)) * 2 * Math.PI;
+                const radius = 150; // 서비스 노드로부터의 거리
+                const x = 300 + radius * Math.cos(angle);
+                const y = 300 + radius * Math.sin(angle);
+                
+                    nodeData.push({
+                        id: entity.id,
+                        name: entity.name,
+                    type: entityType, // 실제 엔티티 타입 사용
+                        connectedTo: entity.connectedTo,
+                        isDVS: entity.isDVS || false, // DVS 정보 추가
+                    x: x,
+                    y: y
+                    });
+                });
+        }
+
+        // 링크 데이터 업데이트
+        function updateLinkData() {
+            linkData = [];
+            
+            if (!selectedService) return;
+            
+            // 연결된 엔티티들만 필터링
+            const connectedEntities = Object.values(allEntities).flat().filter(entity => 
+                entity.connectedTo === selectedService.id
+            );
+            
+            connectedEntities.forEach(entity => {
+                // source와 target을 노드 객체로 변환
+                const sourceNode = { id: selectedService.id, x: 300, y: 300 };
+                const targetNode = nodeData.find(n => n.id === entity.id);
+                
+                if (targetNode) {
+                    linkData.push({
+                        source: sourceNode,
+                        target: targetNode
+                    });
+                }
+            });
+        }
+
+        // D3.js로 노드와 링크 렌더링
+        function renderD3Network() {
+            console.log('renderD3Network 호출됨');
+            
+            // D3.js 초기화 확인
+            if (!nodeGroup || !linkGroup) {
+                console.log('D3.js 초기화 필요');
+                initializeD3();
+            }
+            
+            // 서비스가 선택되지 않은 경우 모든 노드와 링크 제거
+            if (!selectedService) {
+                console.log('서비스가 선택되지 않음 - 다이어그램 비우기');
+                if (nodeGroup) {
+                    nodeGroup.selectAll("*").remove();
+                }
+                if (linkGroup) {
+                    linkGroup.selectAll("*").remove();
+                }
+                return;
+            }
+            
+            updateNodeData();
+            updateLinkData();
+            
+            // 서비스 노드 표시/숨김 처리
+            const serviceNode = document.getElementById('serviceNode');
+            if (serviceNode) {
+                serviceNode.style.display = entityVisibility.service ? 'block' : 'none';
+            }
+            
+            console.log('노드 데이터:', nodeData);
+            console.log('링크 데이터:', linkData);
+            console.log('선택된 서비스:', selectedService);
+            console.log('nodeGroup:', nodeGroup);
+            console.log('linkGroup:', linkGroup);
+            
+            // 기존 노드와 링크 모두 제거
+            if (nodeGroup) {
+            nodeGroup.selectAll("*").remove();
+            }
+            if (linkGroup) {
+            linkGroup.selectAll("*").remove();
+            }
+            
+            // 링크 그리기
+            if (linkData.length > 0 && linkGroup) {
+                linkGroup.selectAll("path")
+                    .data(linkData)
+                    .enter()
+                    .append("path")
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 2)
+                    .attr("fill", "none")
+                    .attr("opacity", 0.6)
+                    .attr("d", d => {
+                        return `M ${d.source.x} ${d.source.y} L ${d.target.x} ${d.target.y}`;
+                    });
+            }
+            
+            // 노드 그리기
+            if (nodeData.length > 0 && nodeGroup) {
+                nodes = nodeGroup.selectAll("g")
+                    .data(nodeData)
+                    .enter()
+                    .append("g")
+                    .attr("class", "entity-node")
+                    .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
+            
+                // 타원형 노드 추가 (텍스트 길이에 따라 동적 크기 조정)
+                nodes.each(function(d) {
+                    const node = d3.select(this);
+                    const textLength = d.name.length;
+                    const baseWidth = Math.max(40, textLength * 6 + 20);
+                    const baseHeight = 30;
+                    
+                    // 타원형 배경
+                    node.append("ellipse")
+                        .attr("rx", baseWidth / 2)
+                        .attr("ry", baseHeight / 2)
+                        .attr("fill", d => {
+                            if (d.type === 'channel') {
+                                return getNodeColor(d.type) + '4D'; // 30% 투명도 (4D = 30%)
+                            }
+                            return getNodeColor(d.type);
+                        })
+                        .attr("stroke", d => getNodeColor(d.type))
+                        .attr("stroke-width", d => d.connectedTo ? 3 : 1)
+                        .attr("opacity", d => d.connectedTo ? 1 : 0.5);
+                    
+                    // 텍스트 배경 (반투명)
+                    node.append("ellipse")
+                        .attr("rx", baseWidth / 2 - 2)
+                        .attr("ry", baseHeight / 2 - 2)
+                        .attr("fill", "rgba(255, 255, 255, 0.2)")
+                        .attr("opacity", 0.8);
+                
+                // 텍스트 추가
+                    node.append("text")
+                    .attr("text-anchor", "middle")
+                        .attr("dy", 4)
+                    .attr("fill", d => d.type === 'channel' ? "black" : "white")
+                        .attr("font-size", "13px")
+                        .attr("font-weight", "bold")
+                        .attr("text-shadow", d => d.type === 'channel' ? "1px 1px 2px rgba(255,255,255,0.8)" : "1px 1px 2px rgba(0,0,0,0.5)")
+                    .attr("opacity", d => d.type === 'service' ? 1 : (d.connectedTo ? 1 : 0.3))
+                        .text(d => {
+                            const displayName = d.name.length > 10 ? d.name.substring(0, 10) + "..." : d.name;
+                            return d.type === 'speakers' && d.isDVS ? `DVS ${displayName}` : displayName;
+                        });
+                });
+                
+                // 클릭 이벤트 추가
+                nodes.on("click", function(event, d) {
+                    if (d.type !== 'service') {
+                        toggleEntityConnection(d);
+                    }
+                });
+                
+                // 호버 효과 추가
+                nodes.on("mouseover", function(event, d) {
+                    if (d.type !== 'service') {
+                        d3.select(this).select("circle")
+                            .attr("r", 25)
+                            .attr("stroke-width", 4);
+                    }
+                })
+                .on("mouseout", function(event, d) {
+                    if (d.type !== 'service') {
+                        d3.select(this).select("circle")
+                            .attr("r", 20)
+                            .attr("stroke-width", d.connectedTo ? 3 : 1);
+                    }
+                });
+            }
+            
+            // 시뮬레이션 업데이트
+            if (nodeData.length > 0 && simulation) {
+                simulation.nodes(nodeData);
+                simulation.force("link").links(linkData);
+                simulation.alpha(1).restart();
+                
+                // 틱 이벤트
+                simulation.on("tick", () => {
+                    // 링크 업데이트
+                    if (linkData.length > 0 && linkGroup) {
+                        linkGroup.selectAll("path")
+                            .attr("d", d => {
+                                return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`;
+                            });
+                    }
+                    
+                    // 노드 위치 업데이트 (화면 경계 내로 제한)
+                    if (nodeGroup) {
+                    nodeGroup.selectAll("g")
+                            .attr("transform", d => {
+                                // 화면 경계 내로 제한 (SVG 크기: 600x600)
+                                d.x = Math.max(50, Math.min(550, d.x));
+                                d.y = Math.max(50, Math.min(550, d.y));
+                                return `translate(${d.x},${d.y})`;
+                            });
+                    }
+                });
+            }
+            
+        }
+
+        // 노드 시각적 상태 업데이트
+        function updateNodeVisualState() {
+            if (!nodes) return;
+            
+            nodes.each(function(d) {
+                const isConnected = d.type === 'service' ? true : (String(d.connectedTo) === String(selectedService?.id));
+                
+                d3.select(this).select("circle")
+                    .attr("opacity", isConnected ? 1 : 0.3)
+                    .attr("stroke-width", d.type === 'service' ? 2 : (isConnected ? 3 : 1));
+                
+                d3.select(this).select("text")
+                    .attr("opacity", isConnected ? 1 : 0.3);
+            });
+        }
+
+        // 노드 색상 반환
+        function getNodeColor(type) {
+            const colors = {
+                service: '#3b82f6',  // 파란색 (서비스)
+                speaker: '#8b5cf6',  // 보라색 (스피커)
+                channel: '#f59e0b',  // 주황색 (채널)
+                server: '#ef4444'    // 빨간색 (서버)
+            };
+            return colors[type] || '#6b7280'; // 회색 (기본값)
+        }
+
+        // 엔티티 연결 토글 함수
+        function toggleEntityConnection(nodeData) {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            // 실제 엔티티 데이터 찾기
+            const entity = Object.values(allEntities).flat().find(e => e.id === nodeData.id);
+            if (!entity) return;
+
+            const isConnected = String(entity.connectedTo) === String(selectedService.id);
+
+            if (isConnected) {
+                // 연결 해제
+                if (confirm(`${entity.name}의 연결을 해제하시겠습니까?`)) {
+                    addPendingChange(entity.id, entity.type, null);
+                    entity.connectedTo = null;
+                    updateAllConnections();
+                    showAlert('warning', `${entity.name}의 연결이 해제되었습니다. (적용 대기 중)`);
+                }
+            } else {
+                // 연결
+                if (entity.connectedTo) {
+                    const previousService = sampleServices.find(s => String(s.id) === String(entity.connectedTo));
+                    if (previousService) {
+                        if (confirm(`${entity.name}은(는) 이미 ${previousService.name}에 연결되어 있습니다. 연결을 변경하시겠습니까?`)) {
+                            addPendingChange(entity.id, entity.type, selectedService.id);
+                            entity.connectedTo = String(selectedService.id);
+                            updateAllConnections();
+                            showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다. (적용 대기 중)`);
+                        }
+                    }
+                } else {
+                    addPendingChange(entity.id, entity.type, selectedService.id);
+                    entity.connectedTo = String(selectedService.id);
+                    updateAllConnections();
+                    showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다. (적용 대기 중)`);
+                }
+            }
+        }
+
+        // 엔티티 연결 토글 함수
+        function toggleEntityConnection(nodeData) {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            // 실제 엔티티 데이터 찾기
+            const entity = Object.values(allEntities).flat().find(e => e.id === nodeData.id);
+            if (!entity) return;
+
+            const isConnected = entity.connectedTo === selectedService.id;
+
+            if (isConnected) {
+                // 연결 해제
+                if (confirm(`${entity.name}의 연결을 해제하시겠습니까?`)) {
+                    addPendingChange(entity.id, entity.type, null);
+                    entity.connectedTo = null;
+                    updateAllConnections();
+                    showAlert('warning', `${entity.name}의 연결이 해제되었습니다. (적용 대기 중)`);
+                }
+            } else {
+                // 연결
+                addPendingChange(entity.id, entity.type, selectedService.id);
+                entity.connectedTo = selectedService.id;
+                updateAllConnections();
+                showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다. (적용 대기 중)`);
+            }
+        }
+
+        // 드래그 이벤트 핸들러
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            
+            // 서비스 노드는 고정
+            if (d.type === 'service') {
+                d.fx = 400;
+                d.fy = 300;
+            } else {
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            populateServiceSelector();
+            renderSpeakerList();
+            updateStats();
+            updateSpeakerStats();
+            initializeD3();
+            // 초기에는 서비스 노드 숨기기
+            hideServiceNode();
+            // 초기 안내 화면 보이기
+            showInitialGuide();
+            hideD3Diagram();
+            // 초기 D3.js 네트워크 렌더링 (비어있는 상태)
+            renderD3Network();
+        });
+
+        // 데이터 초기화
+        function initializeData() {
+            allEntities = { ...sampleEntities };
+        }
+
+        // 스피커 목록 렌더링
+        function renderSpeakerList() {
+            const speakersList = document.getElementById('speakersList');
+            if (!speakersList) return;
+
+            speakersList.innerHTML = allEntities.speakers.map(speaker => `
+                <div class="entity-item" data-entity-id="${speaker.id}" data-entity-type="speakers" draggable="true" 
+                     ondragstart="handleEntityDragStart(event, '${speaker.id}', 'speakers')" 
+                     ondragend="handleEntityDragEnd(event)">
+                    <div class="entity-info">
+                        <div class="entity-icon speakers">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="entity-details">
+                            <h4>${speaker.name}</h4>
+                            <p>${speaker.code} • ${speaker.type}</p>
+                        </div>
+                    </div>
+                    <div class="entity-actions">
+                        ${speaker.isDVS ? '<span class="dvs-label">DVS</span>' : ''}
+                        <button class="btn btn-success btn-sm" onclick="connectEntity('${speaker.id}', 'speakers')">
+                            <i class="fas fa-link"></i> 연결
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 스피커 통계 업데이트
+        function updateSpeakerStats() {
+            const totalSpeakers = allEntities.speakers.length;
+            const dvsCount = allEntities.speakers.filter(s => s.isDVS).length;
+            const speakerStatsElement = document.getElementById('speakerStats');
+            if (speakerStatsElement) {
+                speakerStatsElement.textContent = `총 ${totalSpeakers}개 중 DVS ${dvsCount}개`;
+            }
+        }
+
+        // 서비스 선택기 채우기
+        function populateServiceSelector() {
+            const selector = document.getElementById('serviceSelector');
+            selector.innerHTML = '<option value="">서비스를 선택하세요</option>';
+            
+            sampleServices.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = `${service.name} (${service.type})`;
+                selector.appendChild(option);
+            });
+        }
+
+        // 서비스 선택
+        function selectService() {
+            const serviceId = document.getElementById('serviceSelector').value;
+            
+            if (serviceId) {
+                selectedService = sampleServices.find(s => s.id === serviceId);
+                showServiceNode();
+                loadEntityPanels();
+                updateStats();
+                updateConnectionInfo();
+                // 노드 데이터 초기화
+                nodeData = [];
+                // 안내 화면 숨기고 D3.js 다이어그램 보이기
+                hideInitialGuide();
+                showD3Diagram();
+                // D3.js 네트워크 렌더링
+                renderD3Network();
+                // 변경사항 초기화
+                resetPendingChanges();
+            } else {
+                selectedService = null;
+                hideServiceNode();
+                clearEntityNodes();
+                clearEntityPanels();
+                // 노드 데이터 초기화
+                nodeData = [];
+                // D3.js 다이어그램 숨기고 안내 화면 보이기
+                hideD3Diagram();
+                showInitialGuide();
+                // D3.js 네트워크 렌더링 (비우기)
+                renderD3Network();
+                // 변경사항 초기화
+                resetPendingChanges();
+            }
+        }
+
+        // 서비스 노드 표시
+        function showServiceNode() {
+            if (!selectedService) return;
+            
+            const serviceNode = document.getElementById('serviceNode');
+            const serviceName = document.getElementById('serviceNodeName');
+            const serviceType = document.getElementById('serviceNodeType');
+            
+            serviceName.textContent = selectedService.name;
+            serviceType.textContent = selectedService.type;
+            serviceNode.style.display = 'block';
+            
+            // 서비스 노드에 드롭 이벤트 추가
+            addServiceDropListeners();
+        }
+
+        // 서비스 드롭 이벤트 리스너 추가
+        function addServiceDropListeners() {
+            const serviceNode = document.getElementById('serviceNode');
+            
+            // 드래그 오버 이벤트
+            serviceNode.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                serviceNode.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                serviceNode.style.boxShadow = '0 12px 35px rgba(59, 130, 246, 0.5)';
+            });
+            
+            // 드래그 리브 이벤트
+            serviceNode.addEventListener('dragleave', (e) => {
+                serviceNode.style.transform = 'translate(-50%, -50%) scale(1)';
+                serviceNode.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+            });
+            
+            // 드롭 이벤트
+            serviceNode.addEventListener('drop', (e) => {
+                e.preventDefault();
+                serviceNode.style.transform = 'translate(-50%, -50%) scale(1)';
+                serviceNode.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.3)';
+                
+                const entityId = e.dataTransfer.getData('text/plain');
+                const entityType = e.dataTransfer.getData('entity-type');
+                
+                if (entityId && entityType) {
+                    connectEntityToService(entityId, entityType);
+                }
+            });
+        }
+
+        // 서비스 내부 엔티티 리스트 업데이트
+        function updateServiceEntities() {
+            if (!selectedService) return;
+            
+            const container = document.getElementById('serviceEntities');
+            if (!container) return; // 요소가 없으면 함수 종료
+            
+            const allEntitiesList = [
+                ...allEntities.speakers.filter(e => e.connectedTo === selectedService.id).map(e => ({...e, type: 'speaker'})),
+                ...allEntities.channels.filter(e => e.connectedTo === selectedService.id).map(e => ({...e, type: 'channel'})),
+                ...allEntities.servers.filter(e => e.connectedTo === selectedService.id).map(e => ({...e, type: 'server'}))
+            ];
+            
+            if (allEntitiesList.length === 0) {
+                container.innerHTML = `
+                    <div style="font-size: 10px; opacity: 0.7; text-align: center;">
+                        연결된 엔티티가 없습니다
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = allEntitiesList.map(entity => `
+                <div class="entity-in-service ${entity.type}" 
+                     data-entity-id="${entity.id}" 
+                     data-entity-type="${entity.type}"
+                     onclick="removeEntityFromService('${entity.id}', '${entity.type}')"
+                     title="클릭하여 연결 해제">
+                    <div class="entity-icon-small ${entity.type}">
+                        <i class="fas fa-${entity.type === 'speaker' ? 'volume-up' : entity.type === 'channel' ? 'broadcast-tower' : 'server'}"></i>
+                    </div>
+                    <div class="entity-name-small">${entity.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // 서비스 드롭 이벤트 리스너 추가
+        function addServiceDropListeners() {
+            const serviceNode = document.getElementById('serviceNode');
+            const dropZone = document.getElementById('serviceDropZone');
+            
+            // 드래그 오버 이벤트
+            serviceNode.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            
+            // 드래그 리브 이벤트
+            serviceNode.addEventListener('dragleave', (e) => {
+                if (!serviceNode.contains(e.relatedTarget)) {
+                    dropZone.classList.remove('drag-over');
+                }
+            });
+            
+            // 드롭 이벤트
+            serviceNode.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                
+                const entityId = e.dataTransfer.getData('text/plain');
+                const entityType = e.dataTransfer.getData('entity-type');
+                
+                if (entityId && entityType) {
+                    connectEntityToService(entityId, entityType);
+                }
+            });
+        }
+
+        // 서비스 노드 숨기기
+        function hideServiceNode() {
+            document.getElementById('serviceNode').style.display = 'none';
+        }
+
+        // 초기 안내 화면 보이기
+        function showInitialGuide() {
+            const guide = document.getElementById('initialGuide');
+            if (guide) {
+                guide.style.display = 'flex';
+            }
+        }
+
+        // 초기 안내 화면 숨기기
+        function hideInitialGuide() {
+            const guide = document.getElementById('initialGuide');
+            if (guide) {
+                guide.style.display = 'none';
+            }
+        }
+
+        // D3.js 다이어그램 보이기
+        function showD3Diagram() {
+            const svg = document.getElementById('mainSvg');
+            if (svg) {
+                svg.style.display = 'block';
+            }
+        }
+
+        // D3.js 다이어그램 숨기기
+        function hideD3Diagram() {
+            const svg = document.getElementById('mainSvg');
+            if (svg) {
+                svg.style.display = 'none';
+            }
+        }
+
+        // 선택된 서비스 정보 표시
+        function showSelectedServiceInfo() {
+            if (!selectedService) return;
+
+            const infoDiv = document.getElementById('selectedServiceInfo');
+            const nameDiv = document.getElementById('selectedServiceName');
+            const detailsDiv = document.getElementById('selectedServiceDetails');
+
+            nameDiv.textContent = selectedService.name;
+            detailsDiv.innerHTML = `
+                <div class="detail-item">
+                    <i class="fas fa-language"></i>
+                    <span>언어: ${selectedService.language}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-cog"></i>
+                    <span>타입: ${selectedService.type}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-link"></i>
+                    <span>연결된 항목: <span id="connectedCount">0</span>개</span>
+                </div>
+            `;
+
+            infoDiv.style.display = 'block';
+        }
+
+        // 선택된 서비스 정보 숨기기
+        function hideSelectedServiceInfo() {
+            document.getElementById('selectedServiceInfo').style.display = 'none';
+        }
+
+        // 엔티티 노드들 로드
+        function loadEntityNodes() {
+            if (!selectedService) return;
+            
+            const container = document.getElementById('entityNodes');
+            container.innerHTML = '';
+            
+            // 모든 엔티티를 서비스 원 밖에 원형으로 배치
+            const allEntitiesList = [
+                ...allEntities.speakers.map(e => ({...e, type: 'speaker'})),
+                ...allEntities.channels.map(e => ({...e, type: 'channel'})),
+                ...allEntities.servers.map(e => ({...e, type: 'server'}))
+            ];
+            
+            const centerX = 300; // 컨테이너 중앙 (서비스 노드 위치)
+            const centerY = 300;
+            const radius = 180; // 서비스 원 밖에 배치
+            
+            allEntitiesList.forEach((entity, index) => {
+                const angle = (index / allEntitiesList.length) * 2 * Math.PI;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                const node = createEntityNode(entity, x, y);
+                container.appendChild(node);
+                
+                // 위치 저장
+                entityPositions[entity.id] = { x, y };
+            });
+            
+            // 연결선 그리기
+            drawConnectionLines();
+        }
+
+        // 엔티티 노드 생성
+        function createEntityNode(entity, x, y) {
+            const container = document.getElementById('entityNodes');
+            const isConnected = entity.connectedTo === selectedService.id;
+            
+            // SVG 그룹 생성
+            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            group.id = `node-${entity.id}`;
+            group.className = `entity-node ${entity.type}`;
+            group.setAttribute('transform', `translate(${x}, ${y})`);
+            
+            // 엔티티 원 생성
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('r', '40');
+            circle.setAttribute('fill', `url(#${entity.type}Gradient)`);
+            circle.setAttribute('stroke', isConnected ? '#10b981' : '#94a3b8');
+            circle.setAttribute('stroke-width', isConnected ? '3' : '2');
+            circle.setAttribute('stroke-dasharray', isConnected ? 'none' : '5,5');
+            circle.setAttribute('filter', 'url(#shadow)');
+            circle.setAttribute('opacity', isConnected ? '1' : '0.7');
+            
+            // 엔티티 이름 텍스트
+            const nameText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            nameText.setAttribute('x', '0');
+            nameText.setAttribute('y', '-5');
+            nameText.setAttribute('text-anchor', 'middle');
+            nameText.setAttribute('fill', 'white');
+            nameText.setAttribute('font-family', 'Arial, sans-serif');
+            nameText.setAttribute('font-size', '11');
+            nameText.setAttribute('font-weight', 'bold');
+            nameText.textContent = entity.name;
+            
+            // 엔티티 코드/IP 텍스트
+            const codeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            codeText.setAttribute('x', '0');
+            codeText.setAttribute('y', '10');
+            codeText.setAttribute('text-anchor', 'middle');
+            codeText.setAttribute('fill', 'white');
+            codeText.setAttribute('font-family', 'Arial, sans-serif');
+            codeText.setAttribute('font-size', '9');
+            codeText.setAttribute('opacity', '0.9');
+            codeText.textContent = entity.code || entity.ip;
+            
+            // 그룹에 요소들 추가
+            group.appendChild(circle);
+            group.appendChild(nameText);
+            group.appendChild(codeText);
+            
+            // 드래그 이벤트 추가
+            group.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                startDrag(e, group, entity);
+            });
+            
+            // 클릭 이벤트 (연결/해제 토글)
+            group.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isConnected) {
+                    disconnectEntity(entity.id, entity.type);
+                } else {
+                    connectEntity(entity.id, entity.type);
+                }
+            });
+            
+            return group;
+        }
+
+        // 엔티티 패널들 로드
+        function loadEntityPanels() {
+            if (!selectedService) return;
+
+            loadEntityPanel('speakers');
+            loadEntityPanel('channels');
+            loadEntityPanel('servers');
+        }
+
+        // 엔티티 탭 로드
+        function loadEntityTab(entityType) {
+            const entities = allEntities[entityType];
+            const container = document.getElementById(`${entityType}List`);
+            
+            if (entities.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-${entityType === 'speakers' ? 'volume-up' : entityType === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                        <h3>등록된 ${entityType === 'speakers' ? '스피커' : entityType === 'channels' ? '채널' : '서버'}가 없습니다</h3>
+                        <p>새로운 ${entityType === 'speakers' ? '스피커' : entityType === 'channels' ? '채널' : '서버'}를 등록해주세요</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entities.map(entity => {
+                const isConnected = entity.connectedTo === selectedService.id;
+                const statusClass = entity.status === 'active' ? 'connected' : entity.status === 'warning' ? 'warning' : 'error';
+                
+                return `
+                    <div class="entity-item ${isConnected ? 'connected' : ''}" data-entity-id="${entity.id}" data-entity-type="${entityType}">
+                        <div class="entity-info">
+                            <div class="entity-icon ${entityType}">
+                                <i class="fas fa-${entityType === 'speakers' ? 'volume-up' : entityType === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>${entity.name}</h4>
+                                <p>${entityType === 'speakers' ? entity.code + ' • ' + entity.type : entityType === 'channels' ? entity.code : entity.ip + ' • ' + entity.type}</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            ${isConnected ? 
+                                `<button class="btn btn-danger" onclick="disconnectEntity('${entity.id}', '${entityType}')">
+                                    <i class="fas fa-unlink"></i> 해제
+                                </button>` :
+                                `<button class="btn btn-success" onclick="connectEntity('${entity.id}', '${entityType}')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 탭 전환
+        function switchTab(tabName) {
+            // 탭 버튼 상태 업데이트
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 탭 컨텐츠 상태 업데이트
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}Panel`).classList.add('active');
+            
+            currentTab = tabName;
+        }
+
+        // 드래그 이벤트 리스너 추가
+        function addDragListeners(element, type, entityId = null) {
+            element.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return; // 왼쪽 마우스 버튼만
+                
+                isDragging = true;
+                draggedElement = element;
+                
+                const rect = element.getBoundingClientRect();
+                const containerRect = document.getElementById('dragDropContainer').getBoundingClientRect();
+                
+                dragOffset.x = e.clientX - rect.left;
+                dragOffset.y = e.clientY - rect.top;
+                
+                element.classList.add('dragging');
+                
+                // 드롭 존 표시
+                if (type !== 'service') {
+                    showDropZone();
+                }
+                
+                e.preventDefault();
+            });
+        }
+
+        // 드롭 존 표시
+        function showDropZone() {
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.add('active');
+        }
+
+        // 드롭 존 숨기기
+        function hideDropZone() {
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.remove('active');
+        }
+
+        // 자동 배치
+        function autoLayout() {
+            if (!selectedService) return;
+            
+            const allEntitiesList = [
+                ...allEntities.speakers.map(e => ({...e, type: 'speaker'})),
+                ...allEntities.channels.map(e => ({...e, type: 'channel'})),
+                ...allEntities.servers.map(e => ({...e, type: 'server'}))
+            ];
+            
+            const centerX = 300;
+            const centerY = 300;
+            const radius = 180;
+            
+            allEntitiesList.forEach((entity, index) => {
+                const angle = (index / allEntitiesList.length) * 2 * Math.PI;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                const node = document.getElementById(`node-${entity.id}`);
+                if (node) {
+                    // SVG 애니메이션을 위한 transition 추가
+                    node.style.transition = 'transform 0.5s ease';
+                    node.setAttribute('transform', `translate(${x}, ${y})`);
+                    
+                    entityPositions[entity.id] = { x, y };
+                }
+            });
+            
+            setTimeout(() => {
+                drawConnectionLines();
+            }, 500);
+        }
+
+        // 레이아웃 초기화
+        function resetLayout() {
+            loadEntityNodes();
+        }
+
+        // 연결선 토글
+        function toggleConnections() {
+            showConnections = !showConnections;
+            const btn = document.getElementById('toggleConnectionsBtn');
+            btn.classList.toggle('active', showConnections);
+            
+            if (showConnections) {
+                drawConnectionLines();
+            } else {
+                document.getElementById('connectionLines').innerHTML = '';
+            }
+        }
+
+        // 연결선 그리기
+        function drawConnectionLines() {
+            if (!showConnections) return;
+            
+            const container = document.getElementById('connectionLines');
+            container.innerHTML = '';
+            
+            if (!selectedService) return;
+            
+            const serviceX = 300;
+            const serviceY = 300;
+            
+            // 연결된 엔티티들에 대해 선 그리기
+            const allEntitiesList = [
+                ...allEntities.speakers.map(e => ({...e, type: 'speaker'})),
+                ...allEntities.channels.map(e => ({...e, type: 'channel'})),
+                ...allEntities.servers.map(e => ({...e, type: 'server'}))
+            ];
+            
+            allEntitiesList.forEach(entity => {
+                if (entity.connectedTo === selectedService.id) {
+                    const entityNode = document.getElementById(`node-${entity.id}`);
+                    if (entityNode) {
+                        const transform = entityNode.getAttribute('transform');
+                        const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                        if (match) {
+                            const entityX = parseFloat(match[1]);
+                            const entityY = parseFloat(match[2]);
+                            
+                            const line = createConnectionLine(serviceX, serviceY, entityX, entityY, 'connected');
+                            container.appendChild(line);
+                        }
+                    }
+                }
+            });
+        }
+
+        // 연결선 생성
+        function createConnectionLine(x1, y1, x2, y2, type) {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const midX = (x1 + x2) / 2;
+            const midY = Math.min(y1, y2) - 50;
+            const d = `M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`;
+            
+            path.setAttribute('d', d);
+            path.setAttribute('stroke', type === 'connected' ? '#10b981' : '#94a3b8');
+            path.setAttribute('stroke-width', type === 'connected' ? '3' : '2');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke-dasharray', type === 'connected' ? 'none' : '5,5');
+            path.setAttribute('opacity', type === 'connected' ? '1' : '0.6');
+            
+            return path;
+        }
+
+        // 드래그 시작
+        function startDrag(e, element, entity) {
+            isDragging = true;
+            draggedElement = element;
+            
+            const svg = document.getElementById('mainSvg');
+            const rect = svg.getBoundingClientRect();
+            
+            dragOffset.x = e.clientX - rect.left - parseFloat(element.getAttribute('transform').match(/translate\(([^,]+)/)[1]);
+            dragOffset.y = e.clientY - rect.top - parseFloat(element.getAttribute('transform').match(/translate\([^,]+,([^)]+)\)/)[1]);
+            
+            element.setAttribute('opacity', '0.7');
+            
+            // 드롭 존 표시
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.add('active');
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+        }
+
+        // 드래그 중
+        function drag(e) {
+            if (!isDragging || !draggedElement) return;
+            
+            const svg = document.getElementById('mainSvg');
+            const rect = svg.getBoundingClientRect();
+            
+            const x = e.clientX - rect.left - dragOffset.x;
+            const y = e.clientY - rect.top - dragOffset.y;
+            
+            draggedElement.setAttribute('transform', `translate(${x}, ${y})`);
+        }
+
+        // 드래그 종료
+        function endDrag(e) {
+            if (!isDragging || !draggedElement) return;
+            
+            isDragging = false;
+            draggedElement.setAttribute('opacity', '1');
+            
+            // 서비스 근처에 드롭되었는지 확인
+            const svg = document.getElementById('mainSvg');
+            const rect = svg.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const serviceX = 300;
+            const serviceY = 300;
+            const distance = Math.sqrt(Math.pow(mouseX - serviceX, 2) + Math.pow(mouseY - serviceY, 2));
+            
+            if (distance < 100) {
+                // 서비스 근처에 드롭됨 - 연결 처리
+                const entityId = draggedElement.id.replace('node-', '');
+                const entityType = draggedElement.className.baseVal.split(' ')[1];
+                connectEntityToService(entityId, entityType);
+            }
+            
+            // 드롭 존 숨기기
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.remove('active');
+            
+            draggedElement = null;
+            
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', endDrag);
+        }
+
+        // 연결 정보 업데이트
+        function updateConnectionInfo() {
+            if (!selectedService) {
+                document.getElementById('connectionInfo').style.display = 'none';
+                return;
+            }
+            
+            const allEntitiesList = [
+                ...allEntities.speakers,
+                ...allEntities.channels,
+                ...allEntities.servers
+            ];
+            
+            const connected = allEntitiesList.filter(e => e.connectedTo === selectedService.id).length;
+            document.getElementById('connectedCountInfo').textContent = connected;
+            document.getElementById('connectionInfo').style.display = 'block';
+        }
+
+        // 엔티티 연결
+        function connectEntity(entityId, entityType) {
+            console.log('connectEntity 호출:', entityId, entityType);
+            const entity = allEntities[entityType].find(e => e.id === entityId);
+            if (!entity) {
+                console.log('엔티티를 찾을 수 없음:', entityId, entityType);
+                return;
+            }
+
+            console.log('연결 전 엔티티 상태:', entity.connectedTo);
+            console.log('선택된 서비스:', selectedService);
+
+            // 기존 연결 해제 (다른 서비스에 연결된 경우)
+            if (entity.connectedTo) {
+                const previousService = sampleServices.find(s => String(s.id) === String(entity.connectedTo));
+                if (previousService) {
+                    if (confirm(`${entity.name}은(는) 이미 ${previousService.name}에 연결되어 있습니다. 연결을 변경하시겠습니까?`)) {
+                        // 변경사항 추가
+                        addPendingChange(entityId, entityType, selectedService.id);
+                        entity.connectedTo = selectedService.id; // String() 제거
+                        console.log('연결 후 엔티티 상태:', entity.connectedTo);
+                        updateAllConnections();
+                        showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다. (적용 대기 중)`);
+                    }
+                }
+            } else {
+                // 변경사항 추가
+                addPendingChange(entityId, entityType, selectedService.id);
+                entity.connectedTo = selectedService.id; // String() 제거
+                console.log('연결 후 엔티티 상태:', entity.connectedTo);
+                updateAllConnections();
+                showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다. (적용 대기 중)`);
+            }
+        }
+
+        // 엔티티 연결 상태 업데이트
+        function updateEntityConnections() {
+            // 노드 상태 업데이트
+            const allEntitiesList = [
+                ...allEntities.speakers.map(e => ({...e, type: 'speaker'})),
+                ...allEntities.channels.map(e => ({...e, type: 'channel'})),
+                ...allEntities.servers.map(e => ({...e, type: 'server'}))
+            ];
+            
+            allEntitiesList.forEach(entity => {
+                const node = document.getElementById(`node-${entity.id}`);
+                if (node) {
+                    const isConnected = entity.connectedTo === selectedService.id;
+                    node.classList.toggle('connected', isConnected);
+                    node.classList.toggle('disconnected', !isConnected);
+                }
+            });
+            
+            // 패널 상태 업데이트
+            loadEntityPanels();
+            
+            // 연결선 다시 그리기
+            drawConnectionLines();
+            
+            // 연결 정보 업데이트
+            updateConnectionInfo();
+        }
+
+        // 엔티티 연결 해제
+        function disconnectEntity(entityId, entityType) {
+            const entity = allEntities[entityType].find(e => e.id === entityId);
+            if (!entity) return;
+
+            if (confirm(`${entity.name}의 연결을 해제하시겠습니까?`)) {
+                // 변경사항 추가
+                addPendingChange(entityId, entityType, null);
+                entity.connectedTo = null;
+                updateAllConnections();
+                showAlert('warning', `${entity.name}의 연결이 해제되었습니다. (적용 대기 중)`);
+            }
+        }
+
+        // 엔티티 필터링
+        function filterEntities(entityType) {
+            const searchTerm = document.getElementById(`${entityType}Search`).value.toLowerCase();
+            const entities = document.querySelectorAll(`#${entityType}List .entity-item`);
+            
+            entities.forEach(entity => {
+                const name = entity.querySelector('h4').textContent.toLowerCase();
+                const details = entity.querySelector('p').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || details.includes(searchTerm)) {
+                    entity.style.display = 'flex';
+                } else {
+                    entity.style.display = 'none';
+                }
+            });
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const totalServices = sampleServices.length;
+            const totalSpeakers = allEntities.speakers.length;
+            const totalChannels = allEntities.channels.length;
+            const totalServers = allEntities.servers.length;
+            
+            let connectedCount = 0;
+            let connectedStatus = 0;
+            let disconnectedStatus = 0;
+            let errorStatus = 0;
+
+            if (selectedService) {
+                // 선택된 서비스에 연결된 항목들 계산
+                connectedCount = allEntities.speakers.filter(s => s.connectedTo === selectedService.id).length +
+                                allEntities.channels.filter(c => c.connectedTo === selectedService.id).length +
+                                allEntities.servers.filter(s => s.connectedTo === selectedService.id).length;
+
+                // 상태별 통계
+                const allConnectedEntities = [
+                    ...allEntities.speakers.filter(s => s.connectedTo === selectedService.id),
+                    ...allEntities.channels.filter(c => c.connectedTo === selectedService.id),
+                    ...allEntities.servers.filter(s => s.connectedTo === selectedService.id)
+                ];
+
+                connectedStatus = allConnectedEntities.filter(e => e.status === 'active').length;
+                disconnectedStatus = allConnectedEntities.filter(e => e.status === 'warning').length;
+                errorStatus = allConnectedEntities.filter(e => e.status === 'error').length;
+            }
+
+            // DOM 요소가 존재하는지 확인 후 업데이트
+            const totalServicesEl = document.getElementById('totalServices');
+            const totalSpeakersEl = document.getElementById('totalSpeakers');
+            const totalChannelsEl = document.getElementById('totalChannels');
+            const totalServersEl = document.getElementById('totalServers');
+            const connectedCountEl = document.getElementById('connectedCount');
+            
+            if (totalServicesEl) totalServicesEl.textContent = totalServices;
+            if (totalSpeakersEl) totalSpeakersEl.textContent = totalSpeakers;
+            if (totalChannelsEl) totalChannelsEl.textContent = totalChannels;
+            if (totalServersEl) totalServersEl.textContent = totalServers;
+            if (connectedCountEl) connectedCountEl.textContent = connectedCount;
+            const connectedStatusEl = document.getElementById('connectedStatus');
+            const disconnectedStatusEl = document.getElementById('disconnectedStatus');
+            const errorStatusEl = document.getElementById('errorStatus');
+            
+            if (connectedStatusEl) connectedStatusEl.textContent = connectedStatus;
+            if (disconnectedStatusEl) disconnectedStatusEl.textContent = disconnectedStatus;
+            if (errorStatusEl) errorStatusEl.textContent = errorStatus;
+
+            // 선택된 서비스 정보의 연결된 항목 수 업데이트
+            const connectedCountSpan = document.getElementById('connectedCount');
+            if (connectedCountSpan) {
+                connectedCountSpan.textContent = connectedCount;
+            }
+        }
+
+        // 현재 활성 탭 가져오기
+        function getCurrentTab() {
+            const activePanel = document.querySelector('.tab-content.active');
+            if (activePanel) {
+                const panelId = activePanel.id;
+                if (panelId.includes('speakers')) return 'speakers';
+                if (panelId.includes('channels')) return 'channels';
+                if (panelId.includes('servers')) return 'servers';
+            }
+            return currentTab; // 기본값
+        }
+
+        // 전체연결 - 현재 서비스에 현재탭의 리스트전체를 연결
+        function bulkConnect() {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            const activeTab = getCurrentTab();
+            const currentEntities = allEntities[activeTab];
+            const unconnectedEntities = currentEntities.filter(e => !e.connectedTo);
+            
+            if (unconnectedEntities.length === 0) {
+                showAlert('info', '연결 가능한 항목이 없습니다.');
+                return;
+            }
+
+            const tabName = activeTab === 'speakers' ? '스피커' : activeTab === 'channels' ? '채널' : '서버';
+            if (confirm(`현재 서비스(${selectedService.name})에 ${unconnectedEntities.length}개의 ${tabName}를 모두 연결하시겠습니까?`)) {
+                unconnectedEntities.forEach(entity => {
+                    entity.connectedTo = selectedService.id;
+                });
+                updateAllConnections();
+                showAlert('success', `${unconnectedEntities.length}개의 ${tabName}가 연결되었습니다.`);
+            }
+        }
+
+        // 전체해제 - 현재 서비스에 연결된 현재 탭의 리스트 전체 해제
+        function bulkDisconnect() {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            const activeTab = getCurrentTab();
+            const currentEntities = allEntities[activeTab];
+            const connectedEntities = currentEntities.filter(e => e.connectedTo === selectedService.id);
+            
+            if (connectedEntities.length === 0) {
+                showAlert('info', '해제 가능한 항목이 없습니다.');
+                return;
+            }
+
+            const tabName = activeTab === 'speakers' ? '스피커' : activeTab === 'channels' ? '채널' : '서버';
+            if (confirm(`현재 서비스(${selectedService.name})에 연결된 ${connectedEntities.length}개의 ${tabName} 연결을 모두 해제하시겠습니까?`)) {
+                connectedEntities.forEach(entity => {
+                    entity.connectedTo = null;
+                });
+                updateAllConnections();
+                showAlert('warning', `${connectedEntities.length}개의 ${tabName} 연결이 해제되었습니다.`);
+            }
+        }
+
+        // 초기화 - 저장된 상태를 재호출
+        function resetToLastSaved() {
+            if (confirm('마지막 저장된 상태로 초기화하시겠습니까? 현재 변경사항은 모두 사라집니다.')) {
+                // 실제 구현에서는 서버에서 마지막 저장된 데이터를 가져와야 함
+                // 현재는 샘플 데이터로 초기화
+                allEntities = { ...sampleEntities };
+                
+                // 모든 연결 상태 초기화
+                Object.values(allEntities).flat().forEach(entity => {
+                    entity.connectedTo = null;
+                });
+                
+                // UI 업데이트
+                updateAllConnections();
+                loadEntityPanels();
+                updateStats();
+                updateConnectionInfo();
+                
+                // 변경사항 초기화
+                resetPendingChanges();
+                
+                showAlert('info', '마지막 저장된 상태로 초기화되었습니다.');
+            }
+        }
+
+        // 취소 - 설정한 값 취소 및 화면 닫힘
+        function cancelChanges() {
+            if (confirm('변경사항을 취소하고 화면을 닫으시겠습니까? 설정한 값은 모두 사라집니다.')) {
+                // 변경사항을 원래 상태로 되돌리기
+                allEntities = { ...sampleEntities };
+                updateAllConnections();
+                // 모달 닫기 (부모 창의 함수 호출)
+                if (window.parent && window.parent.closeConnectModal) {
+                    window.parent.closeConnectModal();
+                }
+            }
+        }
+
+        // 저장 - 3개의 탭에서 설정한 연결값 전체 저장
+        function saveChanges() {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            // 모든 엔티티의 연결 상태를 서버에 저장
+            const allEntitiesData = {
+                speakers: allEntities.speakers,
+                channels: allEntities.channels,
+                servers: allEntities.servers
+            };
+
+            saveToServer('allEntities', allEntitiesData);
+            showAlert('success', '모든 연결 설정이 저장되었습니다.');
+        }
+
+        // 연결 새로고침
+        function refreshConnections() {
+            loadEntityNodes();
+            loadEntityPanels();
+            updateServiceEntities();
+            updateStats();
+            updateConnectionInfo();
+            showAlert('info', '연결 상태가 새로고침되었습니다.');
+        }
+
+        // 엔티티 목록 초기화
+        function clearEntities() {
+            ['speakers', 'channels', 'servers'].forEach(type => {
+                const container = document.getElementById(`${type}List`);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-${type === 'speakers' ? 'volume-up' : type === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                        <h3>서비스를 선택해주세요</h3>
+                        <p>연결을 관리할 서비스를 선택하세요</p>
+                    </div>
+                `;
+            });
+        }
+
+        // 모달 열기
+        function openModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('connectionForm').innerHTML = content;
+            document.getElementById('connectionModal').style.display = 'block';
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('connectionModal').style.display = 'none';
+        }
+
+        // 연결 확인
+        function confirmConnection() {
+            // 연결 로직 구현
+            closeModal();
+        }
+
+        // 알림 표시
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            // 헤더 다음에 삽입
+            const header = document.querySelector('.header');
+            header.insertAdjacentElement('afterend', alertDiv);
+            
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // 마우스 이동 이벤트
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging || !draggedElement) return;
+            
+            const containerRect = document.getElementById('dragDropContainer').getBoundingClientRect();
+            const x = e.clientX - containerRect.left - dragOffset.x;
+            const y = e.clientY - containerRect.top - dragOffset.y;
+            
+            draggedElement.style.left = `${x}px`;
+            draggedElement.style.top = `${y}px`;
+        });
+
+        // 마우스 업 이벤트
+        document.addEventListener('mouseup', (e) => {
+            if (isDragging && draggedElement) {
+                isDragging = false;
+                draggedElement.classList.remove('dragging');
+                hideDropZone();
+                draggedElement = null;
+            }
+        });
+
+        // 엔티티 패널 로드
+        function loadEntityPanel(entityType) {
+            const entities = allEntities[entityType];
+            const container = document.getElementById(`${entityType}List`);
+            
+            if (entities.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-${entityType === 'speakers' ? 'volume-up' : entityType === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                        <h3>등록된 ${entityType === 'speakers' ? '스피커' : entityType === 'channels' ? '채널' : '서버'}가 없습니다</h3>
+                        <p>새로운 ${entityType === 'speakers' ? '스피커' : entityType === 'channels' ? '채널' : '서버'}를 등록해주세요</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entities.map(entity => {
+                const isConnected = selectedService && entity.connectedTo === selectedService.id;
+                
+                return `
+                    <div class="entity-item ${isConnected ? 'connected' : ''}" 
+                         data-entity-id="${entity.id}" 
+                         data-entity-type="${entityType}"
+                         draggable="true"
+                         ondragstart="handleEntityDragStart(event, '${entity.id}', '${entityType}')"
+                         ondragend="handleEntityDragEnd(event)">
+                        <div class="entity-info">
+                            <div class="entity-icon ${entityType}">
+                                <i class="fas fa-${entityType === 'speakers' ? 'volume-up' : entityType === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                            </div>
+                            <div class="entity-details">
+                                <h4>${entity.name}</h4>
+                                <p>${entityType === 'speakers' ? entity.code + ' • ' + entity.type : entityType === 'channels' ? entity.code : entity.ip + ' • ' + entity.type}</p>
+                            </div>
+                        </div>
+                        <div class="entity-actions">
+                            ${entityType === 'speakers' && entity.isDVS ? '<span class="dvs-label">DVS</span>' : ''}
+                            ${isConnected ? 
+                                `<button class="btn btn-danger btn-sm" onclick="disconnectEntity('${entity.id}', '${entityType}')">
+                                    <i class="fas fa-unlink"></i> 해제
+                                </button>` :
+                                `<button class="btn btn-success btn-sm" onclick="connectEntity('${entity.id}', '${entityType}')">
+                                    <i class="fas fa-link"></i> 연결
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 엔티티 드래그 시작
+        function handleEntityDragStart(event, entityId, entityType) {
+            event.dataTransfer.setData('text/plain', entityId);
+            event.dataTransfer.setData('entity-type', entityType);
+            event.dataTransfer.effectAllowed = 'move';
+            
+            // 드래그 중인 엔티티 스타일 변경
+            event.target.style.opacity = '0.5';
+            
+            // 서비스 드롭 존 표시
+            const dropZone = document.getElementById('serviceDropZone');
+            dropZone.classList.add('active');
+        }
+
+        // 엔티티 드래그 종료
+        function handleEntityDragEnd(event) {
+            event.target.style.opacity = '1';
+            
+            // 서비스 드롭 존 숨기기
+            const dropZone = document.getElementById('serviceDropZone');
+            dropZone.classList.remove('active');
+        }
+
+        // 서비스에 엔티티 연결
+        function connectEntityToService(entityId, entityType) {
+            const entity = allEntities[entityType].find(e => e.id === entityId);
+            if (!entity) return;
+
+            // 기존 연결 해제 (다른 서비스에 연결된 경우)
+            if (entity.connectedTo) {
+                const previousService = sampleServices.find(s => s.id === entity.connectedTo);
+                if (previousService && previousService.id !== selectedService.id) {
+                    if (confirm(`${entity.name}은(는) 이미 ${previousService.name}에 연결되어 있습니다. 연결을 변경하시겠습니까?`)) {
+                        entity.connectedTo = selectedService.id;
+                        updateAllConnections();
+                        showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다.`);
+                    }
+                } else if (entity.connectedTo === selectedService.id) {
+                    showAlert('info', `${entity.name}은(는) 이미 이 서비스에 연결되어 있습니다.`);
+                }
+            } else {
+                entity.connectedTo = selectedService.id;
+                updateAllConnections();
+                showAlert('success', `${entity.name}이(가) ${selectedService.name}에 연결되었습니다.`);
+            }
+        }
+
+        // 서비스에서 엔티티 제거
+        function removeEntityFromService(entityId, entityType) {
+            const entity = allEntities[entityType].find(e => e.id === entityId);
+            if (!entity) return;
+
+            if (confirm(`${entity.name}의 연결을 해제하시겠습니까?`)) {
+                entity.connectedTo = null;
+                updateAllConnections();
+                showAlert('warning', `${entity.name}의 연결이 해제되었습니다.`);
+            }
+        }
+
+        // 모든 연결 상태 업데이트
+        function updateAllConnections() {
+            updateServiceEntities();
+            updateEntityConnections();
+            updateStats();
+            updateConnectionInfo();
+            updateServiceConnectionStats();
+            // D3.js 네트워크 렌더링
+            if (selectedService) {
+                renderD3Network();
+            } else {
+                // 서비스가 선택되지 않은 경우 노드 상태만 업데이트
+                updateNodeVisualState();
+            }
+        }
+
+
+        // 서버에 변경사항 적용
+        function applyChangesToServer(changes) {
+            // 실제 구현에서는 서버 API 호출
+            console.log('서버에 적용할 변경사항:', changes);
+            
+            // 시뮬레이션: 각 변경사항을 실제 데이터에 적용
+            changes.forEach(change => {
+                const entity = allEntities[change.entityType].find(e => e.id === change.entityId);
+                if (entity) {
+                    entity.connectedTo = change.newConnection;
+                }
+            });
+            
+            // UI 업데이트
+            updateAllConnections();
+        }
+
+        // 변경사항 추가
+        function addPendingChange(entityId, entityType, newConnection) {
+            // 기존 변경사항 제거
+            pendingChanges = pendingChanges.filter(change => 
+                !(change.entityId === entityId && change.entityType === entityType)
+            );
+            
+            // 새 변경사항 추가
+            pendingChanges.push({
+                entityId: entityId,
+                entityType: entityType,
+                newConnection: newConnection,
+                timestamp: new Date()
+            });
+            
+            hasUnsavedChanges = true;
+        }
+
+
+        // 변경사항 초기화
+        function resetPendingChanges() {
+            pendingChanges = [];
+            hasUnsavedChanges = false;
+        }
+
+
+        // 서비스 저장 (제거됨)
+        function saveService_removed() {
+            if (!selectedService) {
+                showAlert('warning', '저장할 서비스가 선택되지 않았습니다.');
+                return;
+            }
+
+            const serviceData = {
+                id: selectedService.id,
+                name: selectedService.name,
+                language: selectedService.language,
+                type: selectedService.type,
+                connections: getServiceConnections()
+            };
+
+            // 서버에 서비스 데이터 저장
+            saveToServer('service', serviceData);
+        }
+
+        // 스피커 저장 (제거됨)
+        function saveSpeakers_removed() {
+            const speakers = allEntities.speakers.map(speaker => ({
+                id: speaker.id,
+                name: speaker.name,
+                code: speaker.code,
+                type: speaker.type,
+                connectedTo: speaker.connectedTo
+            }));
+
+            saveToServer('speakers', speakers);
+        }
+
+        // 채널 저장 (제거됨)
+        function saveChannels_removed() {
+            const channels = allEntities.channels.map(channel => ({
+                id: channel.id,
+                name: channel.name,
+                code: channel.code,
+                connectedTo: channel.connectedTo
+            }));
+
+            saveToServer('channels', channels);
+        }
+
+        // 서버 저장 (제거됨)
+        function saveServers_removed() {
+            const servers = allEntities.servers.map(server => ({
+                id: server.id,
+                name: server.name,
+                ip: server.ip,
+                type: server.type,
+                status: server.status,
+                connectedTo: server.connectedTo
+            }));
+
+            saveToServer('servers', servers);
+        }
+
+        // 서비스 연결 정보 가져오기
+        function getServiceConnections() {
+            const connections = {
+                speakers: allEntities.speakers.filter(s => s.connectedTo === selectedService.id).map(s => s.id),
+                channels: allEntities.channels.filter(c => c.connectedTo === selectedService.id).map(c => c.id),
+                servers: allEntities.servers.filter(s => s.connectedTo === selectedService.id).map(s => s.id)
+            };
+            return connections;
+        }
+
+        // 서버에 데이터 저장
+        function saveToServer(type, data) {
+            // 실제 구현에서는 서버 API 호출
+            console.log(`${type} 저장 요청:`, data);
+            
+            // 시뮬레이션: 저장 성공
+            setTimeout(() => {
+                showAlert('success', `${type} 데이터가 성공적으로 저장되었습니다.`);
+                
+                // 저장 후 변경사항 초기화
+                if (type === 'service') {
+                    resetPendingChanges();
+                }
+            }, 1000);
+        }
+
+
+        // 엔티티 제거 함수 (제거됨)
+        function removeEntity_removed() {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            const entityType = prompt('제거할 엔티티 타입을 선택하세요:\n1. speaker\n2. channel\n3. server');
+            if (!entityType) return;
+
+            let entities = [];
+            if (entityType === 'speaker') {
+                entities = allEntities.speakers;
+            } else if (entityType === 'channel') {
+                entities = allEntities.channels;
+            } else if (entityType === 'server') {
+                entities = allEntities.servers;
+            }
+
+            if (entities.length === 0) {
+                showAlert('warning', '제거할 엔티티가 없습니다.');
+                return;
+            }
+
+            // 엔티티 목록 표시
+            let entityList = entities.map((entity, index) => 
+                `${index + 1}. ${entity.name} (ID: ${entity.id})`
+            ).join('\n');
+
+            const index = prompt(`제거할 엔티티의 번호를 입력하세요:\n\n${entityList}`);
+            if (!index || isNaN(index) || index < 1 || index > entities.length) {
+                showAlert('error', '잘못된 번호입니다.');
+                return;
+            }
+
+            const entityIndex = parseInt(index) - 1;
+            const removedEntity = entities[entityIndex];
+            
+            // 연결 해제
+            if (removedEntity.connectedTo === selectedService.id) {
+                removedEntity.connectedTo = null;
+                updateAllConnections();
+            }
+
+            // 엔티티 제거
+            entities.splice(entityIndex, 1);
+
+            // UI 업데이트
+            loadEntityPanels();
+            updateStats();
+            renderD3Network();
+
+            showAlert('success', `${entityType} 엔티티 "${removedEntity.name}"이 제거되었습니다.`);
+        }
+
+        // 엔티티 편집 함수 (제거됨)
+        function editEntity_removed() {
+            if (!selectedService) {
+                showAlert('warning', '먼저 서비스를 선택해주세요.');
+                return;
+            }
+
+            const entityType = prompt('편집할 엔티티 타입을 선택하세요:\n1. speaker\n2. channel\n3. server');
+            if (!entityType) return;
+
+            let entities = [];
+            if (entityType === 'speaker') {
+                entities = allEntities.speakers;
+            } else if (entityType === 'channel') {
+                entities = allEntities.channels;
+            } else if (entityType === 'server') {
+                entities = allEntities.servers;
+            }
+
+            if (entities.length === 0) {
+                showAlert('warning', '편집할 엔티티가 없습니다.');
+                return;
+            }
+
+            // 엔티티 목록 표시
+            let entityList = entities.map((entity, index) => 
+                `${index + 1}. ${entity.name} (ID: ${entity.id})`
+            ).join('\n');
+
+            const index = prompt(`편집할 엔티티의 번호를 입력하세요:\n\n${entityList}`);
+            if (!index || isNaN(index) || index < 1 || index > entities.length) {
+                showAlert('error', '잘못된 번호입니다.');
+                return;
+            }
+
+            const entityIndex = parseInt(index) - 1;
+            const entity = entities[entityIndex];
+            
+            const newName = prompt(`새로운 이름을 입력하세요 (현재: ${entity.name}):`, entity.name);
+            if (!newName || newName === entity.name) return;
+
+            // 이름 업데이트
+            entity.name = newName;
+
+            // UI 업데이트
+            loadEntityPanels();
+            renderD3Network();
+
+            showAlert('success', `${entityType} 엔티티 이름이 "${newName}"으로 변경되었습니다.`);
+        }
+
+        // 엔티티 타입별 표시/숨김 상태 추적
+        let entityVisibility = {
+            service: true,
+            speaker: true,
+            channel: true,
+            server: true
+        };
+
+        // 엔티티 타입별 표시/숨김 토글
+        function toggleEntityVisibility(entityType) {
+            const btn = document.querySelector(`.${entityType}-btn`);
+            const isActive = btn.classList.contains('active');
+            
+            if (isActive) {
+                btn.classList.remove('active');
+                entityVisibility[entityType] = false;
+            } else {
+                btn.classList.add('active');
+                entityVisibility[entityType] = true;
+            }
+            
+            // D3.js 네트워크 다시 렌더링
+            if (selectedService) {
+                renderD3Network();
+            }
+        }
+
+        // 특정 엔티티 타입 숨기기
+        function hideEntityType(entityType) {
+            entityVisibility[entityType] = false;
+        }
+
+        // 특정 엔티티 타입 보이기
+        function showEntityType(entityType) {
+            entityVisibility[entityType] = true;
+        }
+
+
+        // 서비스 연결 통계 업데이트
+        function updateServiceConnectionStats() {
+            if (!selectedService) {
+                return;
+            }
+
+            const connectedSpeakers = allEntities.speakers.filter(s => s.connectedTo === selectedService.id);
+            const connectedDVS = connectedSpeakers.filter(s => s.isDVS).length;
+            const connectedChannels = allEntities.channels.filter(c => c.connectedTo === selectedService.id).length;
+            const connectedServers = allEntities.servers.filter(s => s.connectedTo === selectedService.id).length;
+
+            // 연결 상태 패널 통계
+            document.getElementById('connectedSpeakers').textContent = `${connectedSpeakers.length}${connectedDVS > 0 ? `(DVS ${connectedDVS})` : ''}`;
+            document.getElementById('connectedChannels').textContent = connectedChannels;
+            document.getElementById('connectedServers').textContent = connectedServers;
+
+            // 연결상태 부분 상세 정보 (요소가 존재하는 경우에만 업데이트)
+            const connectedSpeakersDetail = document.getElementById('connectedSpeakersDetail');
+            const connectedChannelsDetail = document.getElementById('connectedChannelsDetail');
+            const connectedServersDetail = document.getElementById('connectedServersDetail');
+            
+            if (connectedSpeakersDetail) {
+                connectedSpeakersDetail.textContent = `${connectedSpeakers.length}${connectedDVS > 0 ? `(DVS ${connectedDVS})` : ''}`;
+            }
+            if (connectedChannelsDetail) {
+                connectedChannelsDetail.textContent = connectedChannels;
+            }
+            if (connectedServersDetail) {
+                connectedServersDetail.textContent = connectedServers;
+            }
+        }
+
+        // 엔티티 노드 초기화
+        function clearEntityNodes() {
+            document.getElementById('entityNodes').innerHTML = '';
+            document.getElementById('connectionLines').innerHTML = '';
+            entityPositions = {};
+        }
+
+        // 엔티티 패널 초기화
+        function clearEntityPanels() {
+            ['speakers', 'channels', 'servers'].forEach(type => {
+                const container = document.getElementById(`${type}List`);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-${type === 'speakers' ? 'volume-up' : type === 'channels' ? 'broadcast-tower' : 'server'}"></i>
+                        <h3>서비스를 선택해주세요</h3>
+                        <p>연결을 관리할 서비스를 선택하세요</p>
+                    </div>
+                `;
+            });
+        }
+
+        // 모달 외부 클릭으로 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('connectionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+
+</body></html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KT-STT 대시보드 생성기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 360px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e31e24 0%, #c41e3a 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 24px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 16px 0 24px 0;
+        }
+        
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        .feature-list li:before {
+            content: "✅";
+            margin-right: 8px;
+        }
+        
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #e31e24 0%, #c41e3a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            display: none;
+        }
+        
+        .progress.active {
+            display: block;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50%;
+            border-top-color: #e31e24;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .info {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 16px 0;
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        .version {
+            text-align: center;
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KT-STT 대시보드 생성기</h1>
+            <p>시스템 모니터링 대시보드를 자동으로 생성합니다</p>
+        </div>
+        
+        <div class="content">
+            <div class="info">
+                <strong>📋 생성될 컴포넌트:</strong><br>
+                완전한 디자인 시스템, 편집 가능한 컴포넌트, 반응형 레이아웃
+            </div>
+            
+            <ul class="feature-list">
+                <li>Color Styles (30개)</li>
+                <li>Text Styles (7개)</li>
+                <li>Metric Cards (4종)</li>
+                <li>Chart Containers (2종)</li>
+                <li>Status Components</li>
+                <li>완전한 Desktop Layout</li>
+            </ul>
+            
+            <button id="createBtn" class="btn">
+                🚀 대시보드 생성하기
+            </button>
+            
+            <div id="progress" class="progress">
+                <span class="spinner"></span>
+                <span id="progressText">대시보드 생성 중...</span>
+            </div>
+            
+            <div class="version">
+                v1.0.0 - 2024.12.19
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const createBtn = document.getElementById('createBtn');
+        const progress = document.getElementById('progress');
+        const progressText = document.getElementById('progressText');
+        
+        const progressSteps = [
+            '아트보드 생성 중...',
+            'Color Styles 생성 중...',
+            'Text Styles 생성 중...',
+            '컴포넌트 생성 중...',
+            '레이아웃 조립 중...',
+            '마무리 작업 중...'
+        ];
+        
+        let currentStep = 0;
+        
+        createBtn.addEventListener('click', () => {
+            // 버튼 비활성화
+            createBtn.disabled = true;
+            createBtn.textContent = '생성 중...';
+            
+            // 진행률 표시
+            progress.classList.add('active');
+            
+            // 진행률 애니메이션
+            const progressInterval = setInterval(() => {
+                if (currentStep < progressSteps.length) {
+                    progressText.textContent = progressSteps[currentStep];
+                    currentStep++;
+                } else {
+                    clearInterval(progressInterval);
+                    progressText.textContent = '완료! Figma에서 확인해주세요.';
+                }
+            }, 1000);
+            
+            // Figma 플러그인 실행
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'create-dashboard'
+                }
+            }, '*');
+            
+            // 완료 후 상태 복원
+            setTimeout(() => {
+                createBtn.disabled = false;
+                createBtn.textContent = '🚀 대시보드 생성하기';
+                progress.classList.remove('active');
+                currentStep = 0;
+            }, 8000);
+        });
+        
+        // Figma에서 메시지 수신
+        window.onmessage = (event) => {
+            if (event.data.pluginMessage) {
+                const { type, message } = event.data.pluginMessage;
+                
+                if (type === 'progress') {
+                    progressText.textContent = message;
+                } else if (type === 'complete') {
+                    progressText.textContent = '✅ 생성 완료!';
+                    setTimeout(() => {
+                        progress.classList.remove('active');
+                        createBtn.disabled = false;
+                        createBtn.textContent = '🚀 대시보드 생성하기';
+                    }, 2000);
+                } else if (type === 'error') {
+                    progressText.textContent = '❌ 오류: ' + message;
+                    createBtn.disabled = false;
+                    createBtn.textContent = '다시 시도';
+                }
+            }
+        };
+    </script>
+</body>
+</html>

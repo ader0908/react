@@ -1,4 +1,3 @@
-import { useState } from "react";
 import TableHeader from "./TableHeader";
 import Pagination from "./Pagination";
 
@@ -44,39 +43,9 @@ const Table = ({
   header = { show: true, count: data.length },
   pagination = { show: false },
   selectable = false,
-  onSelectionChange,
   emptyMessage = "데이터가 없습니다",
   className = "",
 }) => {
-  const [selectedRows, setSelectedRows] = useState(new Set());
-
-  // 전체 선택/해제
-  const handleSelectAll = (checked) => {
-    if (checked) {
-      const allIds = new Set(data.map((_, index) => index));
-      setSelectedRows(allIds);
-      onSelectionChange?.(allIds);
-    } else {
-      setSelectedRows(new Set());
-      onSelectionChange?.(new Set());
-    }
-  };
-
-  // 행 선택/해제
-  const handleSelectRow = (rowIndex, checked) => {
-    const newSelected = new Set(selectedRows);
-    if (checked) {
-      newSelected.add(rowIndex);
-    } else {
-      newSelected.delete(rowIndex);
-    }
-    setSelectedRows(newSelected);
-    onSelectionChange?.(newSelected);
-  };
-
-  const allSelected = data.length > 0 && selectedRows.size === data.length;
-  const someSelected = selectedRows.size > 0 && !allSelected;
-
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
       {/* 테이블 헤더 */}

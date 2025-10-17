@@ -7,6 +7,7 @@
  * @param {Array} options - 선택 옵션 배열 [{ value: string, label: string }]
  * @param {string} placeholder - placeholder 텍스트
  * @param {string} className - 추가 CSS 클래스
+ * @param {string} bgColor - 배경색 (기본값: #f4f5f5)
  */
 const Select = ({
   label,
@@ -16,6 +17,7 @@ const Select = ({
   options = [],
   placeholder = "선택하세요",
   className = "",
+  bgColor = "#f4f5f5",
 }) => {
   return (
     <div className={className}>
@@ -32,7 +34,8 @@ const Select = ({
         <select
           value={value}
           onChange={onChange}
-          className="w-full px-3 py-2 bg-[#f4f5f5] rounded text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] focus:bg-white"
+          className="w-full px-3 py-2 rounded text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] focus:bg-white"
+          style={{ backgroundColor: bgColor }}
         >
           {placeholder && (
             <option value="" disabled>

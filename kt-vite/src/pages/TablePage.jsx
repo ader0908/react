@@ -15,18 +15,20 @@ export default function TablePage() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const columns = [
-    { key: "date", label: "일시" },
-    { key: "serviceModel", label: "서비스 모델 / 고객코드" },
-    { key: "appliedModel", label: "적용 모델" },
-    { key: "testServer", label: "테스트 서버" },
-    { key: "sttCount", label: "STT 결과 개수" },
-    { key: "result", label: "결과 (transcript)" },
-    { key: "statusCheck", label: "상태조회" },
-    { key: "status", label: "상태" },
+    { key: "no", label: "NO", width: "5%" },
+    { key: "date", label: "일시", width: "15%" },
+    { key: "serviceModel", label: "서비스 모델 / 고객코드", width: "20%" },
+    { key: "appliedModel", label: "적용 모델", width: "30%" },
+    { key: "testServer", label: "테스트 서버", width: "20%" },
+    { key: "sttCount", label: "STT 결과 개수", width: "10%" },
+    { key: "result", label: "결과 (transcript)", width: "10%" },
+    { key: "statusCheck", label: "상태조회", width: "10%" },
+    { key: "status", label: "상태", width: "10%" },
   ];
   const data = [
     {
       id: 1,
+      no: 10,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -47,6 +49,7 @@ export default function TablePage() {
     },
     {
       id: 2,
+      no: 9,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -67,6 +70,7 @@ export default function TablePage() {
     },
     {
       id: 3,
+      no: 8,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -87,6 +91,7 @@ export default function TablePage() {
     },
     {
       id: 4,
+      no: 7,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -107,6 +112,7 @@ export default function TablePage() {
     },
     {
       id: 5,
+      no: 6,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -127,6 +133,7 @@ export default function TablePage() {
     },
     {
       id: 6,
+      no: 5,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -147,6 +154,7 @@ export default function TablePage() {
     },
     {
       id: 7,
+      no: 4,
       date: "2025-08-19 13:53:54",
       serviceModel: "콜봇",
       appliedModel: "콜봇 2025-08-04 12:40:25.826",
@@ -212,6 +220,7 @@ export default function TablePage() {
                 onChange={(e) => setSelectedValue(e.target.value)}
                 options={["1", "2", "3"]}
                 placeholder="선택하세요"
+                bgColor="#ffffff"
               />
             </div>
             <DateRangePicker

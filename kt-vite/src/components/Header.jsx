@@ -78,12 +78,6 @@ const Header = () => {
           </svg>
           <span className="text-sm font-semibold text-white">홍길동</span>
         </div>
-
-        {/* 상태 표시 */}
-        <div className="bg-[#fafafa] rounded-lg px-4 py-2 flex items-center gap-2">
-          <div className="w-2.5 h-2.5 bg-[#22c55e] rounded-full"></div>
-          <span className="text-sm text-black">All Services 정상</span>
-        </div>
       </div>
     </header>
   );

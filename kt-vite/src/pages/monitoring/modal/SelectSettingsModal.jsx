@@ -33,6 +33,7 @@ export default function SelectSettingsModal({ isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       title="조회 설정"
+      size="lg"
       footer={
         <div className="flex gap-2">
           <Button variant="secondary" title="취소" onClick={onClose} />

@@ -145,7 +145,7 @@ const MonitoringPage = () => {
                 { value: "대시보드2", label: "대시보드2" },
                 { value: "대시보드3", label: "대시보드3" },
               ]}
-              className="w-24 h-9"
+              className="w-28 h-9"
             />
           </div>
         </div>
@@ -216,7 +216,7 @@ const MonitoringPage = () => {
     <div className="space-y-4">
       {/* 모니터링 헤더 */}
       <PageHeader
-        title="통합 모니터링 대시보드"
+        title="대시보드"
         subtitle="실시간 성능 지표 및 상태 모니터링"
         middleContent={middleContent}
         rightContent={rightContent}

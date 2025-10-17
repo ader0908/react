@@ -158,7 +158,9 @@ const TimeRangeSelector = ({
 
       {/* 조회 기간 설정 */}
       <div
-        className="flex-1 max-w-[417px] flex flex-col"
+        className={`flex-1 ${
+          isRealtime ? "min-w-[300px]" : "min-w-[370px]"
+        } flex flex-col`}
         style={{ overflow: "visible" }}
       >
         <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4">
@@ -199,9 +201,9 @@ const TimeRangeSelector = ({
             <input
               type="text"
               value={dateRange}
-              onChange={(e) => onDateRangeChange?.(e.target.value)}
+              readOnly
               placeholder="2025/09/10 16:37 ~ 2025/09/10 17:37"
-              className="w-full h-8 px-3 pr-[110px] bg-[#f4f5f5] border-none rounded text-sm"
+              className="w-full h-8 px-3 pr-[10px]  bg-[#f4f5f5] border-none rounded text-sm"
             />
             <div
               className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5"
@@ -222,12 +224,11 @@ const TimeRangeSelector = ({
                 />
                 {isCalendarOpen && (
                   <div
-                    className="absolute top-6 z-[10000] bg-white rounded-lg shadow-2xl p-4"
+                    className="absolute top-10 z-[10000] bg-white rounded-lg shadow-2xl p-4"
                     style={{
                       border: "1px solid #e4e7e7",
                       minWidth: "700px",
-                      left: "50%",
-                      transform: "translateX(-50%)",
+                      right: "0",
                     }}
                   >
                     <div className="flex flex-col gap-4">

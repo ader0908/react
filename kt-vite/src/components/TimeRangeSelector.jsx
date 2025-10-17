@@ -295,16 +295,12 @@ const TimeRangeSelector = ({
 
       {/* 데이터 간격 */}
       <div className="w-20 flex flex-col relative">
-        <label className="text-xs text-[#a1a9aa] font-medium mb-1 block h-4">
-          데이터 간격
-          <span className="text-[#ed1b23] ml-0.5">*</span>
-        </label>
         <Select
           value={dataInterval}
           onChange={(e) => onDataIntervalChange?.(e.target.value)}
           options={intervalOptions}
-          className="h-9"
           disabled={isRealtime}
+          label="데이터 간격"
         />
       </div>
     </div>

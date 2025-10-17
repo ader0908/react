@@ -30,8 +30,8 @@ const ChartCard = ({
   chartType = "line",
   chartData,
   chartOptions = {},
-  onVisibilityToggle,
-  onSettings,
+  onSelectSettings,
+  onChartSettings,
   showControls = true,
   borderColor = "#5090f7",
   selected = false,
@@ -93,27 +93,27 @@ const ChartCard = ({
             {showControls && (
               <>
                 {/* 표시/숨김 버튼 */}
-                {onVisibilityToggle && (
+                {onSelectSettings && (
                   <Button
                     variant="outline"
                     size="small"
                     icon={<TbEye />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      onVisibilityToggle();
+                      onSelectSettings();
                     }}
                   />
                 )}
 
                 {/* 설정 버튼 */}
-                {onSettings && (
+                {onChartSettings && (
                   <Button
                     variant="outline"
                     size="small"
                     icon={<TbSettings />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      onSettings();
+                      onChartSettings();
                     }}
                   />
                 )}

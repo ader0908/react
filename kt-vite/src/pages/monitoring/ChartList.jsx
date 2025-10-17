@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react";
 import ChartCard from "../../components/ChartCard";
 import ChartSettingsModal from "./modal/ChartSettingsModal";
+import SelectSettingsModal from "./modal/SelectSettingsModal";
 
 function ChartList({ dashboardMode }) {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   // 샘플 차트 데이터 - 각 차트별로 독립적인 데이터 (메모이제이션)
   const chartDatasets = useMemo(
     () => ({
@@ -295,8 +297,8 @@ function ChartList({ dashboardMode }) {
               ? setSelectedCard(selectedCard === index ? null : index)
               : null
           }
-          onVisibilityToggle={() => console.log("표시/숨김 토글")}
-          onSettings={() => setIsSettingsOpen(true)}
+          onSelectSettings={() => setIsSelectOpen(true)}
+          onChartSettings={() => setIsSettingsOpen(true)}
         />
       ))}
 
@@ -304,6 +306,13 @@ function ChartList({ dashboardMode }) {
         <ChartSettingsModal
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
+        />
+      )}
+
+      {isSelectOpen && (
+        <SelectSettingsModal
+          isOpen={isSelectOpen}
+          onClose={() => setIsSelectOpen(false)}
         />
       )}
     </div>

@@ -10,6 +10,7 @@ const Sidebar = () => {
     history: false,
     license: false,
     cpod: false,
+    table: false,
   });
   const [expandedSubMenus, setExpandedSubMenus] = useState({
     // cpod 메뉴
@@ -22,6 +23,8 @@ const Sidebar = () => {
     // history 메뉴
     "api-history": false,
     "error-history": false,
+    // table 메뉴
+    tableList: false,
   });
 
   const toggleMenu = (menuKey) => {
@@ -55,6 +58,10 @@ const Sidebar = () => {
       "/settings": {
         mainMenu: "cpod",
         subMenu: "settings",
+      },
+      "/table": {
+        mainMenu: "table",
+        subMenu: "tableList",
       },
     };
 
@@ -93,6 +100,13 @@ const Sidebar = () => {
       hasSubMenus: true,
       route: null,
     },
+    {
+      id: "table",
+      label: "테이블",
+      icon: "📊",
+      hasSubMenus: true,
+      route: null,
+    },
   ];
 
   // 각 메인 메뉴의 서브메뉴 정의
@@ -126,6 +140,20 @@ const Sidebar = () => {
                 route: "/settings",
               },
             ],
+          },
+        ],
+      },
+    ],
+
+    table: [
+      {
+        items: [
+          {
+            id: "tableList",
+            label: "테이블 리스트",
+            icon: "📊",
+            hasSubItems: false,
+            route: "/table",
           },
         ],
       },

@@ -10,6 +10,142 @@
 
 ## 현재 컴포넌트
 
+### Table.jsx
+
+Figma 디자인 기반의 재사용 가능한 테이블 컴포넌트입니다.
+
+**주요 기능:**
+
+- 커스터마이징 가능한 컬럼 구조
+- 행 선택 기능 (체크박스)
+- 상단 액션 버튼 (검색 결과 표시, 다운로드, 등록 등)
+- 하단 액션 버튼 (선택 삭제, 일괄 삭제 등)
+- 페이지네이션 (페이지 크기 조절, 페이지 이동)
+- 커스텀 셀 렌더링
+- 빈 데이터 메시지
+- 반응형 디자인
+
+**Props:**
+
+- `columns` (Array): 테이블 컬럼 정의 배열
+
+  - `key` (string): 데이터 키
+  - `label` (string): 컬럼 헤더 텍스트
+  - `width` (string): 컬럼 너비 (px 또는 CSS 값)
+  - `align` (string): 정렬 ("left" | "center" | "right")
+  - `render` (Function): 커스텀 렌더링 함수 `(value, row, index) => ReactNode`
+
+- `data` (Array): 테이블 데이터 배열
+
+- `topActions` (Object): 상단 액션 영역
+
+  - `leftText` (string): 왼쪽 텍스트 (예: "검색결과 23건")
+  - `rightButtons` (Array): 오른쪽 버튼 배열 (Button 컴포넌트 props)
+
+- `bottomActions` (Object): 하단 액션 영역
+
+  - `leftButtons` (Array): 왼쪽 버튼 배열 (Button 컴포넌트 props)
+  - `onDeleteSelected` (Function): 선택 삭제 핸들러 `(selectedIndexes) => void`
+  - `onDeleteAll` (Function): 일괄 삭제 핸들러 `() => void`
+
+- `pagination` (Object): 페이지네이션 설정
+
+  - `enabled` (boolean): 페이지네이션 활성화 여부
+  - `currentPage` (number): 현재 페이지 (1부터 시작)
+  - `totalPages` (number): 전체 페이지 수
+  - `pageSize` (number): 페이지당 항목 수
+  - `pageSizeOptions` (Array): 페이지 크기 옵션 배열
+  - `onPageChange` (Function): 페이지 변경 핸들러 `(page) => void`
+  - `onPageSizeChange` (Function): 페이지 크기 변경 핸들러 `(size) => void`
+
+- `selectable` (boolean): 행 선택 가능 여부 (기본값: false)
+- `onSelectionChange` (Function): 선택 변경 핸들러 `(selectedSet) => void`
+- `emptyMessage` (string): 데이터 없을 때 메시지 (기본값: "데이터가 없습니다")
+- `className` (string): 추가 CSS 클래스
+
+**사용 예시:**
+
+```jsx
+import Table from "../components/Table";
+import Button from "../components/Button";
+
+const columns = [
+  {
+    key: "no",
+    label: "NO",
+    width: "40px",
+    align: "center",
+  },
+  {
+    key: "date",
+    label: "일시",
+    width: "160px",
+    align: "center",
+  },
+  {
+    key: "status",
+    label: "상태",
+    width: "100px",
+    align: "center",
+    render: (value, row) => (
+      <Button
+        variant="primary"
+        size="small"
+        title={value}
+        onClick={() => alert(`${row.no}번 상태 확인`)}
+      />
+    ),
+  },
+];
+
+const data = [
+  { no: 1, date: "2025-08-19 13:53:54", status: "진행중" },
+  { no: 2, date: "2025-08-19 13:53:54", status: "완료" },
+];
+
+<Table
+  columns={columns}
+  data={data}
+  topActions={{
+    leftText: `검색결과 ${data.length}건`,
+    rightButtons: [
+      {
+        variant: "secondary",
+        size: "medium",
+        title: "다운로드",
+        onClick: () => alert("다운로드"),
+      },
+    ],
+  }}
+  bottomActions={{
+    onDeleteSelected: (selectedIndexes) => {
+      console.log("선택 삭제:", selectedIndexes);
+    },
+    onDeleteAll: () => {
+      console.log("일괄 삭제");
+    },
+  }}
+  pagination={{
+    enabled: true,
+    currentPage: 1,
+    totalPages: 5,
+    pageSize: 10,
+    pageSizeOptions: [10, 20, 50, 100],
+    onPageChange: (page) => console.log("페이지:", page),
+    onPageSizeChange: (size) => console.log("페이지 크기:", size),
+  }}
+  selectable={true}
+  onSelectionChange={(selected) => console.log("선택:", selected)}
+/>;
+```
+
+**디자인 스펙:**
+
+- 테이블 헤더: 40px 높이, 흰색 배경, 회색 테두리 (#e4e7e7), 회색 텍스트 (#a1a9aa), Bold (700), 12px
+- 테이블 행: 56px 높이, 흰색 배경, 회색 테두리 (#e4e7e7), 검은색 텍스트 (#181b1b), SemiBold (600), 14px
+- Hover 효과: 배경색 (#f9fafa)
+- 페이지네이션: 36px 높이 버튼, 현재 페이지는 검은색 배경 (#181b1b)
+
 ### Modal.jsx
 
 팝업(모달) 공통 컴포넌트입니다. Figma 디자인 기반으로 제작되었습니다.
@@ -494,6 +630,82 @@ const MyPage = () => {
 };
 ```
 
+### RadioGroup.jsx
+
+라디오 버튼 그룹 컴포넌트입니다. (Figma 디자인 기반)
+
+- 옵션 배열을 받아 자동으로 라디오 버튼 생성
+- 가로/세로 방향 배치 선택 가능
+- 커스텀 스타일 (브랜드 컬러 #2bb7b3)
+- Label 및 필수 항목 표시
+- 접근성 지원 (sr-only)
+
+**Props:**
+
+- `name`: 라디오 그룹 이름 (필수)
+- `options`: 옵션 배열 `[{ value: string, label: string }]` (필수)
+- `value`: 선택된 값
+- `onChange`: 값 변경 핸들러 (값만 전달)
+- `label`: 그룹 라벨 텍스트 (선택사항)
+- `required`: 필수 항목 여부 (기본값: false)
+- `direction`: 배치 방향 - `"horizontal"` | `"vertical"` (기본값: `"horizontal"`)
+- `gap`: 라디오 버튼 간 간격 (Tailwind 클래스, 기본값: `"gap-6"`)
+- `className`: 추가 CSS 클래스
+
+```jsx
+import { useState } from "react";
+import RadioGroup from "../components/RadioGroup";
+
+const MyPage = () => {
+  const [filterType, setFilterType] = useState("serviceModel");
+  const [selectedSize, setSelectedSize] = useState("medium");
+
+  return (
+    <>
+      {/* 기본 가로 방향 */}
+      <RadioGroup
+        name="filterType"
+        options={[
+          { value: "serviceModel", label: "서비스 모델" },
+          { value: "customerCode", label: "고객 코드" },
+        ]}
+        value={filterType}
+        onChange={setFilterType}
+      />
+
+      {/* 라벨과 필수 표시 */}
+      <RadioGroup
+        name="size"
+        label="사이즈 선택"
+        required
+        options={[
+          { value: "small", label: "Small" },
+          { value: "medium", label: "Medium" },
+          { value: "large", label: "Large" },
+        ]}
+        value={selectedSize}
+        onChange={setSelectedSize}
+      />
+
+      {/* 세로 방향 배치 */}
+      <RadioGroup
+        name="options"
+        label="옵션 선택"
+        options={[
+          { value: "option1", label: "옵션 1" },
+          { value: "option2", label: "옵션 2" },
+          { value: "option3", label: "옵션 3" },
+        ]}
+        value={filterType}
+        onChange={setFilterType}
+        direction="vertical"
+        gap="gap-3"
+      />
+    </>
+  );
+};
+```
+
 ### Button.jsx
 
 통합 Button 컴포넌트입니다.
@@ -584,6 +796,226 @@ const SettingsPage = () => {
     <div>
       <SchedulerSettingCard />
     </div>
+  );
+};
+```
+
+### DatePicker.jsx
+
+단일 날짜 선택 컴포넌트입니다. (react-datepicker 기반)
+
+- Label 텍스트 표시
+- 필수 항목 표시 (\*)
+- 달력 아이콘 포함
+- 커스텀 스타일 (브랜드 컬러 #2bb7b3)
+- 선택 가능한 최소/최대 날짜 설정
+
+**Props:**
+
+- `label`: 라벨 텍스트 (선택사항)
+- `required`: 필수 항목 여부 (기본값: false)
+- `value`: 선택된 날짜 (Date 객체)
+- `onChange`: 날짜 변경 핸들러
+- `placeholder`: placeholder 텍스트 (기본값: "날짜 선택")
+- `minDate`: 선택 가능한 최소 날짜 (선택사항)
+- `maxDate`: 선택 가능한 최대 날짜 (선택사항)
+- `className`: 추가 CSS 클래스
+
+```jsx
+import { useState } from "react";
+import DatePicker from "../components/DatePicker";
+
+const MyPage = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  return (
+    <>
+      {/* 기본 사용 */}
+      <DatePicker
+        label="날짜 선택"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        placeholder="날짜를 선택하세요"
+      />
+
+      {/* 필수 항목 */}
+      <DatePicker
+        label="시작 날짜"
+        required
+        value={selectedDate}
+        onChange={setSelectedDate}
+      />
+
+      {/* 최소/최대 날짜 제한 */}
+      <DatePicker
+        label="예약 날짜"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        minDate={new Date()}
+        maxDate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
+      />
+    </>
+  );
+};
+```
+
+### DateRangePicker.jsx
+
+날짜 범위 선택 컴포넌트입니다. 시작일과 종료일을 선택할 수 있습니다. (react-datepicker 기반, Figma 디자인 기반)
+
+- Label 텍스트 표시
+- 필수 항목 표시 (\*)
+- 시작일과 종료일 입력 필드
+- 달력 아이콘 포함
+- 종료일은 시작일 이후만 선택 가능
+- 커스텀 스타일 (브랜드 컬러 #2bb7b3)
+
+**Props:**
+
+- `label`: 라벨 텍스트 (기본값: "조회기간")
+- `required`: 필수 항목 여부 (기본값: false)
+- `startDate`: 시작일 (Date 객체)
+- `endDate`: 종료일 (Date 객체)
+- `onStartDateChange`: 시작일 변경 핸들러
+- `onEndDateChange`: 종료일 변경 핸들러
+- `startPlaceholder`: 시작일 placeholder (기본값: "시작일")
+- `endPlaceholder`: 종료일 placeholder (기본값: "종료일")
+- `className`: 추가 CSS 클래스
+
+```jsx
+import { useState } from "react";
+import DateRangePicker from "../components/DateRangePicker";
+
+const MyPage = () => {
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  return (
+    <>
+      {/* 기본 사용 */}
+      <DateRangePicker
+        label="조회기간"
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+      />
+
+      {/* 필수 항목 */}
+      <DateRangePicker
+        label="검색 기간"
+        required
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        startPlaceholder="시작일"
+        endPlaceholder="종료일"
+      />
+    </>
+  );
+};
+```
+
+### SearchFilter.jsx
+
+검색 필터 영역 공통 컨테이너 컴포넌트입니다. (Figma 디자인 기반)
+
+- 회색 배경 영역 (#f4f5f5)
+- 검색 버튼 자동 추가
+- children으로 필터 구성 요소를 자유롭게 배치
+- 페이지별로 다양한 필터 조합 가능
+
+**Props:**
+
+- `children`: 필터 구성 요소들 (RadioGroup, Select, DateRangePicker 등)
+- `onSearch`: 검색 버튼 클릭 핸들러 (필수)
+- `searchButtonText`: 검색 버튼 텍스트 (기본값: "검색")
+- `showSearchButton`: 검색 버튼 표시 여부 (기본값: true)
+- `className`: 추가 CSS 클래스
+
+**특징:**
+
+- 전체 영역과 검색 버튼만 제공하는 범용 컨테이너
+- 내부 구성은 페이지별로 자유롭게 커스터마이징
+- Flexbox 레이아웃으로 자동 정렬
+
+```jsx
+import { useState } from "react";
+import SearchFilter from "../components/SearchFilter";
+import RadioGroup from "../components/RadioGroup";
+import Select from "../components/Select";
+import DateRangePicker from "../components/DateRangePicker";
+
+const TablePage = () => {
+  const [filterType, setFilterType] = useState("serviceModel");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const handleSearch = () => {
+    console.log("검색:", {
+      filterType,
+      selectedValue,
+      startDate,
+      endDate,
+    });
+  };
+
+  return (
+    <>
+      {/* 예시 1: 라디오 + 드롭다운 + 날짜 범위 */}
+      <SearchFilter onSearch={handleSearch}>
+        <div className="flex-none w-60">
+          <RadioGroup
+            name="filterType"
+            options={[
+              { value: "serviceModel", label: "서비스 모델" },
+              { value: "customerCode", label: "고객 코드" },
+            ]}
+            value={filterType}
+            onChange={setFilterType}
+            className="mb-2"
+          />
+          <Select
+            value={selectedValue}
+            onChange={(e) => setSelectedValue(e.target.value)}
+            options={[
+              { value: "", label: "전체" },
+              { value: "model1", label: "모델 1" },
+            ]}
+            placeholder="전체"
+          />
+        </div>
+        <DateRangePicker
+          label="조회기간"
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+          className="flex-1"
+        />
+      </SearchFilter>
+
+      {/* 예시 2: 간단한 구성 (드롭다운 + 날짜만) */}
+      <SearchFilter onSearch={handleSearch}>
+        <Select
+          label="카테고리"
+          value={selectedValue}
+          onChange={(e) => setSelectedValue(e.target.value)}
+          options={options}
+          className="flex-none w-60"
+        />
+        <DateRangePicker
+          label="조회기간"
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+          className="flex-1"
+        />
+      </SearchFilter>
+    </>
   );
 };
 ```
@@ -1198,11 +1630,17 @@ components/
   ├── Select.jsx                    # Select 드롭다운 (Label 포함)
   ├── Input.jsx                     # Input 입력 필드 (Label 포함)
   ├── Toggle.jsx                    # Toggle 스위치 (Label 포함)
+  ├── RadioGroup.jsx                # RadioGroup 라디오 버튼 그룹 (Figma 디자인 기반)
+  ├── RadioGroupExample.jsx         # RadioGroup 컴포넌트 사용 예시
   ├── Button.jsx                    # Button 버튼 (통합 컴포넌트)
+  ├── DatePicker.jsx                # DatePicker 날짜 선택 (react-datepicker)
+  ├── DateRangePicker.jsx           # DateRangePicker 날짜 범위 선택 (react-datepicker)
+  ├── SearchFilter.jsx              # SearchFilter 검색 필터 컨테이너 (Figma 디자인 기반)
+  ├── SearchFilterExample.jsx       # SearchFilter 컴포넌트 사용 예시
+  ├── TimeRangeSelector.jsx         # 시간 범위 선택 (모니터링용 조회 설정)
   ├── Dropdown.jsx                  # Dropdown 메뉴 (항목 선택)
   ├── RealtimeStatusIndicator.jsx   # 실시간 상태 표시 (인디케이터, 시간, 배지)
   ├── SchedulerSettingCard.jsx      # 스케줄러 설정 카드
-  ├── TimeRangeSelector.jsx         # 시간 범위 선택 (모니터링용 조회 설정)
   ├── Chart.jsx                     # Chart.js 차트 컴포넌트 (선차트, 막대차트, 도넛차트, 파이차트)
   ├── ChartCard.jsx                 # 모니터링 차트 카드 (Chip, 차트 타입 선택, 차트 표시)
   ├── CardExample.jsx               # Card 컴포넌트 사용 예시

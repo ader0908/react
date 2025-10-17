@@ -15,38 +15,6 @@ export default function SelectSettingsModal({ isOpen, onClose }) {
   const [timeRangePreset, setTimeRangePreset] = useState("최근 1시간");
   const [dataInterval, setDataInterval] = useState("1분");
 
-  // 엔진 선택 상태
-  const [selectedEngines, setSelectedEngines] = useState({
-    stt: true,
-    tts: false,
-    nlu: true,
-  });
-
-  // 서버 선택 상태
-  const [selectedServers, setSelectedServers] = useState({
-    "c-pod-001": true,
-    "c-pod-002": true,
-    "c-pod-003": false,
-    "s-pod-001": false,
-    "s-pod-002": true,
-  });
-
-  // 엔진 선택 핸들러
-  const handleEngineChange = (engine) => {
-    setSelectedEngines((prev) => ({
-      ...prev,
-      [engine]: !prev[engine],
-    }));
-  };
-
-  // 서버 선택 핸들러
-  const handleServerChange = (server) => {
-    setSelectedServers((prev) => ({
-      ...prev,
-      [server]: !prev[server],
-    }));
-  };
-
   // 적용 버튼 핸들러
   const handleApply = () => {
     // 여기서 선택된 값들을 부모 컴포넌트로 전달하거나 처리
@@ -56,8 +24,6 @@ export default function SelectSettingsModal({ isOpen, onClose }) {
       dateRange,
       timeRangePreset,
       dataInterval,
-      selectedEngines,
-      selectedServers,
     });
     onClose();
   };

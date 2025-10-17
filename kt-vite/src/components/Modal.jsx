@@ -1,5 +1,5 @@
 import { IoClose } from "react-icons/io5";
-import "./Modal.css";
+import "../styles/Modal.css";
 
 /**
  * Modal 공통 컴포넌트

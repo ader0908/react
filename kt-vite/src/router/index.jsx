@@ -2,6 +2,7 @@ import { createHashRouter, Navigate } from "react-router-dom";
 import MainPage from "../pages/MainPage";
 import MonitoringPage from "../pages/MonitoringPage";
 import SettingsPage from "../pages/SettingsPage";
+import TablePage from "../pages/TablePage";
 
 export const router = createHashRouter([
   {
@@ -19,6 +20,10 @@ export const router = createHashRouter([
       {
         path: "settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "table",
+        element: <TablePage />,
       },
     ],
   },

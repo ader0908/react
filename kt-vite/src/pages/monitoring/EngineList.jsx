@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import EngineItemCard from "../../components/EngineItemCard";
 import Chip from "../../components/Chip";
 
-export default function EngineList() {
+function EngineList() {
   return (
     <Card
       title="엔진 항목 선택"
@@ -51,3 +51,6 @@ export default function EngineList() {
     </Card>
   );
 }
+
+// React.memo로 감싸서 불필요한 리렌더링 방지
+export default React.memo(EngineList);

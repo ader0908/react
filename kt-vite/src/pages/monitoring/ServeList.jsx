@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import ServerItemCard from "../../components/ServerItemCard";
 import Chip from "../../components/Chip";
 
-export default function ServeList() {
+function ServeList() {
   return (
     <Card
       title="서버 목록"
@@ -56,3 +56,6 @@ export default function ServeList() {
     </Card>
   );
 }
+
+// React.memo로 감싸서 불필요한 리렌더링 방지
+export default React.memo(ServeList);

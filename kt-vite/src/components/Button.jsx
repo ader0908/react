@@ -32,11 +32,14 @@ const Button = ({
     danger: "bg-[#ed1b23] text-white hover:bg-[#d41820]",
   };
 
+  // 아이콘 전용 버튼 여부 확인
+  const isIconOnly = icon && !title;
+
   // Size별 스타일
   const sizeStyles = {
-    small: "px-3 h-8 text-xs",
-    medium: "px-4 h-9 text-sm",
-    large: "px-6 h-11 text-base",
+    small: isIconOnly ? "w-6 h-6 p-0" : "px-3 h-8 text-xs",
+    medium: isIconOnly ? "w-9 h-9 p-0" : "px-4 h-9 text-sm",
+    large: isIconOnly ? "w-11 h-11 p-0" : "px-6 h-11 text-base",
   };
 
   // 아이콘 크기
@@ -48,7 +51,10 @@ const Button = ({
 
   // 기본 스타일
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 font-semibold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] focus:ring-offset-2 whitespace-nowrap";
+    "inline-flex items-center justify-center font-semibold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] focus:ring-offset-2 whitespace-nowrap";
+
+  // gap 스타일 (아이콘 전용일 때는 gap 없음)
+  const gapStyles = isIconOnly ? "" : "gap-2";
 
   // Disabled 스타일
   const disabledStyles = disabled
@@ -63,7 +69,7 @@ const Button = ({
       type={type}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      className={`${baseStyles} ${variantStyles[variant] || ""} ${
+      className={`${baseStyles} ${gapStyles} ${variantStyles[variant] || ""} ${
         sizeStyles[size]
       } ${disabledStyles} ${className}`}
     >

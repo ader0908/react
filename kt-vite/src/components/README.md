@@ -10,6 +10,146 @@
 
 ## 현재 컴포넌트
 
+### Modal.jsx
+
+팝업(모달) 공통 컴포넌트입니다. Figma 디자인 기반으로 제작되었습니다.
+
+**주요 기능:**
+
+- Header 영역 (제목, 닫기 버튼)
+- Content 영역 (스크롤 가능, 커스텀 스크롤바)
+- Footer 영역 (선택사항)
+- 백드롭 클릭 시 닫기
+- ESC 키로 닫기
+- 애니메이션 효과 (페이드인, 슬라이드인)
+- 반응형 대응
+
+### DashboardSectionHeader.jsx
+
+대시보드 섹션의 헤더를 표시하는 컴포넌트입니다.
+
+**Props:**
+
+- `icon` (React.ReactNode): 섹션 아이콘
+- `title` (string): 섹션 제목
+- `count` (string): 항목 개수
+- `showWarning` (boolean): 경고 메시지 표시 여부 (기본값: false)
+- `warningText` (string): 경고 메시지 텍스트
+- `onAddNew` (Function): 새 항목 추가 버튼 클릭 핸들러
+- `addNewText` (string): 새 항목 추가 버튼 텍스트 (기본값: "새 대시보드")
+- `className` (string): 추가 CSS 클래스
+
+**사용 예시:**
+
+```jsx
+<DashboardSectionHeader
+  icon={<svg>...</svg>}
+  title="관리자 대시보드"
+  count={7}
+  onAddNew={() => console.log("Add new")}
+/>
+```
+
+### DashboardListItem.jsx
+
+대시보드 리스트의 개별 아이템을 표시하는 컴포넌트입니다.
+
+**Props:**
+
+- `id` (string): 아이템 ID
+- `title` (string): 대시보드 제목
+- `description` (string): 대시보드 설명
+- `checked` (boolean): 체크 상태 (기본값: false)
+- `isDefault` (boolean): 기본 대시보드 여부 (기본값: false)
+- `onCheck` (Function): 체크박스 변경 핸들러
+- `onEdit` (Function): 편집 버튼 클릭 핸들러
+- `onStar` (Function): 즐겨찾기 버튼 클릭 핸들러
+- `className` (string): 추가 CSS 클래스
+
+**특징:**
+
+- 기본 대시보드(`isDefault={true}`)일 경우:
+  - 체크박스가 숨겨집니다.
+  - 편집/즐겨찾기 버튼 대신 오른쪽에 "기본 대시보드" 텍스트가 표시됩니다.
+- 일반 대시보드일 경우:
+  - 체크박스가 표시됩니다.
+  - 편집/즐겨찾기 버튼이 오른쪽에 표시됩니다.
+- 선택 상태에 따라 테두리 색상이 변경됩니다 (선택: `#2bb7b3`, 미선택: `#e4e7e7`).
+
+**사용 예시:**
+
+```jsx
+<DashboardListItem
+  id="dashboard-1"
+  title="대시보드1 - 시스템 전체 모니터링"
+  description="시스템의 전체적인 상태를 모니터링합니다."
+  checked={true}
+  isDefault={true}
+  onCheck={(id, value) => console.log(id, value)}
+  onEdit={(id) => console.log("Edit", id)}
+  onStar={(id) => console.log("Star", id)}
+/>
+```
+
+### DashboardSection.jsx
+
+대시보드 섹션 전체를 표시하는 컴포넌트입니다. 헤더와 리스트를 포함합니다.
+
+**Props:**
+
+- `icon` (React.ReactNode): 섹션 아이콘
+- `title` (string): 섹션 제목
+- `count` (number): 항목 개수
+- `items` (Array): 대시보드 아이템 목록
+- `selectedItems` (Array): 선택된 아이템 ID 목록
+- `onCheck` (Function): 체크박스 변경 핸들러
+- `onEdit` (Function): 편집 버튼 클릭 핸들러
+- `onStar` (Function): 즐겨찾기 버튼 클릭 핸들러
+- `onAddNew` (Function): 새 대시보드 추가 핸들러 (선택사항)
+- `showWarning` (boolean): 경고 메시지 표시 여부 (기본값: false)
+- `className` (string): 추가 CSS 클래스
+
+**사용 예시:**
+
+```jsx
+<DashboardSection
+  icon={<svg>...</svg>}
+  title="관리자 대시보드"
+  count={7}
+  items={dashboards}
+  selectedItems={["dashboard-1", "dashboard-2"]}
+  onCheck={(id, value) => console.log(id, value)}
+  onEdit={(id) => console.log("Edit", id)}
+  onStar={(id) => console.log("Star", id)}
+  onAddNew={() => console.log("Add new")}
+/>
+```
+
+**참고:** 내보내기, 가져오기, 삭제 등의 전역 액션 버튼은 모달 레벨에서 관리합니다.
+
+### DashboardForm.jsx
+
+새 대시보드 생성 폼을 표시하는 컴포넌트입니다.
+
+**Props:**
+
+- `isOpen` (boolean): 폼 열림 상태 (기본값: false)
+- `onToggle` (Function): 폼 토글 핸들러
+- `onSubmit` (Function): 제출 핸들러
+- `onReset` (Function): 초기화 핸들러
+- `className` (string): 추가 CSS 클래스
+
+**사용 예시:**
+
+```jsx
+<DashboardForm
+  isOpen={true}
+  onToggle={() => setIsOpen(!isOpen)}
+  onSubmit={(formData) => console.log(formData)}
+  onReset={() => console.log("Reset")}
+/>
+```
+
 ### Layout.jsx
 
 전체 페이지 레이아웃 컴포넌트입니다.
@@ -358,45 +498,69 @@ const MyPage = () => {
 
 통합 Button 컴포넌트입니다.
 
+**주요 기능:**
+
 - 5가지 variant (primary, secondary, outline, ghost, danger)
 - 3가지 size (small, medium, large)
+- 아이콘 + 텍스트 또는 아이콘 전용 버튼 지원
 - disabled 상태 지원
 - focus 스타일
 - hover 효과
 
+**Props:**
+
+- `variant` (string): 버튼 스타일 (기본값: "primary")
+- `size` (string): 버튼 크기 (기본값: "medium")
+- `icon` (React.ReactNode): 아이콘
+- `title` (string): 버튼 텍스트 (없으면 아이콘 전용 버튼)
+- `disabled` (boolean): 비활성화 여부
+- `onClick` (Function): 클릭 핸들러
+- `type` (string): 버튼 타입 (기본값: "button")
+- `className` (string): 추가 CSS 클래스
+
+**아이콘 전용 버튼:**
+
+- `title` prop이 없으면 자동으로 정사각형 아이콘 버튼이 됩니다.
+- size별 크기: small (24x24px), medium (36x36px), large (44x44px)
+
 ```jsx
 import Button from "../components/Button";
+import { LuPencil } from "react-icons/lu";
 
 const MyPage = () => {
   return (
     <>
       {/* Variant별 버튼 */}
-      <Button variant="primary">저장</Button>
-      <Button variant="secondary">되돌리기</Button>
-      <Button variant="outline">취소</Button>
-      <Button variant="ghost">닫기</Button>
-      <Button variant="danger">삭제</Button>
+      <Button variant="primary" title="저장" />
+      <Button variant="secondary" title="되돌리기" />
+      <Button variant="outline" title="취소" />
+      <Button variant="ghost" title="닫기" />
+      <Button variant="danger" title="삭제" />
 
       {/* Size별 버튼 */}
-      <Button size="small">작은 버튼</Button>
-      <Button size="medium">중간 버튼</Button>
-      <Button size="large">큰 버튼</Button>
+      <Button size="small" title="작은 버튼" />
+      <Button size="medium" title="중간 버튼" />
+      <Button size="large" title="큰 버튼" />
+
+      {/* 아이콘 + 텍스트 버튼 */}
+      <Button icon={<LuPencil />} title="편집" variant="outline" />
+
+      {/* 아이콘 전용 버튼 (title 없음) */}
+      <Button icon={<LuPencil />} variant="outline" size="small" />
 
       {/* Disabled 버튼 */}
-      <Button disabled>비활성화</Button>
+      <Button disabled title="비활성화" />
 
       {/* 클릭 핸들러 */}
-      <Button onClick={() => console.log("클릭!")}>클릭</Button>
+      <Button onClick={() => console.log("클릭!")} title="클릭" />
 
       {/* Submit 버튼 */}
-      <Button type="submit" variant="primary">
-        제출
-      </Button>
+      <Button type="submit" variant="primary" title="제출" />
 
       {/* 버튼 그룹 */}
       <div className="flex gap-2">
-        <Button variant="secondary">되돌리기</Button>
-        <Button variant="primary">저장</Button>
+        <Button variant="secondary" title="되돌리기" />
+        <Button variant="primary" title="저장" />
       </div>
     </>
   );
@@ -793,6 +957,133 @@ const MyPage = () => {
 };
 ```
 
+### Modal.jsx
+
+팝업(모달) 공통 컴포넌트입니다. Figma 디자인 기반으로 제작되었습니다.
+
+**Props:**
+
+- `isOpen`: 모달 열림/닫힘 상태 (boolean, 필수)
+- `onClose`: 모달 닫기 함수 (function, 필수)
+- `title`: 모달 제목 (string, 필수)
+- `children`: 모달 본문 내용 (ReactNode, 필수)
+- `footer`: 모달 하단 영역 (ReactNode, 선택사항)
+- `size`: 모달 크기 - 'sm', 'md', 'lg', 'xl' (기본값: 'md')
+  - sm: 400px × 600px
+  - md: 560px × 800px
+  - lg: 800px × 900px
+  - xl: 1000px × 1000px
+- `width`: 커스텀 너비 (number, size 대신 사용 가능)
+- `maxHeight`: 커스텀 최대 높이 (number, size 대신 사용 가능)
+
+**주요 기능:**
+
+- Header 영역 (제목, 닫기 버튼)
+- Content 영역 (스크롤 가능, 커스텀 스크롤바)
+- Footer 영역 (선택사항)
+- 백드롭 클릭 시 닫기
+- ESC 키로 닫기
+- 애니메이션 효과 (페이드인, 슬라이드인)
+- 반응형 대응
+
+```jsx
+import { useState } from "react";
+import Modal from "../components/Modal";
+import Button from "../components/Button";
+
+const MyPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsModalOpen(true)}>모달 열기</Button>
+
+      {/* 기본 크기 모달 (md) */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="대시보드 관리"
+      >
+        <div>
+          <h3>관리자 대시보드 (7개)</h3>
+          <p>모달 본문 내용이 여기에 들어갑니다.</p>
+          {/* ... */}
+        </div>
+      </Modal>
+
+      {/* Footer 있는 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="새 대시보드 생성"
+        size="md"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+              취소
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                // 저장 로직
+                setIsModalOpen(false);
+              }}
+            >
+              저장
+            </Button>
+          </>
+        }
+      >
+        <div>
+          <label>대시보드 이름</label>
+          <input type="text" placeholder="대시보드 이름을 적어주세요." />
+          {/* ... */}
+        </div>
+      </Modal>
+
+      {/* 작은 모달 (sm) - 확인 다이얼로그 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="확인"
+        size="sm"
+        footer={
+          <Button variant="primary" onClick={() => setIsModalOpen(false)}>
+            확인
+          </Button>
+        }
+      >
+        <p>정말 삭제하시겠습니까?</p>
+      </Modal>
+
+      {/* 큰 모달 (lg) - 많은 콘텐츠 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="상세 정보"
+        size="lg"
+      >
+        <div>
+          <h3>많은 콘텐츠가 들어갑니다</h3>
+          {/* ... */}
+        </div>
+      </Modal>
+
+      {/* 커스텀 크기 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="커스텀 크기"
+        width={700}
+        maxHeight={600}
+      >
+        <div>커스텀 크기의 모달입니다.</div>
+      </Modal>
+    </>
+  );
+};
+```
+
 ### ChartCard.jsx
 
 모니터링 차트를 표시하는 카드 컴포넌트입니다. Chip, Select, Chart 컴포넌트를 조합하여 완전한 차트 UI를 제공합니다.
@@ -898,6 +1189,9 @@ components/
   ├── Card.jsx                      # 범용 카드 컴포넌트 (Figma 디자인 기반)
   ├── AccordionCard.jsx             # 아코디언 카드 (펼침/접기 기능)
   ├── SectionCard.jsx               # 섹션 카드 (AccordionCard 내부 사용)
+  ├── Modal.jsx                     # 팝업(모달) 공통 컴포넌트 (Figma 디자인 기반)
+  ├── Modal.css                     # Modal 컴포넌트 스타일
+  ├── ModalExample.jsx              # Modal 컴포넌트 사용 예시
   ├── Chip.jsx                      # 칩(Badge) 버튼 컴포넌트
   ├── EngineItemCard.jsx            # 엔진 항목 카드 (Chip 그룹화, 한 줄)
   ├── ServerItemCard.jsx            # 서버 항목 카드 (Chip 그룹화, 여러 줄)

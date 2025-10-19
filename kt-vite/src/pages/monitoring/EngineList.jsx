@@ -15,7 +15,7 @@ function EngineList() {
         </div>
       }
     >
-      <div className=" space-y-2">
+      <div className="space-y-2">
         {/* STT 엔진 */}
         <EngineItemCard title="STT" borderColor="#22c55e">
           <Chip label="CPU" variant="primary" />

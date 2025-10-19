@@ -146,6 +146,213 @@ const data = [
 - Hover 효과: 배경색 (#f9fafa)
 - 페이지네이션: 36px 높이 버튼, 현재 페이지는 검은색 배경 (#181b1b)
 
+### TableHeader.jsx
+
+테이블 상단 영역 컴포넌트입니다. 검색 결과 표시와 액션 버튼을 포함합니다.
+
+**Props:**
+
+- `count`: 검색 결과 개수 (number)
+- `countText`: 개수 텍스트 (기본값: "검색결과")
+- `countUnit`: 개수 단위 (기본값: "건")
+- `rightButtons`: 우측 버튼 배열 (Button 컴포넌트 props)
+- `customLeft`: 커스텀 왼쪽 컨텐츠 (count 대신 사용, 선택사항)
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import TableHeader from "../components/TableHeader";
+
+const MyPage = () => {
+  return (
+    <>
+      {/* 기본 사용 */}
+      <TableHeader count={23} />
+
+      {/* 버튼 포함 */}
+      <TableHeader count={45} countText="전체" />
+
+      {/* 커스텀 왼쪽 컨텐츠 */}
+      <TableHeader
+        customLeft={<span className="text-red-500">경고: 3개 항목</span>}
+      />
+    </>
+  );
+};
+```
+
+### Pagination.jsx
+
+페이지네이션 UI 컴포넌트입니다. (Figma 디자인 기반)
+
+- 페이지 크기 선택 드롭다운
+- 페이지 번호 네비게이션
+- 첫/마지막/이전/다음 버튼
+- 현재 페이지 하이라이트
+
+**Props:**
+
+- `currentPage`: 현재 페이지 (1부터 시작, 기본값: 1)
+- `totalPages`: 전체 페이지 수 (기본값: 1)
+- `pageSize`: 페이지당 항목 수 (기본값: 10)
+- `pageSizeOptions`: 페이지 크기 옵션 배열 (기본값: [10, 20, 50, 100])
+- `onPageChange`: 페이지 변경 핸들러 `(page) => void`
+- `onPageSizeChange`: 페이지 크기 변경 핸들러 `(size) => void`
+- `showPageSizeSelector`: 페이지 크기 선택기 표시 여부 (기본값: true)
+- `pageSizeLabel`: 페이지 크기 레이블 (기본값: "페이지당 표시")
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import { useState } from "react";
+import Pagination from "../components/Pagination";
+
+const MyPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  return (
+    <>
+      {/* 기본 사용 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={10}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
+
+      {/* 페이지 크기 선택기 숨김 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={5}
+        onPageChange={setCurrentPage}
+        showPageSizeSelector={false}
+      />
+
+      {/* 커스텀 옵션 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={20}
+        pageSize={pageSize}
+        pageSizeOptions={[5, 10, 25, 50]}
+        pageSizeLabel="항목 수"
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
+    </>
+  );
+};
+```
+
+### SettingRow.jsx
+
+설정 항목의 레이아웃을 위한 공통 컴포넌트입니다. 왼쪽에 타이틀, 오른쪽에 컨트롤 요소를 배치합니다.
+
+**Props:**
+
+- `title`: 설정 항목 제목 (string, 필수)
+- `children`: 오른쪽에 표시될 컨트롤 요소 (ReactNode, 필수)
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import SettingRow from "../components/SettingRow";
+import Toggle from "../components/Toggle";
+import Input from "../components/Input";
+
+const MyPage = () => {
+  return (
+    <>
+      {/* Toggle 컨트롤 */}
+      <SettingRow title="자동 저장">
+        <Toggle checked={true} onChange={() => {}} />
+      </SettingRow>
+
+      {/* Input 컨트롤 */}
+      <SettingRow title="서버 주소">
+        <Input value="localhost:3000" onChange={() => {}} />
+      </SettingRow>
+
+      {/* 여러 컨트롤 */}
+      <SettingRow title="알림 설정">
+        <div className="space-y-2">
+          <Toggle label="이메일 알림" checked={true} onChange={() => {}} />
+          <Toggle label="SMS 알림" checked={false} onChange={() => {}} />
+        </div>
+      </SettingRow>
+    </>
+  );
+};
+```
+
+### ServiceModelRow.jsx
+
+서비스 모델별 삭제 대상을 표시하는 행 컴포넌트입니다. 모델 라벨과 체크박스들을 포함합니다.
+
+**Props:**
+
+- `label`: 모델 라벨 (예: "콜봇", "챗봇", "상담모델")
+- `checkboxes`: 체크박스 배열 `[{ label, checked, onChange, disabled }, ...]`
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import { useState } from "react";
+import ServiceModelRow from "../components/ServiceModelRow";
+
+const MyPage = () => {
+  const [callbotChecks, setCallbotChecks] = useState({
+    request: true,
+    error: false,
+    statistics: true,
+  });
+
+  return (
+    <>
+      {/* 콜봇 모델 */}
+      <ServiceModelRow
+        label="콜봇"
+        checkboxes={[
+          {
+            label: "요청 데이터",
+            checked: callbotChecks.request,
+            onChange: (val) =>
+              setCallbotChecks({ ...callbotChecks, request: val }),
+          },
+          {
+            label: "오류 데이터",
+            checked: callbotChecks.error,
+            onChange: (val) =>
+              setCallbotChecks({ ...callbotChecks, error: val }),
+          },
+          {
+            label: "통계 데이터",
+            checked: callbotChecks.statistics,
+            onChange: (val) =>
+              setCallbotChecks({ ...callbotChecks, statistics: val }),
+          },
+        ]}
+      />
+
+      {/* 비활성화된 체크박스 포함 */}
+      <ServiceModelRow
+        label="챗봇"
+        checkboxes={[
+          {
+            label: "요청 데이터",
+            checked: true,
+            onChange: () => {},
+          },
+          {
+            label: "오류 데이터",
+            checked: false,
+            onChange: () => {},
+            disabled: true,
+          },
+        ]}
+      />
+    </>
+  );
+};
+```
+
 ### Modal.jsx
 
 팝업(모달) 공통 컴포넌트입니다. Figma 디자인 기반으로 제작되었습니다.
@@ -155,8 +362,6 @@ const data = [
 - Header 영역 (제목, 닫기 버튼)
 - Content 영역 (스크롤 가능, 커스텀 스크롤바)
 - Footer 영역 (선택사항)
-- 백드롭 클릭 시 닫기
-- ESC 키로 닫기
 - 애니메이션 효과 (페이드인, 슬라이드인)
 - 반응형 대응
 
@@ -521,6 +726,18 @@ Label과 Select 드롭다운이 결합된 공통 컴포넌트입니다.
 - 필수 항목 표시 (\*)
 - Chevron-down 아이콘
 - 커스텀 스타일링
+- 배경색 커스터마이징 가능
+
+**Props:**
+
+- `label`: 라벨 텍스트 (선택사항)
+- `required`: 필수 항목 여부 (기본값: false)
+- `value`: 선택된 값 (필수)
+- `onChange`: 값 변경 핸들러 (필수)
+- `options`: 선택 옵션 배열 `[{ value: string, label: string }]` (필수)
+- `placeholder`: placeholder 텍스트 (기본값: "선택하세요")
+- `bgColor`: 배경색 (기본값: "#f4f5f5")
+- `className`: 추가 CSS 클래스 (선택사항)
 
 ```jsx
 import { useState } from "react";
@@ -535,14 +752,35 @@ const MyPage = () => {
   ];
 
   return (
-    <Select
-      label="프로토콜"
-      required
-      value={protocol}
-      onChange={(e) => setProtocol(e.target.value)}
-      options={options}
-      placeholder="선택하세요"
-    />
+    <>
+      {/* 기본 사용 */}
+      <Select
+        label="프로토콜"
+        required
+        value={protocol}
+        onChange={(e) => setProtocol(e.target.value)}
+        options={options}
+        placeholder="선택하세요"
+      />
+
+      {/* 흰색 배경 */}
+      <Select
+        label="카테고리"
+        value={protocol}
+        onChange={(e) => setProtocol(e.target.value)}
+        options={options}
+        bgColor="#ffffff"
+      />
+
+      {/* 커스텀 배경색 */}
+      <Select
+        label="상태"
+        value={protocol}
+        onChange={(e) => setProtocol(e.target.value)}
+        options={options}
+        bgColor="#e3f2fd"
+      />
+    </>
   );
 };
 ```
@@ -580,6 +818,76 @@ const MyPage = () => {
 
       {/* Disabled Input */}
       <Input label="서버명" value="비활성화됨" disabled />
+    </>
+  );
+};
+```
+
+### InputWithUnit.jsx
+
+Label, Input, 단위 텍스트가 결합된 공통 컴포넌트입니다.
+
+- Input.jsx와 동일한 기능
+- 오른쪽에 단위 텍스트 표시 (초, 분, GB, % 등)
+- 스케줄러, 임계치 설정 등에 적합
+
+**Props:**
+
+- `label`: 라벨 텍스트 (선택사항)
+- `required`: 필수 항목 여부 (기본값: false)
+- `value`: 입력 값
+- `onChange`: 값 변경 핸들러
+- `type`: input 타입 (기본값: "text")
+- `placeholder`: placeholder 텍스트 (선택사항)
+- `disabled`: 비활성화 여부 (기본값: false)
+- `readOnly`: 읽기 전용 여부 (기본값: false)
+- `unit`: 단위 텍스트 (예: "초", "분", "GB", "%")
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import { useState } from "react";
+import InputWithUnit from "../components/InputWithUnit";
+
+const MyPage = () => {
+  const [hwCheckInterval, setHwCheckInterval] = useState("15");
+  const [threshold, setThreshold] = useState("80");
+
+  return (
+    <>
+      {/* 초 단위 입력 */}
+      <InputWithUnit
+        label="HW 리소스 조회"
+        required
+        value={hwCheckInterval}
+        onChange={(e) => setHwCheckInterval(e.target.value)}
+        type="number"
+        unit="초"
+      />
+
+      {/* 퍼센트 입력 */}
+      <InputWithUnit
+        label="CPU 임계치"
+        value={threshold}
+        onChange={(e) => setThreshold(e.target.value)}
+        type="number"
+        unit="%"
+      />
+
+      {/* GB 단위 */}
+      <InputWithUnit
+        label="메모리 용량"
+        value="16"
+        onChange={(e) => {}}
+        unit="GB"
+      />
+
+      {/* 분 단위 */}
+      <InputWithUnit
+        label="통계 수집 주기"
+        value="5"
+        onChange={(e) => {}}
+        unit="분"
+      />
     </>
   );
 };
@@ -625,6 +933,63 @@ const MyPage = () => {
         onChange={setStorageShare}
         disabled
       />
+    </>
+  );
+};
+```
+
+### Checkbox.jsx
+
+체크박스 컴포넌트입니다. (Figma 디자인 기반)
+
+- 커스텀 체크박스 UI
+- Label 텍스트 표시
+- disabled 상태 지원
+- 접근성 지원 (sr-only)
+- 브랜드 컬러 (#2bb7b3) 적용
+
+**Props:**
+
+- `label`: 체크박스 라벨 텍스트 (선택사항)
+- `checked`: 체크 상태 (기본값: false)
+- `onChange`: 상태 변경 핸들러 (새로운 체크 상태를 인자로 받음)
+- `disabled`: 비활성화 여부 (기본값: false)
+- `className`: 추가 CSS 클래스 (선택사항)
+
+```jsx
+import { useState } from "react";
+import Checkbox from "../components/Checkbox";
+
+const MyPage = () => {
+  const [checked1, setChecked1] = useState(false);
+  const [checked2, setChecked2] = useState(true);
+
+  return (
+    <>
+      {/* 기본 체크박스 */}
+      <Checkbox
+        label="이용약관 동의"
+        checked={checked1}
+        onChange={setChecked1}
+      />
+
+      {/* 체크된 상태 */}
+      <Checkbox
+        label="마케팅 수신 동의"
+        checked={checked2}
+        onChange={setChecked2}
+      />
+
+      {/* Disabled 체크박스 */}
+      <Checkbox
+        label="필수 항목 (변경 불가)"
+        checked={true}
+        onChange={() => {}}
+        disabled
+      />
+
+      {/* Label 없는 체크박스 */}
+      <Checkbox checked={checked1} onChange={setChecked1} />
     </>
   );
 };
@@ -1413,8 +1778,6 @@ const MyPage = () => {
 - Header 영역 (제목, 닫기 버튼)
 - Content 영역 (스크롤 가능, 커스텀 스크롤바)
 - Footer 영역 (선택사항)
-- 백드롭 클릭 시 닫기
-- ESC 키로 닫기
 - 애니메이션 효과 (페이드인, 슬라이드인)
 - 반응형 대응
 
@@ -1622,13 +1985,19 @@ components/
   ├── AccordionCard.jsx             # 아코디언 카드 (펼침/접기 기능)
   ├── SectionCard.jsx               # 섹션 카드 (AccordionCard 내부 사용)
   ├── Modal.jsx                     # 팝업(모달) 공통 컴포넌트 (Figma 디자인 기반)
-  ├── Modal.css                     # Modal 컴포넌트 스타일
   ├── ModalExample.jsx              # Modal 컴포넌트 사용 예시
+  ├── Table.jsx                     # 테이블 컴포넌트
+  ├── TableHeader.jsx               # 테이블 상단 영역 (검색 결과, 액션 버튼)
+  ├── TableExample.jsx              # Table 컴포넌트 사용 예시
+  ├── Pagination.jsx                # 페이지네이션 컴포넌트
   ├── Chip.jsx                      # 칩(Badge) 버튼 컴포넌트
+  ├── ChipExample.jsx               # Chip 컴포넌트 사용 예시
   ├── EngineItemCard.jsx            # 엔진 항목 카드 (Chip 그룹화, 한 줄)
   ├── ServerItemCard.jsx            # 서버 항목 카드 (Chip 그룹화, 여러 줄)
   ├── Select.jsx                    # Select 드롭다운 (Label 포함)
   ├── Input.jsx                     # Input 입력 필드 (Label 포함)
+  ├── InputWithUnit.jsx             # Input 입력 필드 with 단위 텍스트
+  ├── Checkbox.jsx                  # 체크박스 컴포넌트
   ├── Toggle.jsx                    # Toggle 스위치 (Label 포함)
   ├── RadioGroup.jsx                # RadioGroup 라디오 버튼 그룹 (Figma 디자인 기반)
   ├── RadioGroupExample.jsx         # RadioGroup 컴포넌트 사용 예시
@@ -1641,11 +2010,17 @@ components/
   ├── Dropdown.jsx                  # Dropdown 메뉴 (항목 선택)
   ├── RealtimeStatusIndicator.jsx   # 실시간 상태 표시 (인디케이터, 시간, 배지)
   ├── SchedulerSettingCard.jsx      # 스케줄러 설정 카드
+  ├── SettingRow.jsx                # 설정 행 레이아웃 컴포넌트
+  ├── ServiceModelRow.jsx           # 서비스 모델 행 컴포넌트 (체크박스 그룹)
   ├── Chart.jsx                     # Chart.js 차트 컴포넌트 (선차트, 막대차트, 도넛차트, 파이차트)
   ├── ChartCard.jsx                 # 모니터링 차트 카드 (Chip, 차트 타입 선택, 차트 표시)
-  ├── CardExample.jsx               # Card 컴포넌트 사용 예시
-  ├── ChipExample.jsx               # Chip 컴포넌트 사용 예시
   ├── ChartCardExample.jsx          # ChartCard 컴포넌트 사용 예시
+  ├── CardExample.jsx               # Card 컴포넌트 사용 예시
+  ├── DashboardExample.jsx          # Dashboard 컴포넌트 사용 예시
+  ├── DashboardForm.jsx             # 대시보드 생성 폼
+  ├── DashboardListItem.jsx         # 대시보드 리스트 아이템
+  ├── DashboardSection.jsx          # 대시보드 섹션
+  ├── DashboardSectionHeader.jsx    # 대시보드 섹션 헤더
   └── README.md                     # 이 파일
 ```
 

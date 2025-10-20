@@ -161,7 +161,7 @@ const Sidebar = () => {
         items: [
           {
             id: "tableList",
-            label: "테이블 리스트",
+            label: "테이블 탬플릿",
             icon: "📊",
             hasSubItems: false,
             route: "/table",

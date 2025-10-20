@@ -12,13 +12,14 @@ import Button from "./Button";
  * @param {Function} onSubmit - 제출 핸들러
  * @param {Function} onReset - 초기화 핸들러
  * @param {string} className - 추가 CSS 클래스
+ * @param {React.ReactNode} children - 폼 내용
  */
 const DashboardForm = ({
   isOpen = false,
   onToggle,
   onSubmit,
-  onReset,
   className = "",
+  children,
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -26,26 +27,17 @@ const DashboardForm = ({
     type: "관리자 대시보드",
   });
 
-  const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit(formData);
-      // 폼 초기화
-      setFormData({
-        name: "",
-        description: "",
-        type: "관리자 대시보드",
-      });
-    }
-  };
-
   const handleReset = () => {
     setFormData({
       name: "",
       description: "",
       type: "관리자 대시보드",
     });
-    if (onReset) {
-      onReset();
+  };
+
+  const handleSubmit = () => {
+    if (onSubmit) {
+      onSubmit(formData);
     }
   };
 
@@ -95,38 +87,7 @@ const DashboardForm = ({
         {/* 폼 내용 */}
         {isOpen && (
           <div className="mt-4 pt-4 border-t border-[#e4e7e7] space-y-4">
-            <Input
-              label="대시보드 이름"
-              required
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              placeholder="대시보드 이름을 적어주세요."
-            />
-
-            <Input
-              label="설명(선택사항)"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              placeholder="대시보드에 대한 설명을 입력해 주세요."
-            />
-
-            <Select
-              label="대시보드 유형"
-              required
-              value={formData.type}
-              onChange={(e) =>
-                setFormData({ ...formData, type: e.target.value })
-              }
-              options={[
-                { value: "관리자 대시보드", label: "관리자 대시보드" },
-                { value: "개인 대시보드", label: "개인 대시보드" },
-              ]}
-            />
-
+            {children}
             {/* 버튼 */}
             <div className="flex justify-center gap-2 pt-2">
               <Button

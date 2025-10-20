@@ -6,6 +6,8 @@ import DashboardForm from "../../../components/DashboardForm";
 import { IoDownloadOutline } from "react-icons/io5";
 import { PiTrashBold } from "react-icons/pi";
 import { TbFileExport, TbUser, TbUserCog } from "react-icons/tb";
+import Input from "../../../components/Input";
+import Select from "../../../components/Select";
 
 export default function DashboardManageModal({ isOpen, onClose }) {
   // 관리자 대시보드 목록
@@ -76,6 +78,12 @@ export default function DashboardManageModal({ isOpen, onClose }) {
 
   // 폼 열림 상태
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    type: "관리자 대시보드",
+  });
 
   const selectedCount =
     selectedAdminItems.length + selectedPersonalItems.length;
@@ -199,7 +207,35 @@ export default function DashboardManageModal({ isOpen, onClose }) {
           onToggle={() => setIsFormOpen(!isFormOpen)}
           onSubmit={handleFormSubmit}
           onReset={() => setIsFormOpen(false)}
-        />
+        >
+          <Input
+            label="대시보드 이름"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="대시보드 이름을 적어주세요."
+          />
+
+          <Input
+            label="설명(선택사항)"
+            value={formData.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            placeholder="대시보드에 대한 설명을 입력해 주세요."
+          />
+
+          <Select
+            label="대시보드 유형"
+            required
+            value={formData.type}
+            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+            options={[
+              { value: "관리자 대시보드", label: "관리자 대시보드" },
+              { value: "개인 대시보드", label: "개인 대시보드" },
+            ]}
+          />
+        </DashboardForm>
       </div>
     </Modal>
   );

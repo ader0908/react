@@ -228,6 +228,64 @@ const SnippetPage = () => {
     Button: {
       title: "Button",
       description: "통합 Button 컴포넌트입니다.",
+      props: [
+        {
+          name: "variant",
+          type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'",
+          required: false,
+          default: "'primary'",
+          description: "버튼 스타일 variant",
+        },
+        {
+          name: "size",
+          type: "'small' | 'medium' | 'large'",
+          required: false,
+          default: "'medium'",
+          description: "버튼 크기",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "버튼 텍스트",
+        },
+        {
+          name: "onClick",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "클릭 이벤트 핸들러",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "icon",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "버튼 아이콘",
+        },
+        {
+          name: "type",
+          type: "string",
+          required: false,
+          default: "'button'",
+          description: "버튼 타입 (button | submit | reset)",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <div>
@@ -294,6 +352,64 @@ const MyPage = () => {
     Input: {
       title: "Input",
       description: "Label과 Input이 결합된 공통 컴포넌트입니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "입력 필드 레이블",
+        },
+        {
+          name: "value",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "입력 값",
+        },
+        {
+          name: "onChange",
+          type: "(e: Event) => void",
+          required: true,
+          default: "-",
+          description: "값 변경 이벤트 핸들러",
+        },
+        {
+          name: "placeholder",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "플레이스홀더 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 입력 여부",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "readOnly",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "읽기 전용 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4 max-w-md">
           <Input
@@ -336,6 +452,71 @@ const MyPage = () => {
     InputWithUnit: {
       title: "InputWithUnit",
       description: "Label과 InputWithUnit이 결합된 공통 컴포넌트입니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "라벨 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 항목 여부",
+        },
+        {
+          name: "value",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "입력 값",
+        },
+        {
+          name: "onChange",
+          type: "(e: Event) => void",
+          required: true,
+          default: "-",
+          description: "값 변경 핸들러",
+        },
+        {
+          name: "type",
+          type: "string",
+          required: false,
+          default: "'text'",
+          description: "input 타입",
+        },
+        {
+          name: "unit",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "단위 텍스트 (예: '초', '분', 'GB', '%')",
+        },
+        {
+          name: "placeholder",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "플레이스홀더 텍스트",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "readOnly",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "읽기 전용 여부",
+        },
+      ],
       preview: (
         <div className="space-y-4 max-w-md">
           <InputWithUnit
@@ -372,6 +553,57 @@ return (
     Card: {
       title: "Card",
       description: "범용 카드 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "카드 제목",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "카드 내용",
+        },
+        {
+          name: "showIndicator",
+          type: "boolean",
+          required: false,
+          default: "true",
+          description: "왼쪽 바 표시 여부",
+        },
+        {
+          name: "indicatorColor",
+          type: "string",
+          required: false,
+          default: "'#ed1b23'",
+          description: "왼쪽 바 색상",
+        },
+        {
+          name: "headerActions",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "헤더 오른쪽 액션 영역",
+        },
+        {
+          name: "footer",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "카드 하단 영역",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <Card title="기본 카드">
@@ -421,6 +653,29 @@ return (
       title: "AccordionCard",
       description:
         "AccordionCard 컴포넌트입니다. - 펼침/접기 기능이 있는 카드입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "카드 제목",
+        },
+        {
+          name: "errorMessage",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "제목 옆에 표시될 에러/경고 메시지",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "카드 내용",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <AccordionCard title="카드 제목">
@@ -456,6 +711,22 @@ return (
       title: "SectionCard",
       description:
         "AccordionCard의 content 영역에 사용되는 SectionCard 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "섹션 제목 (예: '학습', '운영')",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "섹션 내용",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <AccordionCard title="Agent 관련 설정">
@@ -498,6 +769,64 @@ const MyPage = () => {
     Select: {
       title: "Select",
       description: "Label과 Select 드롭다운이 결합된 공통 컴포넌트입니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "선택 필드 레이블",
+        },
+        {
+          name: "value",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "선택된 값",
+        },
+        {
+          name: "onChange",
+          type: "(e: Event) => void",
+          required: true,
+          default: "-",
+          description: "값 변경 이벤트 핸들러",
+        },
+        {
+          name: "options",
+          type: "Array<{value: string, label: string}>",
+          required: true,
+          default: "-",
+          description: "선택 옵션 배열",
+        },
+        {
+          name: "placeholder",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "플레이스홀더 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 선택 여부",
+        },
+        {
+          name: "bgColor",
+          type: "string",
+          required: false,
+          default: "'#f4f5f5'",
+          description: "배경색",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="max-w-md">
           <Select
@@ -539,6 +868,43 @@ const MyPage = () => {
     Checkbox: {
       title: "Checkbox",
       description: "체크박스 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "체크박스 레이블",
+        },
+        {
+          name: "checked",
+          type: "boolean",
+          required: true,
+          default: "-",
+          description: "체크 상태",
+        },
+        {
+          name: "onChange",
+          type: "(checked: boolean) => void",
+          required: true,
+          default: "-",
+          description: "체크 상태 변경 핸들러",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="flex gap-2 flex-wrap">
           <Checkbox
@@ -591,6 +957,50 @@ const MyPage = () => {
     Toggle: {
       title: "Toggle",
       description: "Toggle(Switch) 컴포넌트입니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "토글 레이블",
+        },
+        {
+          name: "description",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "토글 설명",
+        },
+        {
+          name: "checked",
+          type: "boolean",
+          required: true,
+          default: "-",
+          description: "토글 상태",
+        },
+        {
+          name: "onChange",
+          type: "(checked: boolean) => void",
+          required: true,
+          default: "-",
+          description: "토글 상태 변경 핸들러",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-3">
           <Toggle
@@ -628,6 +1038,71 @@ const MyPage = () => {
     RadioGroup: {
       title: "RadioGroup",
       description: "라디오 버튼 그룹 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "라디오 그룹 이름",
+        },
+        {
+          name: "options",
+          type: "Array<{value: string, label: string}>",
+          required: true,
+          default: "-",
+          description: "옵션 배열",
+        },
+        {
+          name: "value",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "선택된 값",
+        },
+        {
+          name: "onChange",
+          type: "(value: string) => void",
+          required: true,
+          default: "-",
+          description: "값 변경 핸들러",
+        },
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "그룹 라벨 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 항목 여부",
+        },
+        {
+          name: "direction",
+          type: "'horizontal' | 'vertical'",
+          required: false,
+          default: "'horizontal'",
+          description: "배치 방향",
+        },
+        {
+          name: "gap",
+          type: "string",
+          required: false,
+          default: "'gap-6'",
+          description: "라디오 버튼 간 간격 (Tailwind 클래스)",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <RadioGroup
@@ -667,6 +1142,64 @@ const MyPage = () => {
     DatePicker: {
       title: "DatePicker",
       description: "DatePicker 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "라벨 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 항목 여부",
+        },
+        {
+          name: "value",
+          type: "Date",
+          required: true,
+          default: "-",
+          description: "선택된 날짜 (Date 객체)",
+        },
+        {
+          name: "onChange",
+          type: "(date: Date) => void",
+          required: true,
+          default: "-",
+          description: "날짜 변경 핸들러",
+        },
+        {
+          name: "placeholder",
+          type: "string",
+          required: false,
+          default: "'날짜 선택'",
+          description: "플레이스홀더 텍스트",
+        },
+        {
+          name: "minDate",
+          type: "Date",
+          required: false,
+          default: "-",
+          description: "선택 가능한 최소 날짜",
+        },
+        {
+          name: "maxDate",
+          type: "Date",
+          required: false,
+          default: "-",
+          description: "선택 가능한 최대 날짜",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           {/* 기본 사용 */}
@@ -732,6 +1265,71 @@ const MyPage = () => {
     DateRangePicker: {
       title: "DateRangePicker",
       description: "DatePicker 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: false,
+          default: "'조회기간'",
+          description: "라벨 텍스트",
+        },
+        {
+          name: "required",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "필수 항목 여부",
+        },
+        {
+          name: "startDate",
+          type: "Date",
+          required: true,
+          default: "-",
+          description: "시작일 (Date 객체)",
+        },
+        {
+          name: "endDate",
+          type: "Date",
+          required: true,
+          default: "-",
+          description: "종료일 (Date 객체)",
+        },
+        {
+          name: "onStartDateChange",
+          type: "(date: Date) => void",
+          required: true,
+          default: "-",
+          description: "시작일 변경 핸들러",
+        },
+        {
+          name: "onEndDateChange",
+          type: "(date: Date) => void",
+          required: true,
+          default: "-",
+          description: "종료일 변경 핸들러",
+        },
+        {
+          name: "startPlaceholder",
+          type: "string",
+          required: false,
+          default: "'시작일'",
+          description: "시작일 플레이스홀더",
+        },
+        {
+          name: "endPlaceholder",
+          type: "string",
+          required: false,
+          default: "'종료일'",
+          description: "종료일 플레이스홀더",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <DateRangePicker
@@ -789,6 +1387,64 @@ const MyPage = () => {
       title: "TimeRangeSelector",
       description:
         "TimeRangeSelector 컴포넌트입니다. - 시간 범위 선택 컴포넌트입니다. (모니터링 페이지용 조회 설정)",
+      props: [
+        {
+          name: "isRealtime",
+          type: "boolean",
+          required: true,
+          default: "-",
+          description: "실시간 모드 활성화 여부",
+        },
+        {
+          name: "onRealtimeToggle",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "실시간 버튼 클릭 핸들러",
+        },
+        {
+          name: "dateRange",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "날짜 범위 문자열",
+        },
+        {
+          name: "onDateRangeChange",
+          type: "(range: string) => void",
+          required: true,
+          default: "-",
+          description: "날짜 범위 변경 핸들러",
+        },
+        {
+          name: "timeRangePreset",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "현재 선택된 시간 범위 프리셋",
+        },
+        {
+          name: "onTimeRangePresetChange",
+          type: "(preset: string) => void",
+          required: true,
+          default: "-",
+          description: "시간 범위 프리셋 변경 핸들러",
+        },
+        {
+          name: "dataInterval",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "현재 선택된 데이터 간격",
+        },
+        {
+          name: "onDataIntervalChange",
+          type: "(interval: string) => void",
+          required: true,
+          default: "-",
+          description: "데이터 간격 변경 핸들러",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <TimeRangeSelector
@@ -840,6 +1496,43 @@ const MyPage = () => {
     Chip: {
       title: "Chip",
       description: "칩(Badge) 버튼 컴포넌트입니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "칩에 표시될 텍스트",
+        },
+        {
+          name: "variant",
+          type: "'primary' | 'secondary' | 'tertiary' | 'disabled' | 'gray'",
+          required: false,
+          default: "'primary'",
+          description: "칩 스타일 (녹색/파란색/보라색/회색/연회색)",
+        },
+        {
+          name: "color",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "커스텀 배경색 (variant 대신 사용 가능)",
+        },
+        {
+          name: "onClick",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "클릭 이벤트 핸들러",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="flex gap-2 flex-wrap">
           <Chip label="CPU" variant="primary" />
@@ -867,6 +1560,36 @@ const MyPage = () => {
       title: "EngineItemCard",
       description:
         "엔진 항목 카드 컴포넌트입니다. Chip 컴포넌트들을 그룹화하여 표시합니다.",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "카드 제목 (예: 'STT', 'TTS', 'SV')",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "카드 내용 (주로 Chip 컴포넌트들)",
+        },
+        {
+          name: "borderColor",
+          type: "string",
+          required: false,
+          default: "'#22c55e'",
+          description: "테두리 색상",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <EngineItemCard title="STT" borderColor="#22c55e">
@@ -878,12 +1601,6 @@ const MyPage = () => {
       ),
       code: `import EngineItemCard from "../components/EngineItemCard";
 import Chip from "../components/Chip";
-**Props:**
-
-- title: 카드 제목 (예: "STT", "TTS", "SV")
-- children: 카드 내용 (주로 Chip 컴포넌트들)
-- borderColor: 테두리 색상 (선택사항, 기본값: #22c55e)
-- className: 추가 CSS 클래스 (선택사항)
 
 const MyPage = () => {
 
@@ -902,6 +1619,36 @@ const MyPage = () => {
       title: "ServerItemCard",
       description:
         "서버 항목 카드 컴포넌트입니다. EngineItemCard의 변형으로 서버 리스트를 표시합니다.",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "카드 제목 (예: 'STT', 'TTS', 'SV')",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "카드 내용 (주로 Chip 컴포넌트들)",
+        },
+        {
+          name: "borderColor",
+          type: "string",
+          required: false,
+          default: "'#22c55e'",
+          description: "테두리 색상",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <ServerItemCard title="STT" borderColor="#22c55e">
@@ -914,13 +1661,6 @@ const MyPage = () => {
       ),
       code: `import ServerItemCard from "../components/ServerItemCard";
 import Chip from "../components/Chip";
-
-**Props:**
-
-- title: 카드 제목 (예: "STT", "TTS", "SV")
-- children: 카드 내용 (주로 Chip 컴포넌트들)
-- borderColor: 테두리 색상 (선택사항, 기본값: #22c55e)
-- className: 추가 CSS 클래스 (선택사항)
 
 const MyPage = () => {
 
@@ -940,6 +1680,64 @@ const MyPage = () => {
       title: "Modal",
       description:
         "팝업(모달) 공통 컴포넌트입니다. Figma 디자인 기반으로 제작되었습니다.",
+      props: [
+        {
+          name: "isOpen",
+          type: "boolean",
+          required: true,
+          default: "-",
+          description: "모달 열림/닫힘 상태",
+        },
+        {
+          name: "onClose",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "모달 닫기 함수",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "모달 제목",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "모달 본문 내용",
+        },
+        {
+          name: "footer",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "모달 하단 영역",
+        },
+        {
+          name: "size",
+          type: "'sm' | 'md' | 'lg' | 'xl'",
+          required: false,
+          default: "'md'",
+          description: "모달 크기",
+        },
+        {
+          name: "width",
+          type: "number",
+          required: false,
+          default: "-",
+          description: "커스텀 너비 (size 대신 사용)",
+        },
+        {
+          name: "maxHeight",
+          type: "number",
+          required: false,
+          default: "-",
+          description: "커스텀 최대 높이",
+        },
+      ],
       preview: (
         <div>
           <Button
@@ -974,17 +1772,6 @@ const MyPage = () => {
       code: `import { useState } from "react";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
-
- **Props:** 
-
- isOpen: 모달 열림/닫힘 상태 (boolean, 필수) 
- onClose: 모달 닫기 함수 (function, 필수) 
- title: 모달 제목 (string, 필수) 
- children: 모달 본문 내용 (ReactNode, 필수) 
- footer: 모달 하단 영역 (ReactNode, 선택사항) 
- size: 모달 크기 - 'sm', 'md', 'lg', 'xl' (기본값: 'md') 
- width: 커스텀 너비 (number, size 대신 사용 가능) 
- maxHeight: 커스텀 최대 높이 (number, size 대신 사용 가능) 
 
 const MyPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -1026,6 +1813,29 @@ const MyPage = () => {
     PageHeader: {
       title: "PageHeader",
       description: "PageHeader 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "페이지 제목",
+        },
+        {
+          name: "subtitle",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "페이지 부제목",
+        },
+        {
+          name: "onExpandAll",
+          type: "(isExpanded: boolean) => void",
+          required: false,
+          default: "-",
+          description: "전체 펼침/접기 핸들러",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <PageHeader
@@ -1048,6 +1858,71 @@ const MyPage = () => {
     Table: {
       title: "Table",
       description: "Table 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "columns",
+          type: "Array<Column>",
+          required: true,
+          default: "-",
+          description: "테이블 컬럼 정의 배열",
+        },
+        {
+          name: "data",
+          type: "Array<any>",
+          required: true,
+          default: "-",
+          description: "테이블 데이터 배열",
+        },
+        {
+          name: "topActions",
+          type: "Object",
+          required: false,
+          default: "-",
+          description: "상단 액션 영역 (leftText, rightButtons)",
+        },
+        {
+          name: "bottomActions",
+          type: "Object",
+          required: false,
+          default: "-",
+          description: "하단 액션 영역 (onDeleteSelected, onDeleteAll)",
+        },
+        {
+          name: "pagination",
+          type: "Object",
+          required: false,
+          default: "-",
+          description: "페이지네이션 설정",
+        },
+        {
+          name: "selectable",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "행 선택 가능 여부",
+        },
+        {
+          name: "onSelectionChange",
+          type: "(selected: Set) => void",
+          required: false,
+          default: "-",
+          description: "선택 변경 핸들러",
+        },
+        {
+          name: "emptyMessage",
+          type: "string",
+          required: false,
+          default: "'데이터가 없습니다'",
+          description: "데이터 없을 때 메시지",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <Table
@@ -1088,44 +1963,6 @@ const MyPage = () => {
       ),
       code: `import Table from "../components/Table";
 import Button from "../components/Button";
-
-**Props:**
-
-- columns (Array): 테이블 컬럼 정의 배열
-
-  - key: (string): 데이터 키
-  - label: (string): 컬럼 헤더 텍스트
-  - width: (string): 컬럼 너비 (px 또는 CSS 값)
-  - align: (string): 정렬 ("left" | "center" | "right")
-  - render: (Function): 커스텀 렌더링 함수 (value, row, index) => ReactNode
-
-- data: (Array): 테이블 데이터 배열
-
-- topActions: (Object): 상단 액션 영역
-
-  - leftText: (string): 왼쪽 텍스트 (예: "검색결과 23건")
-  - rightButtons: (Array): 오른쪽 버튼 배열 (Button 컴포넌트 props)
-
-- bottomActions: (Object): 하단 액션 영역
-
-  - leftButtons: (Array): 왼쪽 버튼 배열 (Button 컴포넌트 props)
-  - onDeleteSelected: (Function): 선택 삭제 핸들러 (selectedIndexes) => void
-  - onDeleteAll: (Function): 일괄 삭제 핸들러 () => void
-
-      - pagination: (Object): 페이지네이션 설정
-
-  - enabled: (boolean): 페이지네이션 활성화 여부
-  - currentPage: (number): 현재 페이지 (1부터 시작)
-  - totalPages: (number): 전체 페이지 수
-  - pageSize: (number): 페이지당 항목 수
-  - pageSizeOptions: (Array): 페이지 크기 옵션 배열
-  - onPageChange: (Function): 페이지 변경 핸들러 (page) => void
-  - onPageSizeChange: (Function): 페이지 크기 변경 핸들러 (size) => void
-
-- selectable: (boolean): 행 선택 가능 여부 (기본값: false)
-- onSelectionChange: (Function): 선택 변경 핸들러 (selectedSet) => void
-- emptyMessage: (string): 데이터 없을 때 메시지 (기본값: "데이터가 없습니다")
-- className: (string): 추가 CSS 클래스
 
 const MyPage = () => {
   const handleExpandAll = (isExpanded) => {
@@ -1173,6 +2010,50 @@ const MyPage = () => {
       title: "TableHeader",
       description:
         "테이블 상단 영역 컴포넌트입니다. 검색 결과 표시와 액션 버튼을 포함합니다.",
+      props: [
+        {
+          name: "count",
+          type: "number",
+          required: false,
+          default: "-",
+          description: "검색 결과 개수",
+        },
+        {
+          name: "countText",
+          type: "string",
+          required: false,
+          default: "'검색결과'",
+          description: "개수 텍스트",
+        },
+        {
+          name: "countUnit",
+          type: "string",
+          required: false,
+          default: "'건'",
+          description: "개수 단위",
+        },
+        {
+          name: "rightButtons",
+          type: "Array",
+          required: false,
+          default: "-",
+          description: "우측 버튼 배열 (Button 컴포넌트 props)",
+        },
+        {
+          name: "customLeft",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "커스텀 왼쪽 컨텐츠 (count 대신 사용)",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           {/* 기본 사용 */}
@@ -1212,6 +2093,71 @@ const MyPage = () => {
       title: "Pagination",
       description:
         "테이블 상단 영역 컴포넌트입니다. 검색 결과 표시와 액션 버튼을 포함합니다.",
+      props: [
+        {
+          name: "currentPage",
+          type: "number",
+          required: true,
+          default: "1",
+          description: "현재 페이지 (1부터 시작)",
+        },
+        {
+          name: "totalPages",
+          type: "number",
+          required: true,
+          default: "1",
+          description: "전체 페이지 수",
+        },
+        {
+          name: "pageSize",
+          type: "number",
+          required: false,
+          default: "10",
+          description: "페이지당 항목 수",
+        },
+        {
+          name: "pageSizeOptions",
+          type: "Array<number>",
+          required: false,
+          default: "[10, 20, 50, 100]",
+          description: "페이지 크기 옵션 배열",
+        },
+        {
+          name: "onPageChange",
+          type: "(page: number) => void",
+          required: true,
+          default: "-",
+          description: "페이지 변경 핸들러",
+        },
+        {
+          name: "onPageSizeChange",
+          type: "(size: number) => void",
+          required: false,
+          default: "-",
+          description: "페이지 크기 변경 핸들러",
+        },
+        {
+          name: "showPageSizeSelector",
+          type: "boolean",
+          required: false,
+          default: "true",
+          description: "페이지 크기 선택기 표시 여부",
+        },
+        {
+          name: "pageSizeLabel",
+          type: "string",
+          required: false,
+          default: "'페이지당 표시'",
+          description: "페이지 크기 레이블",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           {/* 기본 사용 */}
@@ -1284,9 +2230,39 @@ const MyPage = () => {
 };`,
     },
     Chart: {
-      title: "Pagination",
+      title: "Chart",
       description:
         "Chart.js를 사용하여 다양한 타입의 차트를 렌더링하는 컴포넌트입니다.",
+      props: [
+        {
+          name: "type",
+          type: "'line' | 'bar' | 'doughnut' | 'pie'",
+          required: false,
+          default: "'line'",
+          description: "차트 타입",
+        },
+        {
+          name: "data",
+          type: "Object",
+          required: true,
+          default: "-",
+          description: "Chart.js 데이터 객체 (labels, datasets 포함)",
+        },
+        {
+          name: "options",
+          type: "Object",
+          required: false,
+          default: "-",
+          description: "Chart.js 옵션 객체",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <div style={{ height: "400px" }}>
@@ -1295,12 +2271,6 @@ const MyPage = () => {
         </div>
       ),
       code: `import Chart from "../components/Chart";
-**Props:**
-
-- type: 차트 타입 ('line' | 'bar' | 'doughnut' | 'pie') (기본값: 'line')
-- data: Chart.js 데이터 객체 (labels, datasets 포함)
-- options: Chart.js 옵션 객체 (선택사항)
-- className: 추가 CSS 클래스 (선택사항)
 
 **지원하는 차트 타입:**
 
@@ -1334,6 +2304,99 @@ const MyPage = () => {
       title: "ChartCard",
       description:
         "모니터링 차트를 표시하는 카드 컴포넌트입니다. Chip, Select, Chart 컴포넌트를 조합하여 완전한 차트 UI를 제공합니다.",
+      props: [
+        {
+          name: "chipLabel",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "칩 라벨 (예: 'STT', 'TTS')",
+        },
+        {
+          name: "chipVariant",
+          type: "'primary' | 'secondary' | 'tertiary'",
+          required: true,
+          default: "-",
+          description: "칩 스타일 variant",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "차트 제목",
+        },
+        {
+          name: "errorMessage",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "에러/경고 메시지",
+        },
+        {
+          name: "chartType",
+          type: "'line' | 'bar' | 'doughnut' | 'pie'",
+          required: false,
+          default: "'line'",
+          description: "차트 타입",
+        },
+        {
+          name: "chartData",
+          type: "Object",
+          required: true,
+          default: "-",
+          description: "Chart.js 데이터 객체",
+        },
+        {
+          name: "chartOptions",
+          type: "Object",
+          required: false,
+          default: "-",
+          description: "Chart.js 옵션 객체",
+        },
+        {
+          name: "onChartTypeChange",
+          type: "(type: string) => void",
+          required: false,
+          default: "-",
+          description: "차트 타입 변경 핸들러",
+        },
+        {
+          name: "onVisibilityToggle",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "표시/숨김 토글 핸들러",
+        },
+        {
+          name: "onSettings",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "설정 버튼 클릭 핸들러",
+        },
+        {
+          name: "showControls",
+          type: "boolean",
+          required: false,
+          default: "true",
+          description: "컨트롤 버튼 표시 여부",
+        },
+        {
+          name: "borderColor",
+          type: "string",
+          required: false,
+          default: "'#5090f7'",
+          description: "카드 테두리 색상",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           {/* 기본 사용 */}
@@ -1374,21 +2437,6 @@ const MyPage = () => {
         </div>
       ),
       code: `import ChartCard from "../components/ChartCard";
-**Props:**
-
-- chipLabel: 칩 라벨 (예: "STT", "TTS")
-- chipVariant: 칩 스타일 ('primary' | 'secondary' | 'tertiary')
-- title: 차트 제목 (예: "CPU 사용률")
-- errorMessage: 에러/경고 메시지 (선택사항)
-- chartType: 차트 타입 ('line' | 'bar' | 'doughnut' | 'pie') (기본값: 'line')
-- chartData: Chart.js 데이터 객체
-- chartOptions: Chart.js 옵션 객체 (선택사항)
-- onChartTypeChange: 차트 타입 변경 핸들러 (선택사항)
-- onVisibilityToggle: 표시/숨김 토글 핸들러 (선택사항)
-- onSettings: 설정 버튼 클릭 핸들러 (선택사항)
-- showControls: 컨트롤 버튼 표시 여부 (기본값: true)
-- borderColor: 카드 테두리 색상 (선택사항, 기본값: #5090f7)
-- className
 
 **지원하는 차트 타입:**
 
@@ -1464,6 +2512,44 @@ const MyPage = () => {
       title: "SearchFilter",
       description:
         "검색 필터 영역 공통 컨테이너 컴포넌트입니다. (Figma 디자인 기반)",
+      props: [
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description:
+            "필터 구성 요소들 (RadioGroup, Select, DateRangePicker 등)",
+        },
+        {
+          name: "onSearch",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "검색 버튼 클릭 핸들러",
+        },
+        {
+          name: "searchButtonText",
+          type: "string",
+          required: false,
+          default: "'검색'",
+          description: "검색 버튼 텍스트",
+        },
+        {
+          name: "showSearchButton",
+          type: "boolean",
+          required: false,
+          default: "true",
+          description: "검색 버튼 표시 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <SearchFilter onSearch={() => alert("검색!")}>
@@ -1505,13 +2591,6 @@ import SearchFilter from "../components/SearchFilter";
 import RadioGroup from "../components/RadioGroup";
 import Select from "../components/Select";
 import DateRangePicker from "../components/DateRangePicker";
-
-**Props:**
-- children: 필터 구성 요소들 (RadioGroup, Select, DateRangePicker 등)
-- onSearch: 검색 버튼 클릭 핸들러 (필수)
-- searchButtonText: 검색 버튼 텍스트 (기본값: "검색")
-- showSearchButton: 검색 버튼 표시 여부 (기본값: true)
-- className: 추가 CSS 클래스
 
 const MyPage = () => {
   const [filterType, setFilterType] = useState("serviceModel");
@@ -1561,6 +2640,64 @@ const MyPage = () => {
     Dropdown: {
       title: "Dropdown",
       description: "범용 드롭다운 메뉴 컴포넌트입니다.",
+      props: [
+        {
+          name: "items",
+          type: "Array",
+          required: true,
+          default: "-",
+          description: "드롭다운 항목 배열 (단순 또는 그룹화)",
+        },
+        {
+          name: "selectedValue",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "현재 선택된 값",
+        },
+        {
+          name: "onSelect",
+          type: "(value: string) => void",
+          required: true,
+          default: "-",
+          description: "항목 선택 시 호출되는 콜백 함수",
+        },
+        {
+          name: "triggerLabel",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "트리거 버튼 텍스트 (없으면 selectedValue 사용)",
+        },
+        {
+          name: "grouped",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "그룹화된 항목 여부",
+        },
+        {
+          name: "align",
+          type: "'left' | 'right'",
+          required: false,
+          default: "'left'",
+          description: "드롭다운 메뉴 정렬",
+        },
+        {
+          name: "disabled",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "비활성화 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <div className="flex gap-4 items-center">
@@ -1594,19 +2731,6 @@ const MyPage = () => {
       ),
       code: `import { useState } from "react";
 import Dropdown from "../components/Dropdown";
-
-**Props:**
-
-- items: 드롭다운 항목 배열
-  - 단순: [{ value: "5min", label: "실시간 5분" }]
-  - 그룹화: [{ group: "시간 단위", items: ["최근 1시간", "최근 3시간"] }]
-- selectedValue: 현재 선택된 값
-- onSelect: 항목 선택 시 호출되는 콜백 함수
-- triggerLabel: 트리거 버튼에 표시할 텍스트 (옵션, 없으면 selectedValue 사용)
-- className: 추가 CSS 클래스 (옵션)
-- disabled: 비활성화 여부 (옵션)
-- grouped: 그룹화된 항목 여부 (기본값: false)
-- align: 드롭다운 메뉴 정렬 - 'left' 또는 'right' (기본값: 'left')
 
 const MyPage = () => {
   const [selectedTime, setSelectedTime] = useState("5min");
@@ -1651,6 +2775,29 @@ const MyPage = () => {
       title: "SettingRow",
       description:
         "설정 항목의 레이아웃을 위한 공통 컴포넌트입니다. 왼쪽에 타이틀, 오른쪽에 컨트롤 요소를 배치합니다.",
+      props: [
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "설정 항목 제목",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "오른쪽에 표시될 컨트롤 요소",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <SettingRow title="자동 저장">
@@ -1668,12 +2815,6 @@ const MyPage = () => {
       code: `import SettingRow from "../components/SettingRow";
 import Toggle from "../components/Toggle";
 import Input from "../components/Input";
-
-**Props:**
-
-- title: 설정 항목 제목 (string, 필수)
-- children: 오른쪽에 표시될 컨트롤 요소 (ReactNode, 필수)
-- className: 추가 CSS 클래스 (선택사항)
 
 const MyPage = () => {
   return (
@@ -1695,6 +2836,31 @@ const MyPage = () => {
       title: "ServiceModelRow",
       description:
         "서비스 모델별 삭제 대상을 표시하는 행 컴포넌트입니다. 모델 라벨과 체크박스들을 포함합니다.",
+      props: [
+        {
+          name: "label",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "모델 라벨 (예:콜봇, 챗봇, 상담모델)",
+        },
+        {
+          name: "checkboxes",
+          type: "array",
+          required: true,
+          default: "-",
+          description:
+            "체크박스 배열 `[{ label, checked, onChange, disabled }, ...]",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
+
       preview: (
         <div className="space-y-4">
           <ServiceModelRow
@@ -1724,12 +2890,6 @@ const MyPage = () => {
       ),
       code: `import { useState } from "react";
 import ServiceModelRow from "../components/ServiceModelRow";
-
-**Props:**
-
-- label: 모델 라벨 (예: "콜봇", "챗봇", "상담모델")
-- checkboxes: 체크박스 배열 [{ label, checked, onChange, disabled }, ...]
-- className: 추가 CSS 클래스 (선택사항)
 
 const MyPage = () => {
   const [callbotChecks, setCallbotChecks] = useState({
@@ -1769,6 +2929,50 @@ const MyPage = () => {
     RealtimeStatusIndicator: {
       title: "RealtimeStatusIndicator",
       description: "실시간 모니터링 상태를 표시하는 컴포넌트입니다.",
+      props: [
+        {
+          name: "isActive",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "실시간 활성화 여부",
+        },
+        {
+          name: "statusText",
+          type: "string",
+          required: false,
+          default: "'실시간 감시중'",
+          description: "상태 텍스트",
+        },
+        {
+          name: "time",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "시간 표시 (예: '15:07:32')",
+        },
+        {
+          name: "badgeText",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "배지 텍스트 (예: '실시간 5분')",
+        },
+        {
+          name: "onBadgeClick",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "배지 클릭 핸들러",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <RealtimeStatusIndicator
@@ -1791,15 +2995,6 @@ const MyPage = () => {
       ),
       code: `import { useState, useEffect } from "react";
 import RealtimeStatusIndicator from "../components/RealtimeStatusIndicator";
-
-**Props:**
-
-- isActive: 실시간 활성화 여부 (기본값: false)
-- statusText: 상태 텍스트 (기본값: "실시간 감시중")
-- time: 시간 표시 (예: "15:07:32")
-- badgeText: 배지 텍스트 (예: "실시간 5분")
-- onBadgeClick: 배지 클릭 핸들러 (옵션)
-- className: 추가 CSS 클래스 (옵션)
 
 const MyPage = () => {
   const [currentTime, setCurrentTime] = useState("");
@@ -1839,6 +3034,85 @@ const MyPage = () => {
       title: "DashboardSection",
       description:
         "대시보드 섹션 전체를 표시하는 컴포넌트입니다. 헤더와 리스트를 포함합니다.",
+      props: [
+        {
+          name: "icon",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "섹션 아이콘",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "섹션 제목",
+        },
+        {
+          name: "count",
+          type: "number",
+          required: true,
+          default: "-",
+          description: "항목 개수",
+        },
+        {
+          name: "items",
+          type: "Array",
+          required: true,
+          default: "-",
+          description: "대시보드 아이템 목록",
+        },
+        {
+          name: "selectedItems",
+          type: "Array<string>",
+          required: true,
+          default: "-",
+          description: "선택된 아이템 ID 목록",
+        },
+        {
+          name: "onCheck",
+          type: "(id: string, value: boolean) => void",
+          required: true,
+          default: "-",
+          description: "체크박스 변경 핸들러",
+        },
+        {
+          name: "onEdit",
+          type: "(id: string) => void",
+          required: true,
+          default: "-",
+          description: "편집 버튼 클릭 핸들러",
+        },
+        {
+          name: "onStar",
+          type: "(id: string) => void",
+          required: true,
+          default: "-",
+          description: "즐겨찾기 버튼 클릭 핸들러",
+        },
+        {
+          name: "onAddNew",
+          type: "() => void",
+          required: false,
+          default: "-",
+          description: "새 대시보드 추가 핸들러",
+        },
+        {
+          name: "showWarning",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "경고 메시지 표시 여부",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <DashboardSection
@@ -1876,16 +3150,6 @@ const MyPage = () => {
         </div>
       ),
       code: `import DashboardSection from "../components/DashboardSection";
-**Props:**
-
-- icon: 섹션 아이콘
-- title: 섹션 제목
-- count: 항목 개수
-- showWarning: 경고 메시지 표시 여부 (기본값: false)
-- warningText: 경고 메시지 텍스트
-- onAddNew: 새 항목 추가 버튼 클릭 핸들러
-- addNewText: 새 항목 추가 버튼 텍스트 (기본값: "새 대시보드")
-- className: 추가 CSS 클래스
 
 const MyPage = () => {
   const [selectedItems, setSelectedItems] = useState(["dashboard-1"]);
@@ -1929,6 +3193,64 @@ const MyPage = () => {
     DashboardSectionHeader: {
       title: "DashboardSectionHeader",
       description: "대시보드 섹션의 헤더를 표시하는 컴포넌트입니다.",
+      props: [
+        {
+          name: "icon",
+          type: "ReactNode",
+          required: true,
+          default: "-",
+          description: "섹션 아이콘",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "섹션 제목",
+        },
+        {
+          name: "count",
+          type: "string | number",
+          required: true,
+          default: "-",
+          description: "항목 개수",
+        },
+        {
+          name: "showWarning",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "경고 메시지 표시 여부",
+        },
+        {
+          name: "warningText",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "경고 메시지 텍스트",
+        },
+        {
+          name: "onAddNew",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "새 항목 추가 버튼 클릭 핸들러",
+        },
+        {
+          name: "addNewText",
+          type: "string",
+          required: false,
+          default: "'새 대시보드'",
+          description: "새 항목 추가 버튼 텍스트",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <DashboardSectionHeader
@@ -1948,18 +3270,6 @@ const MyPage = () => {
         </div>
       ),
       code: `import DashboardSectionHeader from "../components/DashboardSectionHeader";
-
-**Props:**
-
-- id: 아이템 ID
-- title: 대시보드 제목
-- description: 대시보드 설명
-- checked: 체크 상태 (기본값: false)
-- isDefault: 기본 대시보드 여부 (기본값: false)
-- onCheck: 체크박스 변경 핸들러
-- onEdit: 편집 버튼 클릭 핸들러
-- onStar: 즐겨찾기 버튼 클릭 핸들러
-- className: 추가 CSS 클래스
 
 const MyPage = () => {
   return (
@@ -1986,6 +3296,71 @@ const MyPage = () => {
     DashboardListItem: {
       title: "DashboardListItem",
       description: "대시보드 리스트의 개별 아이템을 표시하는 컴포넌트입니다.",
+      props: [
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "아이템 ID",
+        },
+        {
+          name: "title",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "대시보드 제목",
+        },
+        {
+          name: "description",
+          type: "string",
+          required: true,
+          default: "-",
+          description: "대시보드 설명",
+        },
+        {
+          name: "checked",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "체크 상태",
+        },
+        {
+          name: "isDefault",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "기본 대시보드 여부",
+        },
+        {
+          name: "onCheck",
+          type: "(id: string, value: boolean) => void",
+          required: true,
+          default: "-",
+          description: "체크박스 변경 핸들러",
+        },
+        {
+          name: "onEdit",
+          type: "(id: string) => void",
+          required: true,
+          default: "-",
+          description: "편집 버튼 클릭 핸들러",
+        },
+        {
+          name: "onStar",
+          type: "(id: string) => void",
+          required: true,
+          default: "-",
+          description: "즐겨찾기 버튼 클릭 핸들러",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <DashboardListItem
@@ -2011,18 +3386,6 @@ const MyPage = () => {
         </div>
       ),
       code: `import DashboardListItem from "../components/DashboardListItem";
-
-**Props:**
-
-- id: 아이템 ID
-- title: 대시보드 제목
-- description: 대시보드 설명
-- checked: 체크 상태 (기본값: false)
-- isDefault: 기본 대시보드 여부 (기본값: false)
-- onCheck: 체크박스 변경 핸들러
-- onEdit: 편집 버튼 클릭 핸들러
-- onStar: 즐겨찾기 버튼 클릭 핸들러
-- className: 추가 CSS 클래스
 
 const MyPage = () => {
   return (
@@ -2057,6 +3420,50 @@ const MyPage = () => {
     DashboardForm: {
       title: "DashboardForm",
       description: "새 대시보드 생성 폼을 표시하는 컴포넌트입니다.",
+      props: [
+        {
+          name: "isOpen",
+          type: "boolean",
+          required: false,
+          default: "false",
+          description: "폼 열림 상태",
+        },
+        {
+          name: "onToggle",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "폼 토글 핸들러",
+        },
+        {
+          name: "onSubmit",
+          type: "(formData: any) => void",
+          required: true,
+          default: "-",
+          description: "제출 핸들러",
+        },
+        {
+          name: "onReset",
+          type: "() => void",
+          required: true,
+          default: "-",
+          description: "초기화 핸들러",
+        },
+        {
+          name: "children",
+          type: "ReactNode",
+          required: false,
+          default: "-",
+          description: "폼 내용",
+        },
+        {
+          name: "className",
+          type: "string",
+          required: false,
+          default: "-",
+          description: "추가 CSS 클래스",
+        },
+      ],
       preview: (
         <div className="space-y-4">
           <DashboardForm
@@ -2067,20 +3474,19 @@ const MyPage = () => {
               alert("대시보드 생성: " + formData.name);
             }}
             onReset={() => console.log("초기화")}
-          />
+          >
+            <Input
+              label="대시보드 이름"
+              required
+              value={""}
+              onChange={() => {}}
+              placeholder="대시보드 이름을 적어주세요."
+            />
+          </DashboardForm>
         </div>
       ),
       code: `import { useState } from "react";
 import DashboardForm from "../components/DashboardForm";
-
-**Props:**
-
-- isOpen: 폼 열림 상태 (기본값: false)
-- onToggle: 폼 토글 핸들러
-- onSubmit: 제출 핸들러
-- onReset: 초기화 핸들러
-- className: 추가 CSS 클래스
-
 
 const MyPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -2094,7 +3500,15 @@ const MyPage = () => {
         // API 호출 등
       }}
       onReset={() => console.log("초기화")}
-    />
+    >
+      <Input
+        label="대시보드 이름"
+        required
+        value={""}
+        onChange={(e) => {}}
+        placeholder="대시보드 이름을 적어주세요."
+      />
+    </DashboardForm>
   );
 };`,
     },
@@ -2172,6 +3586,70 @@ const MyPage = () => {
               {currentExample.preview}
             </div>
           </div>
+
+          {/* Props 설명 */}
+          {currentExample.props && (
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                Props
+              </h3>
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        이름
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        타입
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        필수
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        기본값
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {currentExample.props.map((prop, index) => (
+                      <tr
+                        key={prop.name}
+                        className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      >
+                        <td className="px-4 py-3 text-sm font-mono font-medium text-gray-900">
+                          {prop.name}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-mono text-gray-600">
+                          {prop.type}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {prop.required ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                              필수
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                              선택
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-mono text-gray-600">
+                          {prop.default}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600 ">
+                          {prop.description}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {/* 코드 예시 */}
           <div>

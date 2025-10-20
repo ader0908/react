@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import Card from "../components/Card";
@@ -11,6 +11,15 @@ import Modal from "../components/Modal";
 import { LuCopy, LuCheck } from "react-icons/lu";
 import InputWithUnit from "../components/InputWithUnit";
 import DatePicker from "../components/DatePicker";
+import DateRangePicker from "../components/DateRangePicker";
+import TimeRangeSelector from "../components/TimeRangeSelector";
+import AccordionCard from "../components/AccordionCard";
+import SectionCard from "../components/SectionCard";
+import PageHeader from "../components/PageHeader";
+import Table from "../components/Table";
+import TableHeader from "../components/TableHeader";
+import Pagination from "../components/Pagination";
+import Chart from "../components/Chart";
 
 const SnippetPage = () => {
   const [selectedComponent, setSelectedComponent] = useState("Button");
@@ -27,7 +36,88 @@ const SnippetPage = () => {
   const [toggle1, setToggle1] = useState(true);
   const [toggle2, setToggle2] = useState(false);
   const [radioValue, setRadioValue] = useState("serviceModel");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  // 시간 범위 관련 상태
+  const [isRealtime, setIsRealtime] = useState(false);
+  const [dataInterval, setDataInterval] = useState("1분");
+  const [dateRange, setDateRange] = useState(
+    "2025/09/10 16:37 ~ 2025/09/10 17:37"
+  );
+  const [timeRangePreset, setTimeRangePreset] = useState("최근 1시간");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [modalOpen, setModalOpen] = useState(false);
+
+  // 실시간 모드 토글 핸들러 - TimeRangeSelector 컴포넌트에서 사용
+  const handleRealtimeToggle = useCallback(() => {
+    const newRealtimeState = !isRealtime;
+    setIsRealtime(newRealtimeState);
+
+    // 실시간 모드로 전환 시 프리셋을 "실시간 5분"으로 변경
+    if (newRealtimeState) {
+      setTimeRangePreset("실시간 5분");
+    } else {
+      // 일반 모드로 전환 시 프리셋을 "최근 1시간"으로 변경
+      setTimeRangePreset("최근 1시간");
+    }
+  }, [isRealtime]);
+
+  // 전체 펼침/접기 핸들러 - PageHeader 컴포넌트에서 사용
+  const handleExpandAll = (isExpanded) => {
+    console.log("전체 펼침/접기:", isExpanded);
+  };
+
+  // Table 컴포넌트에서 사용되는 컬럼 정의
+  const columns = [
+    {
+      key: "no",
+      label: "NO",
+      width: "40px",
+      align: "center",
+    },
+    {
+      key: "date",
+      label: "일시",
+      width: "160px",
+      align: "center",
+    },
+    {
+      key: "status",
+      label: "상태",
+      width: "100px",
+      align: "center",
+      render: (value, row) => (
+        <Button
+          variant="primary"
+          size="small"
+          title={value}
+          onClick={() => alert(`${row.no}번 상태 확인`)}
+        />
+      ),
+    },
+  ];
+
+  // Table 컴포넌트에서 사용되는 데이터 정의
+  const data = [
+    { no: 1, date: "2025-08-19 13:53:54", status: "진행중" },
+    { no: 2, date: "2025-08-19 13:53:54", status: "완료" },
+  ];
+
+  // Chart 컴포넌트에서 사용되는 데이터 정의
+  const chartData = {
+    labels: ["1월", "2월", "3월", "4월", "5월"],
+    datasets: [
+      {
+        label: "데이터셋 1",
+        data: [65, 59, 80, 81, 56],
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
 
   // 컴포넌트 카테고리 및 리스트
   const componentCategories = [
@@ -43,6 +133,7 @@ const SnippetPage = () => {
         "RadioGroup",
         "DatePicker",
         "DateRangePicker",
+        "TimeRangeSelector",
       ],
     },
     {
@@ -255,28 +346,106 @@ return (
         </div>
       ),
       code: `import Card from "../components/Card";
+        import Button from "../components/Button";
+
+        const MyPage = () => {
+          return (
+            <>
+              {/* 기본 카드 */}
+              <Card title="기본 카드">
+                <p>카드 내용이 여기에 들어갑니다.</p>
+              </Card>
+              
+              {/* 버튼이 있는 카드 */}
+              <Card
+                title="버튼이 있는 카드"
+                headerActions={
+                  <div className="flex gap-2">
+                    <Button variant="secondary" size="small" title="취소" />
+                    <Button variant="primary" size="small" title="저장" />
+                  </div>
+                }
+              >
+                <p>헤더에 버튼이 포함된 카드입니다.</p>
+              </Card>
+            </>
+          );
+        };`,
+    },
+    AccordionCard: {
+      title: "AccordionCard",
+      description:
+        "AccordionCard 컴포넌트입니다. - 펼침/접기 기능이 있는 카드입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <AccordionCard title="카드 제목">
+            <div>카드 내용</div>
+          </AccordionCard>
+          <AccordionCard
+            title="설정"
+            errorMessage="설정을 불러오는데 실패했습니다."
+          >
+            <div>카드 내용</div>
+          </AccordionCard>
+        </div>
+      ),
+      code: `import Card from "../components/Card";
+        import Button from "../components/Button";
+
+        const MyPage = () => {
+          return (
+            <>
+              {/* 기본 사용 */}
+             <AccordionCard title="카드 제목">
+                <div>카드 내용</div>
+              </AccordionCard>
+              {/* 에러 메시지가 있는 경우 */}
+              <AccordionCard title="설정" errorMessage="설정을 불러오는데 실패했습니다.">
+                <div>카드 내용</div>
+              </AccordionCard>
+            </>
+          );
+        };`,
+    },
+    SectionCard: {
+      title: "SectionCard",
+      description:
+        "AccordionCard의 content 영역에 사용되는 SectionCard 컴포넌트입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <AccordionCard title="Agent 관련 설정">
+            <div className="flex gap-6">
+              <SectionCard title="학습">
+                <div className="grid grid-cols-4 gap-4">
+                  {/* 입력 필드들 */}
+                </div>
+              </SectionCard>
+              <SectionCard title="운영">
+                <div className="grid grid-cols-4 gap-4">
+                  {/* 입력 필드들 */}
+                </div>
+              </SectionCard>
+            </div>
+          </AccordionCard>
+        </div>
+      ),
+      code: `import Card from "../components/Card";
 import Button from "../components/Button";
 
 const MyPage = () => {
   return (
     <>
-      {/* 기본 카드 */}
-      <Card title="기본 카드">
-        <p>카드 내용이 여기에 들어갑니다.</p>
-      </Card>
-      
-      {/* 버튼이 있는 카드 */}
-      <Card
-        title="버튼이 있는 카드"
-        headerActions={
-          <div className="flex gap-2">
-            <Button variant="secondary" size="small" title="취소" />
-            <Button variant="primary" size="small" title="저장" />
-          </div>
-        }
-      >
-        <p>헤더에 버튼이 포함된 카드입니다.</p>
-      </Card>
+    <AccordionCard title="Agent 관련 설정">
+      <div className="flex gap-6">
+        {/* AccordionCard의 content 영역에 사용되는 섹션 카드 컴포넌트입니다. */}
+        <SectionCard title="학습">
+          <div className="grid grid-cols-4 gap-4">{/* 입력 필드들 */}</div>
+        </SectionCard>
+        <SectionCard title="운영">
+          <div className="grid grid-cols-4 gap-4">{/* 입력 필드들 */}</div>
+        </SectionCard>
+      </div>
+    </AccordionCard>
     </>
   );
 };`,
@@ -515,6 +684,110 @@ const MyPage = () => {
   );
 };`,
     },
+    DateRangePicker: {
+      title: "DateRangePicker",
+      description: "DatePicker 컴포넌트입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <DateRangePicker
+            label="조회기간"
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+          />
+
+          {/* 필수 항목 */}
+          <DateRangePicker
+            label="검색 기간"
+            required
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+            startPlaceholder="시작일"
+            endPlaceholder="종료일"
+          />
+        </div>
+      ),
+      code: `import { useState } from "react";
+import DateRangePicker from "../components/DateRangePicker";
+
+const MyPage = () => {
+ const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  
+  return (
+    <DateRangePicker
+        label="조회기간"
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+      />
+
+      {/* 필수 항목 */}
+      <DateRangePicker
+        label="검색 기간"
+        required
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        startPlaceholder="시작일"
+        endPlaceholder="종료일"
+      />
+  );
+};`,
+    },
+    TimeRangeSelector: {
+      title: "TimeRangeSelector",
+      description:
+        "TimeRangeSelector 컴포넌트입니다. - 시간 범위 선택 컴포넌트입니다. (모니터링 페이지용 조회 설정)",
+      preview: (
+        <div className="space-y-4">
+          <TimeRangeSelector
+            isRealtime={isRealtime}
+            onRealtimeToggle={handleRealtimeToggle}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            timeRangePreset={timeRangePreset}
+            onTimeRangePresetChange={setTimeRangePreset}
+            dataInterval={dataInterval}
+            onDataIntervalChange={setDataInterval}
+          />
+        </div>
+      ),
+      code: `import { useState } from "react";
+import DateRangePicker from "../components/DateRangePicker";
+
+const MyPage = () => {
+ const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  
+  return (
+    <DateRangePicker
+        label="조회기간"
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+      />
+
+      {/* 필수 항목 */}
+      <DateRangePicker
+        label="검색 기간"
+        required
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        startPlaceholder="시작일"
+        endPlaceholder="종료일"
+      />
+  );
+};`,
+    },
     Chip: {
       title: "Chip",
       description: "칩(Badge) 버튼 컴포넌트입니다.",
@@ -580,6 +853,17 @@ const MyPage = () => {
 import Modal from "../components/Modal";
 import Button from "../components/Button";
 
+ **Props:** 
+
+ isOpen: 모달 열림/닫힘 상태 (boolean, 필수) 
+ onClose: 모달 닫기 함수 (function, 필수) 
+ title: 모달 제목 (string, 필수) 
+ children: 모달 본문 내용 (ReactNode, 필수) 
+ footer: 모달 하단 영역 (ReactNode, 선택사항) 
+ size: 모달 크기 - 'sm', 'md', 'lg', 'xl' (기본값: 'md') 
+ width: 커스텀 너비 (number, size 대신 사용 가능) 
+ maxHeight: 커스텀 최대 높이 (number, size 대신 사용 가능) 
+
 const MyPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   
@@ -614,6 +898,313 @@ const MyPage = () => {
         <p>모달 본문 내용이 여기에 들어갑니다.</p>
       </Modal>
     </>
+  );
+};`,
+    },
+    PageHeader: {
+      title: "PageHeader",
+      description: "PageHeader 컴포넌트입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <PageHeader
+            title="공통설정"
+            subtitle="실시간 성능 지표 및 상태 모니터링"
+            onExpandAll={handleExpandAll}
+          />
+        </div>
+      ),
+      code: `import PageHeader from "../components/PageHeader";
+
+const MyPage = () => {
+  const handleExpandAll = (isExpanded) => {
+    console.log("전체 펼침/접기:", isExpanded);
+  };
+
+  return <PageHeader title="페이지 제목" onExpandAll={handleExpandAll} />;
+};`,
+    },
+    Table: {
+      title: "Table",
+      description: "Table 컴포넌트입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <Table
+            columns={columns}
+            data={data}
+            topActions={{
+              leftText: `검색결과 ${data.length}건`,
+              rightButtons: [
+                {
+                  variant: "secondary",
+                  size: "medium",
+                  title: "다운로드",
+                  onClick: () => alert("다운로드"),
+                },
+              ],
+            }}
+            bottomActions={{
+              onDeleteSelected: (selectedIndexes) => {
+                console.log("선택 삭제:", selectedIndexes);
+              },
+              onDeleteAll: () => {
+                console.log("일괄 삭제");
+              },
+            }}
+            pagination={{
+              enabled: true,
+              currentPage: 1,
+              totalPages: 5,
+              pageSize: 10,
+              pageSizeOptions: [10, 20, 50, 100],
+              onPageChange: (page) => console.log("페이지:", page),
+              onPageSizeChange: (size) => console.log("페이지 크기:", size),
+            }}
+            selectable={true}
+            onSelectionChange={(selected) => console.log("선택:", selected)}
+          />
+        </div>
+      ),
+      code: `import Table from "../components/Table";
+import Button from "../components/Button";
+
+**Props:**
+
+- columns (Array): 테이블 컬럼 정의 배열
+
+  - key: (string): 데이터 키
+  - label: (string): 컬럼 헤더 텍스트
+  - width: (string): 컬럼 너비 (px 또는 CSS 값)
+  - align: (string): 정렬 ("left" | "center" | "right")
+  - render: (Function): 커스텀 렌더링 함수 (value, row, index) => ReactNode
+
+- data: (Array): 테이블 데이터 배열
+
+- topActions: (Object): 상단 액션 영역
+
+  - leftText: (string): 왼쪽 텍스트 (예: "검색결과 23건")
+  - rightButtons: (Array): 오른쪽 버튼 배열 (Button 컴포넌트 props)
+
+- bottomActions: (Object): 하단 액션 영역
+
+  - leftButtons: (Array): 왼쪽 버튼 배열 (Button 컴포넌트 props)
+  - onDeleteSelected: (Function): 선택 삭제 핸들러 (selectedIndexes) => void
+  - onDeleteAll: (Function): 일괄 삭제 핸들러 () => void
+
+      - pagination: (Object): 페이지네이션 설정
+
+  - enabled: (boolean): 페이지네이션 활성화 여부
+  - currentPage: (number): 현재 페이지 (1부터 시작)
+  - totalPages: (number): 전체 페이지 수
+  - pageSize: (number): 페이지당 항목 수
+  - pageSizeOptions: (Array): 페이지 크기 옵션 배열
+  - onPageChange: (Function): 페이지 변경 핸들러 (page) => void
+  - onPageSizeChange: (Function): 페이지 크기 변경 핸들러 (size) => void
+
+- selectable: (boolean): 행 선택 가능 여부 (기본값: false)
+- onSelectionChange: (Function): 선택 변경 핸들러 (selectedSet) => void
+- emptyMessage: (string): 데이터 없을 때 메시지 (기본값: "데이터가 없습니다")
+- className: (string): 추가 CSS 클래스
+
+const MyPage = () => {
+  const handleExpandAll = (isExpanded) => {
+    console.log("전체 펼침/접기:", isExpanded);
+  };
+
+  return (
+  <Table
+  columns={columns}
+  data={data}
+  topActions={{
+    leftText: "검색결과 2건",
+    rightButtons: [
+      {
+        variant: "secondary",
+        size: "medium",
+        title: "다운로드",
+        onClick: () => alert("다운로드"),
+      },
+    ],
+  }}
+  bottomActions={{
+    onDeleteSelected: (selectedIndexes) => {
+      console.log("선택 삭제:", selectedIndexes);
+    },
+    onDeleteAll: () => {
+      console.log("일괄 삭제");
+    },
+  }}
+  pagination={{
+    enabled: true,
+    currentPage: 1,
+    totalPages: 5,
+    pageSize: 10,
+    pageSizeOptions: [10, 20, 50, 100],
+    onPageChange: (page) => console.log("페이지:", page),
+    onPageSizeChange: (size) => console.log("페이지 크기:", size),
+  }}
+  selectable={true}
+  onSelectionChange={(selected) => console.log("선택:", selected)}
+/>);
+};`,
+    },
+    TableHeader: {
+      title: "TableHeader",
+      description:
+        "테이블 상단 영역 컴포넌트입니다. 검색 결과 표시와 액션 버튼을 포함합니다.",
+      preview: (
+        <div className="space-y-4">
+          {/* 기본 사용 */}
+          <TableHeader count={23} />
+
+          {/* 버튼 포함 */}
+          <TableHeader count={45} countText="전체" />
+
+          {/* 커스텀 왼쪽 컨텐츠 */}
+          <TableHeader
+            count={45}
+            countText="전체"
+            customLeft={<span className="text-red-500">경고: 3개 항목</span>}
+          />
+        </div>
+      ),
+      code: `import TableHeader from "../components/TableHeader";
+
+const MyPage = () => {
+    return (
+    <>
+      {/* 기본 사용 */}
+      <TableHeader count={23} />
+
+      {/* 버튼 포함 */}
+      <TableHeader count={45} countText="전체" />
+
+      {/* 커스텀 왼쪽 컨텐츠 */}
+      <TableHeader
+        customLeft={<span className="text-red-500">경고: 3개 항목</span>}
+      />
+    </>
+  );
+};`,
+    },
+    Pagination: {
+      title: "Pagination",
+      description:
+        "테이블 상단 영역 컴포넌트입니다. 검색 결과 표시와 액션 버튼을 포함합니다.",
+      preview: (
+        <div className="space-y-4">
+          {/* 기본 사용 */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={10}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={setPageSize}
+          />
+
+          {/* 페이지 크기 선택기 숨김 */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={5}
+            onPageChange={setCurrentPage}
+            showPageSizeSelector={false}
+          />
+
+          {/* 커스텀 옵션 */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={20}
+            pageSize={pageSize}
+            pageSizeOptions={[5, 10, 25, 50]}
+            pageSizeLabel="항목 수"
+            onPageChange={setCurrentPage}
+            onPageSizeChange={setPageSize}
+          />
+        </div>
+      ),
+      code: `mport { useState } from "react";
+import Pagination from "../components/Pagination";
+
+
+const MyPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+    return (
+    <>
+      {/* 기본 사용 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={10}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
+
+      {/* 페이지 크기 선택기 숨김 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={5}
+        onPageChange={setCurrentPage}
+        showPageSizeSelector={false}
+      />
+
+      {/* 커스텀 옵션 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={20}
+        pageSize={pageSize}
+        pageSizeOptions={[5, 10, 25, 50]}
+        pageSizeLabel="항목 수"
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
+    </>
+  );
+};`,
+    },
+    Chart: {
+      title: "Pagination",
+      description:
+        "Chart.js를 사용하여 다양한 타입의 차트를 렌더링하는 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <div style={{ height: "400px" }}>
+            <Chart type="line" data={chartData} />
+          </div>
+        </div>
+      ),
+      code: `import Chart from "../components/Chart";
+**Props:**
+
+- type: 차트 타입 ('line' | 'bar' | 'doughnut' | 'pie') (기본값: 'line')
+- data: Chart.js 데이터 객체 (labels, datasets 포함)
+- options: Chart.js 옵션 객체 (선택사항)
+- className: 추가 CSS 클래스 (선택사항)
+
+**지원하는 차트 타입:**
+
+- line: 선차트
+- bar: 막대차트
+- doughnut: 도넛차트
+- pie: 파이차트
+
+const MyPage = () => {
+  const chartData = {
+    labels: ["1월", "2월", "3월", "4월", "5월"],
+    datasets: [
+      {
+        label: "데이터셋 1",
+        data: [65, 59, 80, 81, 56],
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+  return (
+   <div style={{ height: "400px" }}>
+      <Chart type="line" data={chartData} />
+    </div>
   );
 };`,
     },

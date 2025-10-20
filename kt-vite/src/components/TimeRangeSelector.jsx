@@ -83,6 +83,91 @@ const TimeRangeSelector = ({
     setEndDate(null);
   };
 
+  // 달력 열릴 때 페이지 스크롤 완전히 막기
+  useEffect(() => {
+    if (isCalendarOpen) {
+      // 현재 스크롤 위치 저장
+      const scrollY = window.scrollY;
+
+      // 스크롤바 너비 계산 (레이아웃 shift 방지)
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      // body 스크롤 막기
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+
+      // 스크롤바가 사라지면서 생기는 레이아웃 shift 방지
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+
+      // 모든 스크롤 이벤트 완전히 차단
+      const preventScroll = (e) => {
+        // 달력 내부가 아니면 스크롤 막기
+        if (
+          datePickerRef.current &&
+          !datePickerRef.current.contains(e.target)
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      };
+
+      // 키보드 스크롤 막기
+      const preventKeyScroll = (e) => {
+        // 방향키, Page Up/Down, Home, End, Space 막기
+        if (
+          [
+            "ArrowUp",
+            "ArrowDown",
+            "PageUp",
+            "PageDown",
+            "Home",
+            "End",
+            " ",
+          ].includes(e.key)
+        ) {
+          if (
+            datePickerRef.current &&
+            !datePickerRef.current.contains(e.target)
+          ) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      // 휠, 터치, 키보드 스크롤 모두 막기
+      document.addEventListener("wheel", preventScroll, { passive: false });
+      document.addEventListener("touchmove", preventScroll, { passive: false });
+      document.addEventListener("keydown", preventKeyScroll);
+
+      return () => {
+        // 원래 상태로 복구
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.width = "";
+        document.body.style.overflow = "";
+        document.body.style.paddingRight = "";
+
+        // 이벤트 리스너 제거
+        document.removeEventListener("wheel", preventScroll);
+        document.removeEventListener("touchmove", preventScroll);
+        document.removeEventListener("keydown", preventKeyScroll);
+
+        // 스크롤 위치 복원
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isCalendarOpen]);
+
   // 외부 클릭 감지하여 달력 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {

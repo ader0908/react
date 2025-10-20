@@ -42,7 +42,7 @@ const DatePicker = ({
           maxDate={maxDate}
           placeholderText={placeholder}
           dateFormat="yyyy-MM-dd"
-          className="w-full px-3 py-2 pr-10 bg-white rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
+          className="w-full px-3 py-2 pr-10 bg-[#f4f5f5] rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
           <FaRegCalendarAlt className="w-4 h-4 text-[#525b5b]" />

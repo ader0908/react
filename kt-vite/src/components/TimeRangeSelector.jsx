@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Button from "./Button";
 import Select from "./Select";
 import Dropdown from "./Dropdown";
@@ -35,7 +36,9 @@ const TimeRangeSelector = ({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarPosition, setCalendarPosition] = useState({ top: 0, left: 0 });
   const datePickerRef = useRef(null);
+  const calendarIconRef = useRef(null);
 
   // 현재 시간 업데이트 (실시간 모드일 때)
   useEffect(() => {
@@ -85,7 +88,9 @@ const TimeRangeSelector = ({
     const handleClickOutside = (event) => {
       if (
         datePickerRef.current &&
-        !datePickerRef.current.contains(event.target)
+        !datePickerRef.current.contains(event.target) &&
+        calendarIconRef.current &&
+        !calendarIconRef.current.contains(event.target)
       ) {
         setIsCalendarOpen(false);
       }
@@ -102,6 +107,13 @@ const TimeRangeSelector = ({
 
   // 달력 아이콘 클릭 핸들러
   const handleCalendarClick = () => {
+    if (!isCalendarOpen && calendarIconRef.current) {
+      const rect = calendarIconRef.current.getBoundingClientRect();
+      setCalendarPosition({
+        top: rect.bottom + window.scrollY + 8, // 아이콘 아래 8px
+        left: rect.left + window.scrollX + rect.width / 2, // 아이콘 중앙
+      });
+    }
     setIsCalendarOpen(!isCalendarOpen);
   };
 
@@ -217,18 +229,23 @@ const TimeRangeSelector = ({
                 grouped={true}
                 align="right"
               />
-              <div className="relative" ref={datePickerRef}>
+              <div ref={calendarIconRef}>
                 <FiCalendar
                   className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800"
                   onClick={handleCalendarClick}
                 />
-                {isCalendarOpen && (
+              </div>
+              {isCalendarOpen &&
+                createPortal(
                   <div
-                    className="absolute top-10 z-[10000] bg-white rounded-lg shadow-2xl p-4"
+                    ref={datePickerRef}
+                    className="fixed z-[10000] bg-white rounded-lg shadow-2xl p-4"
                     style={{
                       border: "1px solid #e4e7e7",
                       minWidth: "700px",
-                      right: "0",
+                      top: `${calendarPosition.top}px`,
+                      left: `${calendarPosition.left}px`,
+                      transform: "translateX(-50%)",
                     }}
                   >
                     <div className="flex flex-col gap-4">
@@ -286,9 +303,9 @@ const TimeRangeSelector = ({
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </div>,
+                  document.body
                 )}
-              </div>
             </div>
           </div>
         )}

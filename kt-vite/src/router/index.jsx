@@ -3,6 +3,7 @@ import MainPage from "../pages/MainPage";
 import MonitoringPage from "../pages/MonitoringPage";
 import SettingsPage from "../pages/SettingsPage";
 import TablePage from "../pages/TablePage";
+import SnippetPage from "../pages/SnippetPage";
 
 export const router = createHashRouter([
   {
@@ -24,6 +25,10 @@ export const router = createHashRouter([
       {
         path: "table",
         element: <TablePage />,
+      },
+      {
+        path: "snippet",
+        element: <SnippetPage />,
       },
     ],
   },

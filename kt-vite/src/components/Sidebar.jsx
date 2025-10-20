@@ -63,6 +63,10 @@ const Sidebar = () => {
         mainMenu: "table",
         subMenu: "tableList",
       },
+      "/snippet": {
+        mainMenu: "snippet",
+        subMenu: "snippetList",
+      },
     };
 
     const menuInfo = routeMenuMap[path];
@@ -103,6 +107,13 @@ const Sidebar = () => {
     {
       id: "table",
       label: "테이블",
+      icon: "📊",
+      hasSubMenus: true,
+      route: null,
+    },
+    {
+      id: "snippet",
+      label: "스니펫",
       icon: "📊",
       hasSubMenus: true,
       route: null,
@@ -154,6 +165,20 @@ const Sidebar = () => {
             icon: "📊",
             hasSubItems: false,
             route: "/table",
+          },
+        ],
+      },
+    ],
+
+    snippet: [
+      {
+        items: [
+          {
+            id: "snippetList",
+            label: "스니펫 리스트",
+            icon: "📊",
+            hasSubItems: false,
+            route: "/snippet",
           },
         ],
       },

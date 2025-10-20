@@ -6,6 +6,7 @@ import SettingRow from "../../../components/SettingRow";
 import Toggle from "../../../components/Toggle";
 import Checkbox from "../../../components/Checkbox";
 import Input from "../../../components/Input";
+import RadioGroup from "../../../components/RadioGroup";
 
 function ChartSettingsModal({ isOpen, onClose }) {
   // 차트 설정 상태
@@ -100,21 +101,16 @@ function ChartSettingsModal({ isOpen, onClose }) {
         <div className="flex flex-col gap-4">
           {/* 차트 유형 */}
           <SettingRow title="차트 유형">
-            <div className="flex gap-5">
-              <RadioButton
-                label="선차트"
-                checked={chartType === "line"}
-                onChange={() => setChartType("line")}
-              />
-              <RadioButton
-                label="막대차트"
-                checked={chartType === "bar"}
-                onChange={() => setChartType("bar")}
-              />
-              <RadioButton
-                label="영역차트"
-                checked={chartType === "area"}
-                onChange={() => setChartType("area")}
+            <div className="flex items-center gap-5">
+              <RadioGroup
+                name="chartType"
+                options={[
+                  { value: "line", label: "선차트" },
+                  { value: "bar", label: "막대차트" },
+                  { value: "area", label: "영역차트" },
+                ]}
+                value={chartType}
+                onChange={setChartType}
               />
             </div>
           </SettingRow>

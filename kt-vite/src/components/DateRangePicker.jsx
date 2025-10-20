@@ -59,7 +59,7 @@ const DateRangePicker = ({
             endDate={endDate}
             placeholderText={startPlaceholder}
             dateFormat="yyyy-MM-dd"
-            className="w-full px-2.5 py-2 pr-8 h-9 bg-[#f4f5f5] rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
+            className="w-full px-2.5 py-2 pr-8 h-9 bg-white rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
           />
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
             <FaRegCalendarAlt className="w-4 h-4 text-[#525b5b]" />
@@ -80,7 +80,7 @@ const DateRangePicker = ({
             minDate={startDate}
             placeholderText={endPlaceholder}
             dateFormat="yyyy-MM-dd"
-            className="w-full px-2.5 py-2 h-9 pr-8 bg-[#f4f5f5] rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
+            className="w-full px-2.5 py-2 h-9 pr-8 bg-white rounded text-sm text-black placeholder:text-[#a1a9aa] focus:outline-none focus:ring-2 focus:ring-[#2bb7b3] border border-transparent"
           />
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
             <FaRegCalendarAlt className="w-4 h-4 text-[#525b5b]" />

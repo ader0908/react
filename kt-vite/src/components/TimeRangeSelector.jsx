@@ -288,7 +288,6 @@ const TimeRangeSelector = ({
                 selectedValue={timeRangePreset}
                 onSelect={onTimeRangePresetChange}
                 triggerLabel={timeRangePreset}
-                align="right"
               />
             </div>
           </div>
@@ -312,7 +311,7 @@ const TimeRangeSelector = ({
                 onSelect={onTimeRangePresetChange}
                 triggerLabel={timeRangePreset}
                 grouped={true}
-                align="right"
+                align="0"
               />
               <div ref={calendarIconRef}>
                 <FiCalendar

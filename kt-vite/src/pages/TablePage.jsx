@@ -188,8 +188,8 @@ export default function TablePage() {
     totalPages: 10,
     pageSize: 10,
     pageSizeOptions: [10, 20, 50, 100],
-    onPageChange: (page) => {},
-    onPageSizeChange: (size) => {},
+    onPageChange: () => {},
+    onPageSizeChange: () => {},
   };
   const selectable = true;
   const onSelectionChange = (selected) => {

@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * Dropdown 컴포넌트
@@ -24,17 +25,65 @@ const Dropdown = ({
   align = "left",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+  const [isPositioned, setIsPositioned] = useState(false);
   const dropdownRef = useRef(null);
+  const triggerRef = useRef(null);
 
   // 선택된 항목 찾기 (그룹화되지 않은 경우)
   const selectedItem = !grouped
     ? items.find((item) => item.value === selectedValue)
     : null;
 
+  // 드롭다운 위치 계산
+  const updatePosition = useCallback(() => {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 4,
+        left: align === "right" ? rect.right : rect.left,
+        width: rect.width,
+      });
+      setIsPositioned(true);
+    }
+  }, [align]);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 위치 초기화
+      setIsPositioned(false);
+      // 위치 계산 (다음 프레임에서 실행하여 정확한 위치 계산)
+      requestAnimationFrame(() => {
+        updatePosition();
+      });
+
+      // 스크롤 및 리사이즈 이벤트 리스너 추가
+      window.addEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
+    } else {
+      // dropdown이 닫힐 때 위치 상태 초기화
+      setIsPositioned(false);
+    }
+  }, [isOpen, updatePosition]);
+
   // 외부 클릭 감지하여 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -63,121 +112,56 @@ const Dropdown = ({
     }
   };
 
-  return (
+  // 드롭다운 메뉴 컴포넌트
+  const dropdownMenu = isOpen && (
     <div
       ref={dropdownRef}
-      className={`dropdown-container ${className}`}
-      style={{ position: "relative", display: "inline-block", zIndex: 1000 }}
+      className="dropdown-menu"
+      style={{
+        position: "fixed",
+        top: `${dropdownPosition.top}px`,
+        left: align === "right" ? "auto" : `${dropdownPosition.left}px`,
+        right:
+          align === "right"
+            ? `${
+                window.innerWidth -
+                (dropdownPosition.left + dropdownPosition.width)
+              }px`
+            : "auto",
+        backgroundColor: "#ffffff",
+        borderRadius: "8px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+        minWidth: "120px",
+        zIndex: 99999,
+        overflow: "hidden",
+        opacity: isPositioned ? 1 : 0,
+        transition: "opacity 0.1s ease-in-out",
+        pointerEvents: isPositioned ? "auto" : "none",
+      }}
     >
-      {/* 드롭다운 트리거 버튼 */}
-      <button
-        className={`dropdown-trigger ${disabled ? "disabled" : ""}`}
-        onClick={toggleDropdown}
-        disabled={disabled}
-        style={{
-          padding: "4px 12px",
-          backgroundColor: "#717a7a",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "12px",
-          fontSize: "12px",
-          fontWeight: 400,
-          lineHeight: "16px",
-          cursor: disabled ? "not-allowed" : "pointer",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          height: "20px",
-          whiteSpace: "nowrap",
-          opacity: disabled ? 0.5 : 1,
-        }}
-      >
-        {triggerLabel || selectedItem?.label || selectedValue || "선택하세요"}
-      </button>
-
-      {/* 드롭다운 메뉴 */}
-      {isOpen && (
-        <div
-          className="dropdown-menu"
-          style={{
-            position: "absolute",
-            top: "calc(100% + 4px)",
-            ...(align === "right" ? { right: 0 } : { left: 0 }),
-            backgroundColor: "#ffffff",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-            minWidth: "120px",
-            zIndex: 10000,
-            overflow: "hidden",
-          }}
-        >
-          <div style={{ padding: "8px" }}>
-            {grouped
-              ? /* 그룹화된 항목 렌더링 */
-                items.map((group, groupIdx) => (
-                  <div key={groupIdx}>
-                    {groupIdx > 0 && (
-                      <div
-                        style={{
-                          height: "1px",
-                          backgroundColor: "#e4e7e7",
-                          margin: "8px 0",
-                        }}
-                      />
-                    )}
-                    {group.items.map((item) => {
-                      const isSelected = item === selectedValue;
-                      return (
-                        <div
-                          key={item}
-                          className={`dropdown-item ${
-                            isSelected ? "selected" : ""
-                          }`}
-                          onClick={() => handleSelect(item)}
-                          style={{
-                            padding: "4px 4px",
-                            backgroundColor: isSelected
-                              ? "#f0fdfa"
-                              : "transparent",
-                            color: isSelected ? "#2bb7b3" : "#000000",
-                            fontSize: "14px",
-                            fontWeight: isSelected ? 600 : 400,
-                            lineHeight: "20px",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                            transition: "background-color 0.2s",
-                            height: "24px",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isSelected) {
-                              e.currentTarget.style.backgroundColor = "#f4f5f5";
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isSelected) {
-                              e.currentTarget.style.backgroundColor =
-                                "transparent";
-                            }
-                          }}
-                        >
-                          <span style={{ paddingLeft: "4px" }}>{item}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))
-              : /* 단순 항목 렌더링 */
-                items.map((item) => {
-                  const isSelected = item.value === selectedValue;
+      <div style={{ padding: "8px" }}>
+        {grouped
+          ? /* 그룹화된 항목 렌더링 */
+            items.map((group, groupIdx) => (
+              <div key={groupIdx}>
+                {groupIdx > 0 && (
+                  <div
+                    style={{
+                      height: "1px",
+                      backgroundColor: "#e4e7e7",
+                      margin: "8px 0",
+                    }}
+                  />
+                )}
+                {group.items.map((item) => {
+                  const isSelected = item === selectedValue;
                   return (
                     <div
-                      key={item.value}
+                      key={item}
                       className={`dropdown-item ${
                         isSelected ? "selected" : ""
                       }`}
-                      onClick={() => handleSelect(item.value)}
+                      onClick={() => handleSelect(item)}
                       style={{
                         padding: "4px 4px",
                         backgroundColor: isSelected ? "#f0fdfa" : "transparent",
@@ -203,14 +187,90 @@ const Dropdown = ({
                         }
                       }}
                     >
-                      <span style={{ paddingLeft: "4px" }}>{item.label}</span>
+                      <span style={{ paddingLeft: "4px" }}>{item}</span>
                     </div>
                   );
                 })}
-          </div>
-        </div>
-      )}
+              </div>
+            ))
+          : /* 단순 항목 렌더링 */
+            items.map((item) => {
+              const isSelected = item.value === selectedValue;
+              return (
+                <div
+                  key={item.value}
+                  className={`dropdown-item ${isSelected ? "selected" : ""}`}
+                  onClick={() => handleSelect(item.value)}
+                  style={{
+                    padding: "4px 4px",
+                    backgroundColor: isSelected ? "#f0fdfa" : "transparent",
+                    color: isSelected ? "#2bb7b3" : "#000000",
+                    fontSize: "14px",
+                    fontWeight: isSelected ? 600 : 400,
+                    lineHeight: "20px",
+                    cursor: "pointer",
+                    borderRadius: "4px",
+                    transition: "background-color 0.2s",
+                    height: "24px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = "#f4f5f5";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }
+                  }}
+                >
+                  <span style={{ paddingLeft: "4px" }}>{item.label}</span>
+                </div>
+              );
+            })}
+      </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* 드롭다운 트리거 버튼 */}
+      <div
+        className={`dropdown-container ${className}`}
+        style={{ display: "inline-block" }}
+      >
+        <button
+          ref={triggerRef}
+          className={`dropdown-trigger ${disabled ? "disabled" : ""}`}
+          onClick={toggleDropdown}
+          disabled={disabled}
+          style={{
+            padding: "4px 12px",
+            backgroundColor: "#717a7a",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "12px",
+            fontSize: "12px",
+            fontWeight: 400,
+            lineHeight: "16px",
+            cursor: disabled ? "not-allowed" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            height: "20px",
+            whiteSpace: "nowrap",
+            opacity: disabled ? 0.5 : 1,
+          }}
+        >
+          {triggerLabel || selectedItem?.label || selectedValue || "선택하세요"}
+        </button>
+      </div>
+
+      {/* Portal로 드롭다운 메뉴 렌더링 */}
+      {isOpen && createPortal(dropdownMenu, document.body)}
+    </>
   );
 };
 

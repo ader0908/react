@@ -1144,27 +1144,6 @@ const MyPage = () => {
 };
 ```
 
-### SchedulerSettingCard.jsx
-
-스케줄러 설정 카드 컴포넌트입니다.
-
-- 사용 여부 토글 스위치
-- HW 리소스 조회 설정 (초 단위)
-- 통계(요청, 오류) 설정 (분 단위)
-- 되돌리기/저장 기능
-
-```jsx
-import SchedulerSettingCard from "../components/SchedulerSettingCard";
-
-const SettingsPage = () => {
-  return (
-    <div>
-      <SchedulerSettingCard />
-    </div>
-  );
-};
-```
-
 ### DatePicker.jsx
 
 단일 날짜 선택 컴포넌트입니다. (react-datepicker 기반)

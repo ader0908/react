@@ -20,6 +20,18 @@ import Table from "../components/Table";
 import TableHeader from "../components/TableHeader";
 import Pagination from "../components/Pagination";
 import Chart from "../components/Chart";
+import ChartCard from "../components/ChartCard";
+import EngineItemCard from "../components/EngineItemCard";
+import ServerItemCard from "../components/ServerItemCard";
+import SearchFilter from "../components/SearchFilter";
+import Dropdown from "../components/Dropdown";
+import SettingRow from "../components/SettingRow";
+import ServiceModelRow from "../components/ServiceModelRow";
+import RealtimeStatusIndicator from "../components/RealtimeStatusIndicator";
+import DashboardSection from "../components/DashboardSection";
+import DashboardSectionHeader from "../components/DashboardSectionHeader";
+import DashboardListItem from "../components/DashboardListItem";
+import DashboardForm from "../components/DashboardForm";
 
 const SnippetPage = () => {
   const [selectedComponent, setSelectedComponent] = useState("Button");
@@ -48,6 +60,22 @@ const SnippetPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [modalOpen, setModalOpen] = useState(false);
+  // SearchFilter 관련 상태
+  const [searchFilterType, setSearchFilterType] = useState("serviceModel");
+  const [searchSelectValue, setSearchSelectValue] = useState("");
+  // Dropdown 관련 상태
+  const [dropdownValue, setDropdownValue] = useState("최근 1시간");
+  // SettingRow 관련 상태
+  const [settingToggle, setSettingToggle] = useState(true);
+  // ServiceModelRow 관련 상태
+  const [callbotChecks, setCallbotChecks] = useState({
+    request: true,
+    error: false,
+    statistics: true,
+  });
+  // Dashboard 관련 상태
+  const [selectedDashboards, setSelectedDashboards] = useState(["dashboard-1"]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   // 실시간 모드 토글 핸들러 - TimeRangeSelector 컴포넌트에서 사용
   const handleRealtimeToggle = useCallback(() => {
@@ -119,6 +147,29 @@ const SnippetPage = () => {
     ],
   };
 
+  // ChartCard 컴포넌트에서 사용되는 데이터 정의
+  const charCardtData = {
+    labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00"],
+    datasets: [
+      {
+        label: "c-pod-001",
+        data: [65, 59, 80, 81, 56, 55],
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+      {
+        label: "c-pod-002",
+        data: [28, 48, 40, 19, 86, 27],
+        borderColor: "#5090f7",
+        backgroundColor: "rgba(80, 144, 247, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+
   // 컴포넌트 카테고리 및 리스트
   const componentCategories = [
     {
@@ -133,7 +184,6 @@ const SnippetPage = () => {
         "RadioGroup",
         "DatePicker",
         "DateRangePicker",
-        "TimeRangeSelector",
       ],
     },
     {
@@ -160,12 +210,7 @@ const SnippetPage = () => {
     },
     {
       name: "⚙️ 설정",
-      components: [
-        "SettingRow",
-        "ServiceModelRow",
-        "SchedulerSettingCard",
-        "RealtimeStatusIndicator",
-      ],
+      components: ["SettingRow", "ServiceModelRow", "RealtimeStatusIndicator"],
     },
     {
       name: "📋 대시보드",
@@ -758,40 +803,44 @@ const MyPage = () => {
           />
         </div>
       ),
-      code: `import { useState } from "react";
-import DateRangePicker from "../components/DateRangePicker";
+      code: `import { useState, useCallback } from "react";
+import TimeRangeSelector from "../components/TimeRangeSelector";
 
 const MyPage = () => {
- const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [isRealtime, setIsRealtime] = useState(false);
+  const [dataInterval, setDataInterval] = useState("1분");
+  const [dateRange, setDateRange] = useState("2025/09/10 16:37 ~ 2025/09/10 17:37");
+  const [timeRangePreset, setTimeRangePreset] = useState("최근 1시간");
+  
+  const handleRealtimeToggle = useCallback(() => {
+    const newRealtimeState = !isRealtime;
+    setIsRealtime(newRealtimeState);
+    
+    if (newRealtimeState) {
+      setTimeRangePreset("실시간 5분");
+    } else {
+      setTimeRangePreset("최근 1시간");
+    }
+  }, [isRealtime]);
   
   return (
-    <DateRangePicker
-        label="조회기간"
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-      />
-
-      {/* 필수 항목 */}
-      <DateRangePicker
-        label="검색 기간"
-        required
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-        startPlaceholder="시작일"
-        endPlaceholder="종료일"
-      />
+    <TimeRangeSelector
+      isRealtime={isRealtime}
+      onRealtimeToggle={handleRealtimeToggle}
+      dateRange={dateRange}
+      onDateRangeChange={setDateRange}
+      timeRangePreset={timeRangePreset}
+      onTimeRangePresetChange={setTimeRangePreset}
+      dataInterval={dataInterval}
+      onDataIntervalChange={setDataInterval}
+    />
   );
 };`,
     },
     Chip: {
       title: "Chip",
       description: "칩(Badge) 버튼 컴포넌트입니다.",
-      preview: () => (
+      preview: (
         <div className="flex gap-2 flex-wrap">
           <Chip label="CPU" variant="primary" />
           <Chip label="메모리" variant="secondary" />
@@ -811,6 +860,79 @@ const MyPage = () => {
       <Chip label="실패건수" variant="disabled" />
       <Chip label="커스텀" color="#ea580c" />
     </div>
+  );
+};`,
+    },
+    EngineItemCard: {
+      title: "EngineItemCard",
+      description:
+        "엔진 항목 카드 컴포넌트입니다. Chip 컴포넌트들을 그룹화하여 표시합니다.",
+      preview: (
+        <div className="space-y-4">
+          <EngineItemCard title="STT" borderColor="#22c55e">
+            <Chip label="CPU" variant="primary" />
+            <Chip label="메모리" variant="primary" />
+            <Chip label="디스크" variant="primary" />
+          </EngineItemCard>
+        </div>
+      ),
+      code: `import EngineItemCard from "../components/EngineItemCard";
+import Chip from "../components/Chip";
+**Props:**
+
+- title: 카드 제목 (예: "STT", "TTS", "SV")
+- children: 카드 내용 (주로 Chip 컴포넌트들)
+- borderColor: 테두리 색상 (선택사항, 기본값: #22c55e)
+- className: 추가 CSS 클래스 (선택사항)
+
+const MyPage = () => {
+
+  return (
+    <>
+      <EngineItemCard title="STT" borderColor="#22c55e">
+        <Chip label="CPU" variant="primary" />
+        <Chip label="메모리" variant="primary" />
+        <Chip label="디스크" variant="primary" />
+      </EngineItemCard>
+    </>
+  );
+};`,
+    },
+    ServerItemCard: {
+      title: "ServerItemCard",
+      description:
+        "서버 항목 카드 컴포넌트입니다. EngineItemCard의 변형으로 서버 리스트를 표시합니다.",
+      preview: (
+        <div className="space-y-4">
+          <ServerItemCard title="STT" borderColor="#22c55e">
+            <Chip label="c-pod-001" variant="primary" />
+            <Chip label="c-pod-002" variant="primary" />
+            <Chip label="c-pod-003" variant="primary" />
+            <Chip label="c-pod-004" variant="disabled" />
+          </ServerItemCard>
+        </div>
+      ),
+      code: `import ServerItemCard from "../components/ServerItemCard";
+import Chip from "../components/Chip";
+
+**Props:**
+
+- title: 카드 제목 (예: "STT", "TTS", "SV")
+- children: 카드 내용 (주로 Chip 컴포넌트들)
+- borderColor: 테두리 색상 (선택사항, 기본값: #22c55e)
+- className: 추가 CSS 클래스 (선택사항)
+
+const MyPage = () => {
+
+  return (
+    <>
+     <ServerItemCard title="STT" borderColor="#22c55e">
+        <Chip label="c-pod-001" variant="primary" />
+        <Chip label="c-pod-002" variant="primary" />
+        <Chip label="c-pod-003" variant="primary" />
+        <Chip label="c-pod-004" variant="disabled" />
+      </ServerItemCard>
+    </>
   );
 };`,
     },
@@ -1205,6 +1327,774 @@ const MyPage = () => {
    <div style={{ height: "400px" }}>
       <Chart type="line" data={chartData} />
     </div>
+  );
+};`,
+    },
+    ChartCard: {
+      title: "ChartCard",
+      description:
+        "모니터링 차트를 표시하는 카드 컴포넌트입니다. Chip, Select, Chart 컴포넌트를 조합하여 완전한 차트 UI를 제공합니다.",
+      preview: (
+        <div className="space-y-4">
+          {/* 기본 사용 */}
+          <ChartCard
+            chipLabel="STT"
+            chipVariant="primary"
+            title="CPU 사용률"
+            chartType="line"
+            chartData={chartData}
+            onChartTypeChange={(type) => console.log("차트 타입 변경:", type)}
+            onVisibilityToggle={() => console.log("표시/숨김 토글")}
+            onSettings={() => console.log("설정 열기")}
+            onSelectSettings={() => {}}
+            onChartSettings={() => {}}
+          />
+
+          {/* 에러 메시지가 있는 차트 */}
+          <ChartCard
+            chipLabel="TTS"
+            chipVariant="secondary"
+            title="메모리 사용량"
+            errorMessage="서버를 개별로 차트에서 노출 또는 비노출 할 수 있습니다."
+            chartType="line"
+            chartData={chartData}
+            borderColor="#5090f7"
+          />
+
+          {/* 컨트롤 없는 차트 */}
+          <ChartCard
+            chipLabel="SV"
+            chipVariant="tertiary"
+            title="작업 상태 분포"
+            chartType="doughnut"
+            chartData={charCardtData}
+            showControls={false}
+            borderColor="#a855f7"
+          />
+        </div>
+      ),
+      code: `import ChartCard from "../components/ChartCard";
+**Props:**
+
+- chipLabel: 칩 라벨 (예: "STT", "TTS")
+- chipVariant: 칩 스타일 ('primary' | 'secondary' | 'tertiary')
+- title: 차트 제목 (예: "CPU 사용률")
+- errorMessage: 에러/경고 메시지 (선택사항)
+- chartType: 차트 타입 ('line' | 'bar' | 'doughnut' | 'pie') (기본값: 'line')
+- chartData: Chart.js 데이터 객체
+- chartOptions: Chart.js 옵션 객체 (선택사항)
+- onChartTypeChange: 차트 타입 변경 핸들러 (선택사항)
+- onVisibilityToggle: 표시/숨김 토글 핸들러 (선택사항)
+- onSettings: 설정 버튼 클릭 핸들러 (선택사항)
+- showControls: 컨트롤 버튼 표시 여부 (기본값: true)
+- borderColor: 카드 테두리 색상 (선택사항, 기본값: #5090f7)
+- className
+
+**지원하는 차트 타입:**
+
+- line: 선차트
+- bar: 막대차트
+- doughnut: 도넛차트
+- pie: 파이차트
+
+const MyPage = () => {
+  const chardCardData = {
+    labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00"],
+    datasets: [
+      {
+        label: "c-pod-001",
+        data: [65, 59, 80, 81, 56, 55],
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+      {
+        label: "c-pod-002",
+        data: [28, 48, 40, 19, 86, 27],
+        borderColor: "#5090f7",
+        backgroundColor: "rgba(80, 144, 247, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+  return (
+    <>
+      {/* 기본 사용 */}
+        <ChartCard
+          chipLabel="STT"
+          chipVariant="primary"
+          title="CPU 사용률"
+          chartType="line"
+          chartData={chartData}
+          onChartTypeChange={(type) => console.log("차트 타입 변경:", type)}
+          onVisibilityToggle={() => console.log("표시/숨김 토글")}
+          onSettings={() => console.log("설정 열기")}
+          onSelectSettings={() => {}}
+          onChartSettings={() => {}}
+        />
+
+        {/* 에러 메시지가 있는 차트 */}
+        <ChartCard
+          chipLabel="TTS"
+          chipVariant="secondary"
+          title="메모리 사용량"
+          errorMessage="서버를 개별로 차트에서 노출 또는 비노출 할 수 있습니다."
+          chartType="line"
+          chartData={chartData}
+          borderColor="#5090f7"
+        />
+
+        {/* 컨트롤 없는 차트 */}
+        <ChartCard
+          chipLabel="SV"
+          chipVariant="tertiary"
+          title="작업 상태 분포"
+          chartType="doughnut"
+          chartData={charCardtData}
+          showControls={false}
+          borderColor="#a855f7"
+        />
+    </>
+  );
+};`,
+    },
+    SearchFilter: {
+      title: "SearchFilter",
+      description:
+        "검색 필터 영역 공통 컨테이너 컴포넌트입니다. (Figma 디자인 기반)",
+      preview: (
+        <div className="space-y-4">
+          <SearchFilter onSearch={() => alert("검색!")}>
+            <div className="flex-none w-60">
+              <RadioGroup
+                name="searchFilterType"
+                options={[
+                  { value: "serviceModel", label: "서비스 모델" },
+                  { value: "customerCode", label: "고객 코드" },
+                ]}
+                value={searchFilterType}
+                onChange={setSearchFilterType}
+                className="mb-2"
+              />
+              <Select
+                value={searchSelectValue}
+                onChange={(e) => setSearchSelectValue(e.target.value)}
+                options={[
+                  { value: "", label: "전체" },
+                  { value: "model1", label: "모델 1" },
+                ]}
+                placeholder="전체"
+                bgColor="#ffffff"
+              />
+            </div>
+            <DateRangePicker
+              label="조회기간"
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              className="flex-1"
+            />
+          </SearchFilter>
+        </div>
+      ),
+      code: `import { useState } from "react";
+import SearchFilter from "../components/SearchFilter";
+import RadioGroup from "../components/RadioGroup";
+import Select from "../components/Select";
+import DateRangePicker from "../components/DateRangePicker";
+
+**Props:**
+- children: 필터 구성 요소들 (RadioGroup, Select, DateRangePicker 등)
+- onSearch: 검색 버튼 클릭 핸들러 (필수)
+- searchButtonText: 검색 버튼 텍스트 (기본값: "검색")
+- showSearchButton: 검색 버튼 표시 여부 (기본값: true)
+- className: 추가 CSS 클래스
+
+const MyPage = () => {
+  const [filterType, setFilterType] = useState("serviceModel");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const handleSearch = () => {
+    console.log("검색:", { filterType, selectedValue, startDate, endDate });
+  };
+
+  return (
+    <SearchFilter onSearch={handleSearch}>
+      <div className="flex-none w-60">
+        <RadioGroup
+          name="filterType"
+          options={[
+            { value: "serviceModel", label: "서비스 모델" },
+            { value: "customerCode", label: "고객 코드" },
+          ]}
+          value={filterType}
+          onChange={setFilterType}
+          className="mb-2"
+        />
+        <Select
+          value={selectedValue}
+          onChange={(e) => setSelectedValue(e.target.value)}
+          options={[
+            { value: "", label: "전체" },
+            { value: "model1", label: "모델 1" },
+          ]}
+          placeholder="전체"
+        />
+      </div>
+      <DateRangePicker
+        label="조회기간"
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        className="flex-1"
+      />
+    </SearchFilter>
+  );
+};`,
+    },
+    Dropdown: {
+      title: "Dropdown",
+      description: "범용 드롭다운 메뉴 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <div className="flex gap-4 items-center">
+            <span className="text-sm">단순 항목:</span>
+            <Dropdown
+              items={[
+                { value: "5min", label: "실시간 5분" },
+                { value: "10min", label: "실시간 10분" },
+                { value: "1hour", label: "실시간 1시간" },
+              ]}
+              selectedValue="5min"
+              onSelect={(value) => console.log("선택:", value)}
+            />
+          </div>
+          <div className="flex gap-4 items-center">
+            <span className="text-sm">그룹화된 항목:</span>
+            <Dropdown
+              items={[
+                { group: "빠른 선택", items: ["최근 5분", "최근 10분"] },
+                {
+                  group: "시간 단위",
+                  items: ["최근 1시간", "최근 3시간", "최근 1일"],
+                },
+              ]}
+              selectedValue={dropdownValue}
+              onSelect={setDropdownValue}
+              grouped={true}
+            />
+          </div>
+        </div>
+      ),
+      code: `import { useState } from "react";
+import Dropdown from "../components/Dropdown";
+
+**Props:**
+
+- items: 드롭다운 항목 배열
+  - 단순: [{ value: "5min", label: "실시간 5분" }]
+  - 그룹화: [{ group: "시간 단위", items: ["최근 1시간", "최근 3시간"] }]
+- selectedValue: 현재 선택된 값
+- onSelect: 항목 선택 시 호출되는 콜백 함수
+- triggerLabel: 트리거 버튼에 표시할 텍스트 (옵션, 없으면 selectedValue 사용)
+- className: 추가 CSS 클래스 (옵션)
+- disabled: 비활성화 여부 (옵션)
+- grouped: 그룹화된 항목 여부 (기본값: false)
+- align: 드롭다운 메뉴 정렬 - 'left' 또는 'right' (기본값: 'left')
+
+const MyPage = () => {
+  const [selectedTime, setSelectedTime] = useState("5min");
+  const [selectedPreset, setSelectedPreset] = useState("최근 1시간");
+
+  // 단순 항목
+  const timeOptions = [
+    { value: "5min", label: "실시간 5분" },
+    { value: "10min", label: "실시간 10분" },
+    { value: "1hour", label: "실시간 1시간" },
+  ];
+
+  // 그룹화된 항목
+  const presetOptions = [
+    { group: "빠른 선택", items: ["최근 5분", "최근 10분"] },
+    { group: "시간 단위", items: ["최근 1시간", "최근 3시간", "최근 1일"] },
+    { group: "일 단위", items: ["오늘(00~24시)", "어제(00~24시)"] },
+  ];
+
+  return (
+    <>
+      {/* 기본 드롭다운 */}
+      <Dropdown
+        items={timeOptions}
+        selectedValue={selectedTime}
+        onSelect={setSelectedTime}
+      />
+
+      {/* 그룹화된 드롭다운 */}
+      <Dropdown
+        items={presetOptions}
+        selectedValue={selectedPreset}
+        onSelect={setSelectedPreset}
+        grouped={true}
+        align="right"
+      />
+    </>
+  );
+};`,
+    },
+    SettingRow: {
+      title: "SettingRow",
+      description:
+        "설정 항목의 레이아웃을 위한 공통 컴포넌트입니다. 왼쪽에 타이틀, 오른쪽에 컨트롤 요소를 배치합니다.",
+      preview: (
+        <div className="space-y-4">
+          <SettingRow title="자동 저장">
+            <Toggle
+              checked={settingToggle}
+              onChange={setSettingToggle}
+              label="활성화"
+            />
+          </SettingRow>
+          <SettingRow title="서버 주소">
+            <Input value="localhost:3000" onChange={() => {}} />
+          </SettingRow>
+        </div>
+      ),
+      code: `import SettingRow from "../components/SettingRow";
+import Toggle from "../components/Toggle";
+import Input from "../components/Input";
+
+**Props:**
+
+- title: 설정 항목 제목 (string, 필수)
+- children: 오른쪽에 표시될 컨트롤 요소 (ReactNode, 필수)
+- className: 추가 CSS 클래스 (선택사항)
+
+const MyPage = () => {
+  return (
+    <>
+      {/* Toggle 컨트롤 */}
+      <SettingRow title="자동 저장">
+        <Toggle checked={true} onChange={() => {}} />
+      </SettingRow>
+
+      {/* Input 컨트롤 */}
+      <SettingRow title="서버 주소">
+        <Input value="localhost:3000" onChange={() => {}} />
+      </SettingRow>
+    </>
+  );
+};`,
+    },
+    ServiceModelRow: {
+      title: "ServiceModelRow",
+      description:
+        "서비스 모델별 삭제 대상을 표시하는 행 컴포넌트입니다. 모델 라벨과 체크박스들을 포함합니다.",
+      preview: (
+        <div className="space-y-4">
+          <ServiceModelRow
+            label="콜봇"
+            checkboxes={[
+              {
+                label: "요청 데이터",
+                checked: callbotChecks.request,
+                onChange: (val) =>
+                  setCallbotChecks({ ...callbotChecks, request: val }),
+              },
+              {
+                label: "오류 데이터",
+                checked: callbotChecks.error,
+                onChange: (val) =>
+                  setCallbotChecks({ ...callbotChecks, error: val }),
+              },
+              {
+                label: "통계 데이터",
+                checked: callbotChecks.statistics,
+                onChange: (val) =>
+                  setCallbotChecks({ ...callbotChecks, statistics: val }),
+              },
+            ]}
+          />
+        </div>
+      ),
+      code: `import { useState } from "react";
+import ServiceModelRow from "../components/ServiceModelRow";
+
+**Props:**
+
+- label: 모델 라벨 (예: "콜봇", "챗봇", "상담모델")
+- checkboxes: 체크박스 배열 [{ label, checked, onChange, disabled }, ...]
+- className: 추가 CSS 클래스 (선택사항)
+
+const MyPage = () => {
+  const [callbotChecks, setCallbotChecks] = useState({
+    request: true,
+    error: false,
+    statistics: true,
+  });
+
+  return (
+    <ServiceModelRow
+      label="콜봇"
+      checkboxes={[
+        {
+          label: "요청 데이터",
+          checked: callbotChecks.request,
+          onChange: (val) =>
+            setCallbotChecks({ ...callbotChecks, request: val }),
+        },
+        {
+          label: "오류 데이터",
+          checked: callbotChecks.error,
+          onChange: (val) =>
+            setCallbotChecks({ ...callbotChecks, error: val }),
+        },
+        {
+          label: "통계 데이터",
+          checked: callbotChecks.statistics,
+          onChange: (val) =>
+            setCallbotChecks({ ...callbotChecks, statistics: val }),
+        },
+      ]}
+    />
+  );
+};`,
+    },
+
+    RealtimeStatusIndicator: {
+      title: "RealtimeStatusIndicator",
+      description: "실시간 모니터링 상태를 표시하는 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <RealtimeStatusIndicator
+            isActive={true}
+            statusText="실시간 감시중"
+            time="15:07:32"
+            badgeText="실시간 5분"
+            onBadgeClick={() => console.log("배지 클릭")}
+          />
+          <RealtimeStatusIndicator
+            isActive={true}
+            statusText="데이터 수집 중"
+            time="12:34:56"
+          />
+          <RealtimeStatusIndicator
+            isActive={false}
+            statusText="모니터링 중지됨"
+          />
+        </div>
+      ),
+      code: `import { useState, useEffect } from "react";
+import RealtimeStatusIndicator from "../components/RealtimeStatusIndicator";
+
+**Props:**
+
+- isActive: 실시간 활성화 여부 (기본값: false)
+- statusText: 상태 텍스트 (기본값: "실시간 감시중")
+- time: 시간 표시 (예: "15:07:32")
+- badgeText: 배지 텍스트 (예: "실시간 5분")
+- onBadgeClick: 배지 클릭 핸들러 (옵션)
+- className: 추가 CSS 클래스 (옵션)
+
+const MyPage = () => {
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const timeString = now.toTimeString().slice(0, 8);
+      setCurrentTime(timeString);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      <RealtimeStatusIndicator
+        isActive={true}
+        statusText="실시간 감시중"
+        time={currentTime}
+        badgeText="실시간 5분"
+        onBadgeClick={() => console.log("배지 클릭")}
+      />
+      
+      <RealtimeStatusIndicator
+        isActive={false}
+        statusText="모니터링 중지됨"
+      />
+    </>
+  );
+};`,
+    },
+    DashboardSection: {
+      title: "DashboardSection",
+      description:
+        "대시보드 섹션 전체를 표시하는 컴포넌트입니다. 헤더와 리스트를 포함합니다.",
+      preview: (
+        <div className="space-y-4">
+          <DashboardSection
+            icon={<span>A</span>}
+            title="관리자 대시보드"
+            count={7}
+            items={[
+              {
+                id: "dashboard-1",
+                title: "대시보드1 - 시스템 전체 모니터링",
+                description: "시스템의 전체적인 상태를 모니터링합니다.",
+                isDefault: true,
+              },
+              {
+                id: "dashboard-2",
+                title: "대시보드2 - 성능 모니터링",
+                description: "CPU, 메모리 등 성능 지표를 추적합니다.",
+                isDefault: false,
+              },
+            ]}
+            selectedItems={selectedDashboards}
+            onCheck={(id, value) => {
+              if (value) {
+                setSelectedDashboards([...selectedDashboards, id]);
+              } else {
+                setSelectedDashboards(
+                  selectedDashboards.filter((item) => item !== id)
+                );
+              }
+            }}
+            onEdit={(id) => console.log("편집:", id)}
+            onStar={(id) => console.log("즐겨찾기:", id)}
+            onAddNew={() => console.log("새 대시보드 추가")}
+          />
+        </div>
+      ),
+      code: `import DashboardSection from "../components/DashboardSection";
+**Props:**
+
+- icon: 섹션 아이콘
+- title: 섹션 제목
+- count: 항목 개수
+- showWarning: 경고 메시지 표시 여부 (기본값: false)
+- warningText: 경고 메시지 텍스트
+- onAddNew: 새 항목 추가 버튼 클릭 핸들러
+- addNewText: 새 항목 추가 버튼 텍스트 (기본값: "새 대시보드")
+- className: 추가 CSS 클래스
+
+const MyPage = () => {
+  const [selectedItems, setSelectedItems] = useState(["dashboard-1"]);
+  
+  const dashboards = [
+    {
+      id: "dashboard-1",
+      title: "대시보드1 - 시스템 전체 모니터링",
+      description: "시스템의 전체적인 상태를 모니터링합니다.",
+      isDefault: true,
+    },
+    {
+      id: "dashboard-2",
+      title: "대시보드2 - 성능 모니터링",
+      description: "CPU, 메모리 등 성능 지표를 추적합니다.",
+      isDefault: false,
+    },
+  ];
+
+  return (
+    <DashboardSection
+      icon={<span>A</span>}
+      title="관리자 대시보드"
+      count={7}
+      items={dashboards}
+      selectedItems={selectedItems}
+      onCheck={(id, value) => {
+        if (value) {
+          setSelectedItems([...selectedItems, id]);
+        } else {
+          setSelectedItems(selectedItems.filter((item) => item !== id));
+        }
+      }}
+      onEdit={(id) => console.log("편집:", id)}
+      onStar={(id) => console.log("즐겨찾기:", id)}
+      onAddNew={() => console.log("새 대시보드 추가")}
+    />
+  );
+};`,
+    },
+    DashboardSectionHeader: {
+      title: "DashboardSectionHeader",
+      description: "대시보드 섹션의 헤더를 표시하는 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <DashboardSectionHeader
+            icon={<span>A</span>}
+            title="관리자 대시보드"
+            count={7}
+            onAddNew={() => console.log("새 대시보드 추가")}
+          />
+          <DashboardSectionHeader
+            icon={<span>P</span>}
+            title="개인 대시보드"
+            count={3}
+            showWarning={true}
+            warningText="최대 10개까지 생성 가능합니다."
+            onAddNew={() => console.log("새 대시보드 추가")}
+          />
+        </div>
+      ),
+      code: `import DashboardSectionHeader from "../components/DashboardSectionHeader";
+
+**Props:**
+
+- id: 아이템 ID
+- title: 대시보드 제목
+- description: 대시보드 설명
+- checked: 체크 상태 (기본값: false)
+- isDefault: 기본 대시보드 여부 (기본값: false)
+- onCheck: 체크박스 변경 핸들러
+- onEdit: 편집 버튼 클릭 핸들러
+- onStar: 즐겨찾기 버튼 클릭 핸들러
+- className: 추가 CSS 클래스
+
+const MyPage = () => {
+  return (
+    <>
+      <DashboardSectionHeader
+        icon={<span>A</span>}
+        title="관리자 대시보드"
+        count={7}
+        onAddNew={() => console.log("새 대시보드 추가")}
+      />
+      
+      <DashboardSectionHeader
+        icon={<span>P</span>}
+        title="개인 대시보드"
+        count={3}
+        showWarning={true}
+        warningText="최대 10개까지 생성 가능합니다."
+        onAddNew={() => console.log("새 대시보드 추가")}
+      />
+    </>
+  );
+};`,
+    },
+    DashboardListItem: {
+      title: "DashboardListItem",
+      description: "대시보드 리스트의 개별 아이템을 표시하는 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <DashboardListItem
+            id="dashboard-1"
+            title="대시보드1 - 시스템 전체 모니터링"
+            description="시스템의 전체적인 상태를 모니터링합니다."
+            checked={true}
+            isDefault={true}
+            onCheck={(id, value) => console.log(id, value)}
+            onEdit={(id) => console.log("편집:", id)}
+            onStar={(id) => console.log("즐겨찾기:", id)}
+          />
+          <DashboardListItem
+            id="dashboard-2"
+            title="대시보드2 - 성능 모니터링"
+            description="CPU, 메모리 등 성능 지표를 추적합니다."
+            checked={false}
+            isDefault={false}
+            onCheck={(id, value) => console.log(id, value)}
+            onEdit={(id) => console.log("편집:", id)}
+            onStar={(id) => console.log("즐겨찾기:", id)}
+          />
+        </div>
+      ),
+      code: `import DashboardListItem from "../components/DashboardListItem";
+
+**Props:**
+
+- id: 아이템 ID
+- title: 대시보드 제목
+- description: 대시보드 설명
+- checked: 체크 상태 (기본값: false)
+- isDefault: 기본 대시보드 여부 (기본값: false)
+- onCheck: 체크박스 변경 핸들러
+- onEdit: 편집 버튼 클릭 핸들러
+- onStar: 즐겨찾기 버튼 클릭 핸들러
+- className: 추가 CSS 클래스
+
+const MyPage = () => {
+  return (
+    <>
+      {/* 기본 대시보드 */}
+      <DashboardListItem
+        id="dashboard-1"
+        title="대시보드1 - 시스템 전체 모니터링"
+        description="시스템의 전체적인 상태를 모니터링합니다."
+        checked={true}
+        isDefault={true}
+        onCheck={(id, value) => console.log(id, value)}
+        onEdit={(id) => console.log("편집:", id)}
+        onStar={(id) => console.log("즐겨찾기:", id)}
+      />
+
+      {/* 일반 대시보드 */}
+      <DashboardListItem
+        id="dashboard-2"
+        title="대시보드2 - 성능 모니터링"
+        description="CPU, 메모리 등 성능 지표를 추적합니다."
+        checked={false}
+        isDefault={false}
+        onCheck={(id, value) => console.log(id, value)}
+        onEdit={(id) => console.log("편집:", id)}
+        onStar={(id) => console.log("즐겨찾기:", id)}
+      />
+    </>
+  );
+};`,
+    },
+    DashboardForm: {
+      title: "DashboardForm",
+      description: "새 대시보드 생성 폼을 표시하는 컴포넌트입니다.",
+      preview: (
+        <div className="space-y-4">
+          <DashboardForm
+            isOpen={isFormOpen}
+            onToggle={() => setIsFormOpen(!isFormOpen)}
+            onSubmit={(formData) => {
+              console.log("제출:", formData);
+              alert("대시보드 생성: " + formData.name);
+            }}
+            onReset={() => console.log("초기화")}
+          />
+        </div>
+      ),
+      code: `import { useState } from "react";
+import DashboardForm from "../components/DashboardForm";
+
+**Props:**
+
+- isOpen: 폼 열림 상태 (기본값: false)
+- onToggle: 폼 토글 핸들러
+- onSubmit: 제출 핸들러
+- onReset: 초기화 핸들러
+- className: 추가 CSS 클래스
+
+
+const MyPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <DashboardForm
+      isOpen={isOpen}
+      onToggle={() => setIsOpen(!isOpen)}
+      onSubmit={(formData) => {
+        console.log("제출:", formData);
+        // API 호출 등
+      }}
+      onReset={() => console.log("초기화")}
+    />
   );
 };`,
     },
